@@ -1,5 +1,35 @@
 <resources>
-    <string name="app_name">My Application</string>
+
+    <!-- NOMBRE APP -->
+    <string name="app_name">My Hipoteca App</string>
+
+    <!-- BOTONES -->
+    <string name="txt_btn_simular_hipoteca">SIMULAR HIPOTECA</string>
+    <string name="txt_btn_iniciar_sesion">INICIAR SESIÓN</string>
+    <string name="txt_btn_registrarse">REGISTRARSE</string>
+
+    <!-- LABELS -->
+    <string name="label_correo_electronico">Correo Eléctronico</string>
+    <string name="label_ejemplo_correo">ejemplo@email.com</string>
+    <string name="label_contrasenia">Contraseña</string>
+    <string name="label_ejemplo_contrasenia">************</string>
+    <string name="label_recuperar_contrasenia">Recuperar contraseña</string>
+    <string name="label_no_tienes_cuenta">¿No tienes cuenta? Regístrate aquí</string>
+    <string name="label_registro">Registro</string>
+    <string name="label_datos_de_acceso">Datos de acceso</string>
+    <string name="label_nombre">Nombre</string>
+    <string name="label_repetir_contrasenia">Repetir contraseña</string>
+    <string name="label_acepto_terminos">Acepto los términos y condiciones</string>
+
+    <!-- MENSAJES DE ERROR -->
+    <string name="correo_en_bd">El correo introducido ya está registrado</string>
+    <string name="necesario_aceptar_terminos">Acepta los términos y condiciones para poder registrarte</string>
+    <string name="nombre_vacio">Es necesario introducir un nombre</string>
+    <string name="correo_vacio">Es necesario introducir un correo eléctronico</string>
+    <string name="contra_vacia">Es necesario introducir una contraseña</string>
+    <string name="contras_no_coinciden">Las contraseñas no coinciden</string>
+
+    <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>
     <string name="txt_pass">Contraseña</string>
     <string name="txt_text">Hola</string>
