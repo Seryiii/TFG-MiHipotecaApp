@@ -9,6 +9,9 @@ public class Usuario implements Serializable {
     private String contra;
     private String nombre;
 
+    public Usuario() {
+
+    }
     public Usuario(int id, String correo, String contra, String nombre) {
         this.id = id;
         this.correo = correo;
