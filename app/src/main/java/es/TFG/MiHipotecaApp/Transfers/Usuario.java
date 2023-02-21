@@ -6,7 +6,7 @@ public class Usuario implements Serializable {
 
     private int id;
     private String correo;
-    private String contra;
+    private String contrasenia;
     private String nombre;
 
     public Usuario() {
@@ -15,7 +15,7 @@ public class Usuario implements Serializable {
     public Usuario(int id, String correo, String contra, String nombre) {
         this.id = id;
         this.correo = correo;
-        this.contra = contra;
+        this.contrasenia = contra;
         this.nombre = nombre;
     }
 
@@ -36,11 +36,11 @@ public class Usuario implements Serializable {
     }
 
     public String getContra() {
-        return contra;
+        return contrasenia;
     }
 
     public void setContra(String contra) {
-        this.contra = contra;
+        this.contrasenia = contra;
     }
 
     public String getNombre() {
