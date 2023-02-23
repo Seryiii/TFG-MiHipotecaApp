@@ -20,13 +20,15 @@ public class Constantes {
     /**
      * Dirección IP de AVD
      */
-    private static final String IP = "http://10.0.2.2:/MiHipotecaApp";
+    private static final String IP = "http://10.0.2.2/MiHipotecaApp";
 
     /**
      * URLs del Web Service
      */
 
     public static final String GET_ALL_USERS = IP + "/obtener_usuarios.php";
+    public static final String GET_BY_CORREO = IP + "/obtener_usuario_por_correo.php";
+    public static final String CREACION_USUARIO = IP + "/creación_usuario.php";
     //public static final String UPDATE = IP  + "/dbcitas_android/actualizar_usuario.php";
 
     //public static final String DELETE = IP  + "/dbcitas_android/eliminar_usuario.php";

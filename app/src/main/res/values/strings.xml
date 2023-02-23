@@ -20,6 +20,7 @@
     <string name="label_nombre">Nombre</string>
     <string name="label_repetir_contrasenia">Repetir contraseña</string>
     <string name="label_acepto_terminos">Acepto los términos y condiciones</string>
+    <string name="label_selecciona_avatar">Escoge un avatar</string>
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>
@@ -28,6 +29,7 @@
     <string name="correo_vacio">Es necesario introducir un correo eléctronico</string>
     <string name="contra_vacia">Es necesario introducir una contraseña</string>
     <string name="contras_no_coinciden">Las contraseñas no coinciden</string>
+
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>
