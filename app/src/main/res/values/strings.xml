@@ -7,11 +7,15 @@
     <string name="txt_btn_simular_hipoteca">SIMULAR HIPOTECA</string>
     <string name="txt_btn_iniciar_sesion">INICIAR SESIÓN</string>
     <string name="txt_btn_registrarse">REGISTRARSE</string>
+    <string name="txt_btn_aplicar_cambios">APLICAR CAMBIOS</string>
+    <string name="txt_btn_pasar_a_premium">PASAR A PREMIUM</string>
+
 
     <!-- LABELS -->
     <string name="label_correo_electronico">Correo Eléctronico</string>
     <string name="label_ejemplo_correo">ejemplo@email.com</string>
     <string name="label_contrasenia">Contraseña</string>
+    <string name="label_contrasenia_nueva">Contraseña nueva</string>
     <string name="label_ejemplo_contrasenia">************</string>
     <string name="label_recuperar_contrasenia">Recuperar contraseña</string>
     <string name="label_no_tienes_cuenta">¿No tienes cuenta? Regístrate aquí</string>
@@ -19,6 +23,7 @@
     <string name="label_datos_de_acceso">Datos de acceso</string>
     <string name="label_nombre">Nombre</string>
     <string name="label_repetir_contrasenia">Repetir contraseña</string>
+    <string name="label_repetir_contrasenia_nueva">Repetir contraseña nueva</string>
     <string name="label_acepto_terminos">Acepto los términos y condiciones</string>
     <string name="label_selecciona_avatar">Escoge un avatar</string>
     <string name="titulo_actividad_principal">TUS HIPOTECAS</string>
@@ -29,6 +34,7 @@
     <string name="label_acercaDe">Acerca de</string>
     <string name="label_terminos_de_uso">Términos de uso</string>
     <string name="label_pol_privacidad">Pol. de privacidad</string>
+    <string name="label_modificar_perfil">Modificar Perfil</string>
 
 
     <!-- MENSAJES DE ERROR -->

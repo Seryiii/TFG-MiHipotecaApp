@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.Request;
@@ -33,6 +34,7 @@ public class IniciarSesion extends AppCompatActivity {
     private Button btn_iniciar_sesion;
     private EditText correo;
     private EditText contra;
+    private TextView link_no_tengo_cuenta_registrarse;
 
     private Gson gson = new Gson();
 
@@ -47,6 +49,7 @@ public class IniciarSesion extends AppCompatActivity {
         correo             = findViewById(R.id.edit_correo_iniciar_sesion);
         contra             = findViewById(R.id.edit_contrasenia_iniciar_sesion);
         btn_iniciar_sesion = findViewById(R.id.btn_iniciar_sesion);
+        link_no_tengo_cuenta_registrarse = findViewById(R.id.link_no_tengo_cuenta_registrarse);
         btn_iniciar_sesion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -56,6 +59,14 @@ public class IniciarSesion extends AppCompatActivity {
                 else comprobarSiUsuarioCorrecto();
             }
         });
+        link_no_tengo_cuenta_registrarse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(IniciarSesion.this, Registro.class);
+                startActivity(i);
+            }
+        });
+
     }
 
     private void comprobarSiUsuarioCorrecto(){
