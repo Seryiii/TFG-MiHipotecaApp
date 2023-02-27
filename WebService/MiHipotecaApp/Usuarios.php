@@ -45,9 +45,7 @@ class Usuarios
     public static function getById($idUsuario)
     {
         // Consulta del usuario
-        $consulta = "SELECT *
-                    FROM usuarios
-                    WHERE id = ?";
+        $consulta = "SELECT * FROM usuarios WHERE id = ?";
 
         try {
             // Preparar sentencia
@@ -76,9 +74,7 @@ class Usuarios
     public static function getByCorreo($correo)
     {
         // Consulta del usuario
-        $consulta = "SELECT *
-                    FROM usuarios
-                    WHERE correo = ?";
+        $consulta = "SELECT * FROM usuarios WHERE correo = ?";
 
         try {
             // Preparar sentencia
@@ -96,48 +92,33 @@ class Usuarios
         }
     }
 
-
-
     /**
      * Insertar un nuevo usuario
      *
-     * @param $nombre           nombre del nuevo registro
+     * @param $nombre           nombre de usuario del nuevo registro
      * @param $correo           correo del nuevo registro
      * @param $contrasenia      contrasenia del nuevo registro
      * @param $avatar           avatar del nuevo registro
      * @return PDOStatement
      */
-    public static function insert(
-        $nombre,
-        $correo,
-        $contrasenia,
-        $avatar
-    )
+    public static function insert($nombre, $correo, $contrasenia, $avatar)
     {
         // Sentencia INSERT
-        $comando = "INSERT INTO usuarios (nombre, correo, password, avatar) VALUES( ?,?,?,?)";
+        $comando = "INSERT INTO usuarios (nombre, correo, password, premium, avatar) VALUES(?,?,?,?,?)";
 
         // Preparar la sentencia
         $sentencia = Database::getInstance()->getDb()->prepare($comando);
 
-    
-        $result = $sentencia->execute(
-            array(
-                $nombre,
-                $correo,
-                $contrasenia,
-                $avatar
-            )
-        );
+        $result = $sentencia->execute(array($nombre,$correo,$contrasenia,false,$avatar));
+
         $id = Database::getInstance()->getDb()->lastInsertId();
+
         return array(
             'result' => $result,
             'id' => $id
         );
         
-
     }
 
 }
-
 ?>

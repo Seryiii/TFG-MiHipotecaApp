@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
 
     // Insertar usuario
-    $retorno = Usuarios::insertUsuario(
+    $retorno = Usuarios::insert(
         $body['nombre'],
         $body['correo'],
         $body['contrasenia'],
