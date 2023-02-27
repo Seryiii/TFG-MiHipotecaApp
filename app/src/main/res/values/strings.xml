@@ -21,6 +21,15 @@
     <string name="label_repetir_contrasenia">Repetir contraseña</string>
     <string name="label_acepto_terminos">Acepto los términos y condiciones</string>
     <string name="label_selecciona_avatar">Escoge un avatar</string>
+    <string name="titulo_actividad_principal">TUS HIPOTECAS</string>
+    <string name="label_configuracion_usuario">Perfil y ajustes</string>
+    <string name="label_datos_personales">Datos personales</string>
+    <string name="label_cambiar_datos">Modificar perfil</string>
+    <string name="label_pasar_premium">Pasar a premium</string>
+    <string name="label_acercaDe">Acerca de</string>
+    <string name="label_terminos_de_uso">Términos de uso</string>
+    <string name="label_pol_privacidad">Pol. de privacidad</string>
+
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>
