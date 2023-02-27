@@ -29,7 +29,9 @@
     <string name="correo_vacio">Es necesario introducir un correo eléctronico</string>
     <string name="contra_vacia">Es necesario introducir una contraseña</string>
     <string name="contras_no_coinciden">Las contraseñas no coinciden</string>
-
+    <string name="correo_no_existente">El correo introducido no está registrado</string>
+    <string name="correo_incorrecto">El correo introducido no es correcto</string>
+    <string name="contra_incorrecta">La contraseña es incorrecta</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>

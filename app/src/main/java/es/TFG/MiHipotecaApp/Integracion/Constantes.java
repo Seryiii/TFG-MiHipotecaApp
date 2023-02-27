@@ -28,7 +28,7 @@ public class Constantes {
 
     public static final String GET_ALL_USERS = IP + "/obtener_usuarios.php";
     public static final String GET_BY_CORREO = IP + "/obtener_usuario_por_correo.php";
-    public static final String CREACION_USUARIO = IP + "/creación_usuario.php";
+    public static final String CREACION_USUARIO = IP + "/creacion_usuario.php";
     //public static final String UPDATE = IP  + "/dbcitas_android/actualizar_usuario.php";
 
     //public static final String DELETE = IP  + "/dbcitas_android/eliminar_usuario.php";

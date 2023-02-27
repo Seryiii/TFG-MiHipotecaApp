@@ -171,7 +171,7 @@ public class Registro extends AppCompatActivity {
 
         if(TextUtils.isEmpty(contra.getText())) contra.setError(getString(R.string.contra_vacia));
         else{
-            if(contra.getText().toString().equals(confir_contra.getText())) {
+            if(contra.getText().toString().equals(confir_contra.getText().toString())) {
                 Pattern pat = Pattern.compile("^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,15}$");
                 Matcher mat = pat.matcher(contra.getText().toString());
                 if(mat.matches()) registarUsuarioBD();
@@ -206,7 +206,8 @@ public class Registro extends AppCompatActivity {
                 avatar = 5;
         }
 
-        map.put("avatar", Integer.toString(avatar));
+        //map.put("avatar", Integer.toString(avatar));
+        map.put("avatar", "1");
 
         // Crear nuevo objeto Json basado en el mapa
         JSONObject jobject = new JSONObject(map);

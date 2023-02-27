@@ -6,18 +6,48 @@ public class Usuario implements Serializable {
 
     private int id;
     private String correo;
-    private String contrasenia;
+    private String password;
     private String nombre;
+    private int premium;
+    private int avatar;
 
     public Usuario() {
 
     }
-    public Usuario(int id, String correo, String contra, String nombre) {
+
+    public Usuario(int id, String correo, String password, String nombre, int premium, int avatar) {
         this.id = id;
         this.correo = correo;
-        this.contrasenia = contra;
+        this.password = password;
         this.nombre = nombre;
+        this.premium = premium;
+        this.avatar = avatar;
     }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public int isPremium() {
+        return premium;
+    }
+
+    public void setPremium(int premium) {
+        this.premium = premium;
+    }
+
+    public int getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(int avatar) {
+        this.avatar = avatar;
+    }
+
 
     public int getId() {
         return id;
@@ -35,13 +65,6 @@ public class Usuario implements Serializable {
         this.correo = correo;
     }
 
-    public String getContra() {
-        return contrasenia;
-    }
-
-    public void setContra(String contra) {
-        this.contrasenia = contra;
-    }
 
     public String getNombre() {
         return nombre;
