@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UsuarioRegistrado.ModificarDatosUsuario">
+    android:background="@color/background_aplicacion"
+    tools:context=".UsuarioRegistrado.ModificarDatosUsuario"
+    >
 
     <TextView
         android:id="@+id/textView10"
@@ -24,7 +26,7 @@
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginTop="18dp"
-        android:background="@drawable/circuloFondo"
+        android:background="@drawable/circulo_fondo"
         android:padding="5dp"
         android:scaleType="centerCrop"
         android:src="@drawable/avatar1"
@@ -38,10 +40,10 @@
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:layout_marginTop="-24dp"
-        android:background="@drawable/circuloMorado"
+        android:background="@drawable/circulo_morado"
         android:padding="10dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/lapizEditar"
+        android:src="@drawable/lapiz_editar"
         app:layout_constraintBottom_toTopOf="@+id/textView11"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -68,6 +70,7 @@
         android:layout_height="48sp"
         android:background="@drawable/rounded_edit_text"
         android:fontFamily="@font/allerta"
+        android:hint="Nombre"
         android:inputType="text"
         android:text=""
         app:layout_constraintEnd_toEndOf="parent"
