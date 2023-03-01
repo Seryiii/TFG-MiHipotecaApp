@@ -196,7 +196,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/terminos"
+        android:src="@drawable/privacidad"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circleImageView5" />
 
@@ -207,7 +207,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:layout_marginTop="24dp"
-        android:text="@string/label_terminos_de_uso"
+        android:text="@string/label_pol_privacidad"
         android:textSize="32dp"
         app:layout_constraintStart_toEndOf="@+id/circleImageView6"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
@@ -223,30 +223,27 @@
         app:layout_constraintTop_toBottomOf="@+id/btn_acercaDe" />
 
     <de.hdodenhof.circleimageview.CircleImageView
-
-
         android:id="@+id/circleImageView7"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:src="@drawable/privacidad"
+        android:src="@drawable/eliminar_cuenta"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/circleImageView6" />
 
     <TextView
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="24dp"
-        android:text="@string/label_pol_privacidad"
+        android:text="@string/label_eliminar_usuario"
         android:textSize="32dp"
         app:layout_constraintStart_toEndOf="@+id/circleImageView7"
         app:layout_constraintTop_toBottomOf="@+id/textView9" />
 
     <Button
-        android:id="@+id/btn_pol_privacidad"
+        android:id="@+id/eliminar_cuenta"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"

@@ -33,8 +33,8 @@
     <string name="label_cambiar_datos">Modificar perfil</string>
     <string name="label_pasar_premium">Pasar a premium</string>
     <string name="label_acercaDe">Acerca de</string>
-    <string name="label_terminos_de_uso">Términos de uso</string>
     <string name="label_pol_privacidad">Pol. de privacidad</string>
+    <string name="label_eliminar_usuario">Eliminar cuenta</string>
     <string name="label_modificar_perfil">Modificar Perfil</string>
     <string name="label_nuevo_seguimiento">Nuevo seguimiento</string>
     <string name="label_combobox_comunidad">¿En que comunidad autónoma se encuentra?</string>
@@ -62,4 +62,8 @@
     <string name="txt_correo">Correo</string>
     <string name="txt_pass">Contraseña</string>
     <string name="txt_text">Hola</string>
+    <string name="dialog_message">¿Estás seguro de eliminar la cuenta?</string>
+    <string name="dialog_title">ELIMINAR CUENTA</string>
+    <string name="si_eliminar_cuenta">Si</string>
+    <string name="no_eliminar_cuenta">No</string>
 </resources>
