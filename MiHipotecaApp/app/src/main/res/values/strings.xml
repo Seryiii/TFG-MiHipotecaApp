@@ -10,6 +10,7 @@
     <string name="txt_btn_aplicar_cambios">APLICAR CAMBIOS</string>
     <string name="txt_btn_pasar_a_premium">PASAR A PREMIUM</string>
     <string name="txt_btn_añadir_hipoteca">AÑADIR HIPOTECA</string>
+    <string name="txt_btn_enviar_problema">ENVIAR</string>
 
 
     <!-- LABELS -->
@@ -45,6 +46,11 @@
     <string name="label_cantidad_abonada">¿Cantidad abonada por el comprador?</string>
     <string name="label_plazo_prestamo_a_pagar">¿Plazo a pagar de préstamo?</string>
     <string name="label_año_hipoteca_actual">¿Año de hipoteca actual?</string>
+    <string name="label_informar_problema">Notificar problema</string>
+    <string name="label_has_detectado">¿Has detectado algún fallo que quieras que solucionemos?</string>
+    <string name="label_comentanoslo">¡COMÉNTANOSLO!</string>
+    <string name="label_texto_error">Escribe aquí lo que quieras \ndecirnos...</string>
+    <string name="label_aniadir_captura">Añade captura (recomendado) </string>
 
 
     <!-- MENSAJES DE ERROR -->
