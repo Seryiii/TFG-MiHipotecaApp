@@ -1,7 +1,7 @@
 <resources>
 
     <!-- NOMBRE APP -->
-    <string name="app_name">My Hipoteca App</string>
+    <string name="app_name">Mi Hipoteca App</string>
 
     <!-- BOTONES -->
     <string name="txt_btn_simular_hipoteca">SIMULAR HIPOTECA</string>
@@ -29,7 +29,7 @@
     <string name="label_selecciona_avatar">Escoge un avatar</string>
     <string name="titulo_actividad_principal">TUS HIPOTECAS</string>
     <string name="label_configuracion_usuario">Perfil y ajustes</string>
-    <string name="label_datos_personales">Datos personales</string>
+    <string name="label_notificar_problema">Notificar problema</string>
     <string name="label_cambiar_datos">Modificar perfil</string>
     <string name="label_pasar_premium">Pasar a premium</string>
     <string name="label_acercaDe">Acerca de</string>
