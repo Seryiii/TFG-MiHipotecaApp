@@ -9,6 +9,7 @@
     <string name="txt_btn_registrarse">REGISTRARSE</string>
     <string name="txt_btn_aplicar_cambios">APLICAR CAMBIOS</string>
     <string name="txt_btn_pasar_a_premium">PASAR A PREMIUM</string>
+    <string name="txt_btn_añadir_hipoteca">AÑADIR HIPOTECA</string>
 
 
     <!-- LABELS -->
@@ -35,6 +36,15 @@
     <string name="label_terminos_de_uso">Términos de uso</string>
     <string name="label_pol_privacidad">Pol. de privacidad</string>
     <string name="label_modificar_perfil">Modificar Perfil</string>
+    <string name="label_nuevo_seguimiento">Nuevo seguimiento</string>
+    <string name="label_combobox_comunidad">¿En que comunidad autónoma se encuentra?</string>
+    <string name="label_tipo_vivienda">¿Vivienda nueva o de segunda mano?</string>
+    <string name="label_vivienda_nueva">Vivienda nueva</string>
+    <string name="label_vivienda_segunda_mano">Vivienda de segunda mano</string>
+    <string name="label_precio_vivienda">¿Precio de la vivienda?</string>
+    <string name="label_cantidad_abonada">¿Cantidad abonada por el comprador?</string>
+    <string name="label_plazo_prestamo_a_pagar">¿Plazo a pagar de préstamo?</string>
+    <string name="label_año_hipoteca_actual">¿Año de hipoteca actual?</string>
 
 
     <!-- MENSAJES DE ERROR -->
