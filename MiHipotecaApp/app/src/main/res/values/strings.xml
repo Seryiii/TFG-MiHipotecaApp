@@ -11,7 +11,7 @@
     <string name="txt_btn_pasar_a_premium">PASAR A PREMIUM</string>
     <string name="txt_btn_añadir_hipoteca">AÑADIR HIPOTECA</string>
     <string name="txt_btn_enviar_problema">ENVIAR</string>
-
+    <string name="txt_aplicar_filtro">Aplicar filtros</string>
 
     <!-- LABELS -->
     <string name="label_correo_electronico">Correo Eléctronico</string>
@@ -51,6 +51,29 @@
     <string name="label_comentanoslo">¡COMÉNTANOSLO!</string>
     <string name="label_texto_error">Escribe aquí lo que quieras \ndecirnos...</string>
     <string name="label_aniadir_captura">Añade captura (recomendado) </string>
+    <string name="label_filtros">Filtros</string>
+    <string name="label_precio_vivienda_sin">Precio de la vivienda</string>
+    <string name="label_primer_pago">Primer pago</string>
+    <string name="label_plazo_prestamo_a_pagar_sin">Plazo a pagar de préstamo</string>
+    <string name="label_hipoteca_fija">Hipoteca fija</string>
+    <string name="label_hipoteca_variable">Hipoteca variable</string>
+    <string name="label_hipoteca_mixta">Hipoteca mixta</string>
+    <string name="label_tipo_hipoteca">Tipo de hipoteca</string>
+    <string name="label_vinculaciones">Vinculaciones</string>
+    <string name="label_seguro_vida">Seguro de vida</string>
+    <string name="label_seguro_hogar">Seguro del hogar</string>
+    <string name="label_cuenta_nomina">Cuenta nómina</string>
+    <string name="label_plan_pensiones">Plan de pensiones</string>
+    <string name="label_comisiones_no">Comisiones que no quieres</string>
+    <string name="label_comision_apertura">Comisión por apertura</string>
+    <string name="label_comision_gastos_formalizacion">Comisión por gastos de formalizacion</string>
+    <string name="label_comision_subrogacion">Comisión por subrogación</string>
+    <string name="label_comision_estudio_gestion">Comisión por estudio y gestión</string>
+    <string name="label_comision_amortizacion_anticipada">Comisión por amortización anticipada</string>
+    <string name="label_comision_cancelacion">Comisión por cancelación</string>
+    <string name="label_bancos">Bancos</string>
+
+
 
 
     <!-- MENSAJES DE ERROR -->
