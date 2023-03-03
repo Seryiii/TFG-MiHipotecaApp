@@ -17,6 +17,9 @@
             android:name=".RecuperarContra"
             android:exported="false" />
         <activity
+            android:name=".UsuarioRegistrado.PasarPremium"
+            android:exported="false"/>
+        <activity
             android:name=".Filtros"
             android:exported="false" />
         <activity

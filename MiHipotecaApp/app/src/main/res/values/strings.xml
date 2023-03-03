@@ -74,6 +74,7 @@
     <string name="label_comision_amortizacion_anticipada">Comisión por amortización anticipada</string>
     <string name="label_comision_cancelacion">Comisión por cancelación</string>
     <string name="label_bancos">Bancos</string>
+    <string name="label_pasate_premium">¡Pásate a premium!</string>
     <string name="label_indicar_correo_recuperar_contra">Indica tu correo electrónico para recuperar la contraseña</string>
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>
