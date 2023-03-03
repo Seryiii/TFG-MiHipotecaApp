@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
     <Button
-        android:id="@+id/btn_datos_personales"
+        android:id="@+id/btn_modificar_datos"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="56dp"
@@ -85,14 +85,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
-        android:id="@+id/btn_modificar_perfil"
+        android:id="@+id/btn_pasar_a_premium"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="32dp"
         android:background="@drawable/baseline_arrow_forward_ios_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_datos_personales" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_modificar_datos" />
 
     <View
         android:id="@+id/view"
@@ -133,7 +133,7 @@
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <Button
-        android:id="@+id/btn_pasar_premium"
+        android:id="@+id/btn_notificar_problema"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="44dp"
@@ -213,7 +213,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <Button
-        android:id="@+id/btn_terminos_de_uso"
+        android:id="@+id/btn_pol_privacidad"
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="16dp"
@@ -250,6 +250,6 @@
         android:layout_marginEnd="32dp"
         android:background="@drawable/baseline_arrow_forward_ios_24"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_terminos_de_uso" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_pol_privacidad" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
