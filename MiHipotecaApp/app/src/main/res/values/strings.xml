@@ -12,6 +12,8 @@
     <string name="txt_btn_añadir_hipoteca">AÑADIR HIPOTECA</string>
     <string name="txt_btn_enviar_problema">ENVIAR</string>
     <string name="txt_aplicar_filtro">Aplicar filtros</string>
+    <string name="txt_btn_cerrar_sesion">CERRAR SESIÓN</string>
+    <string name="txt_btn_recuperar_contrasenia">RECUPERAR CONTRASEÑA</string>
 
     <!-- LABELS -->
     <string name="label_correo_electronico">Correo Eléctronico</string>
@@ -72,10 +74,7 @@
     <string name="label_comision_amortizacion_anticipada">Comisión por amortización anticipada</string>
     <string name="label_comision_cancelacion">Comisión por cancelación</string>
     <string name="label_bancos">Bancos</string>
-
-
-
-
+    <string name="label_indicar_correo_recuperar_contra">Indica tu correo electrónico para recuperar la contraseña</string>
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>
     <string name="necesario_aceptar_terminos">Acepta los términos y condiciones para poder registrarte</string>
@@ -86,6 +85,14 @@
     <string name="correo_no_existente">El correo introducido no está registrado</string>
     <string name="correo_incorrecto">El correo introducido no es correcto</string>
     <string name="contra_incorrecta">La contraseña es incorrecta</string>
+    <string name="completar_campos">Completa todos los campos!</string>
+    <string name="formato_correo_incorrecto">El correo formato del correo introducido no es correcto</string>
+    <string name="error_enviar_mensaje_recuperar_contra">No se pudo enviar un correo electrónico para restablecer su contraseña</string>
+
+    <!-- MENSAJES DE EXITO -->
+    <string name="usuario_creado_exito">Usuario creado con éxito!</string>
+    <string name="sesion_cerrada">Sesión cerrada</string>
+    <string name="mensaje_enviado_recuperar_contra">Se ha enviado un correo electrónico para restablecer su contraseña</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>

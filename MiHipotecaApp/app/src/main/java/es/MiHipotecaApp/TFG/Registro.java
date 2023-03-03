@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,8 +14,17 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+
+import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.basgeekball.awesomevalidation.ValidationStyle;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +49,9 @@ public class Registro extends AppCompatActivity {
 
     private RadioGroup avatarRadio;
 
+    private FirebaseAuth firebaseAuth;
+    private AwesomeValidation awesomeValidation;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +60,11 @@ public class Registro extends AppCompatActivity {
     }
 
     private void initUI(){
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
+        awesomeValidation.addValidation(this,R.id.edit_correo_registro, Patterns.EMAIL_ADDRESS,R.string.correo_incorrecto);
+
         correo = findViewById(R.id.edit_correo_registro);
         nombre = findViewById(R.id.edit_nombre_registro);
         contra = findViewById(R.id.edit_contra_registro);
@@ -75,81 +93,109 @@ public class Registro extends AppCompatActivity {
     private void registrarUsuario(){
 
         if(terminos.isChecked()){
-            if (TextUtils.isEmpty(correo.getText())) correo.setError(getString(R.string.correo_vacio));
-            else{
-                //comprobarSiCorreoExiste(correo.getText().toString());
+            if(comprobarContrasenia()){
+                if(awesomeValidation.validate()){
+                    firebaseAuth.createUserWithEmailAndPassword(correo.getText().toString(), contra.getText().toString()).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()){
+
+                                //AQUI FALTA METER USUARIO EN FIRESTORE EN COLLECCION USERS
+
+                                Toast.makeText(Registro.this, getString(R.string.usuario_creado_exito), Toast.LENGTH_LONG).show();
+                                finish();
+                            }else{
+                                String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
+                                dameToastdeerror(errorCode);
+                            }
+                        }
+                    });
+                }else Toast.makeText(Registro.this, getString(R.string.completar_campos), Toast.LENGTH_LONG).show();
             }
 
         }else terminos.setError(getString(R.string.necesario_aceptar_terminos));
-
-
     }
 
-    /*
-    /** Esta funcion comprueba si el correo introducido existe en la base de datos,
-     *  devuelve true si el correo no existe.
-    private void comprobarSiCorreoExiste(String correo){
-        // Añadir parámetro a la URL del web service
-        String newURL = Constantes.GET_BY_CORREO + "?correoUsuario=" + correo;
-        // Realizar petición GET_BY_CORREO
-        VolleySingleton.getInstance(this).addToRequestQueue(
-                new JsonObjectRequest(
-                        Request.Method.GET,
-                        newURL,
-                        null,
-                        new Response.Listener<JSONObject>() {
 
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                // Procesar respuesta Json
-                                procesarRespuestaExisteUsu(response);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Error", "Error Volley: " + error.getMessage());
-                            }
-                        }
-                )
-        );
-    }
+    private void dameToastdeerror(String error) {
 
-     Esta funcion procesa la respuesta enviada por el webservice:
-     *  - Estado == 1 El usuario con correo  pasado a la peticion existe en bd
-     *  - Estado == 2 El usuario con nombre de usuario pasado a la peticon no existe en bd
-     *  - Estado == 3 Error en la peticion, no llega bien el nombre de usuario
-    private void procesarRespuestaExisteUsu(JSONObject response) {
+        switch (error) {
 
-        try {
-            // Obtener atributo "estado"
-            String estado = response.getString("estado");
+            case "ERROR_INVALID_CUSTOM_TOKEN":
+                Toast.makeText(Registro.this, "El formato del token personalizado es incorrecto. Por favor revise la documentación", Toast.LENGTH_LONG).show();
+                break;
 
-            switch (estado) {
-                case "1":
-                    correo.setError(getString(R.string.correo_en_bd));
-                    break;
+            case "ERROR_CUSTOM_TOKEN_MISMATCH":
+                Toast.makeText(Registro.this, "El token personalizado corresponde a una audiencia diferente.", Toast.LENGTH_LONG).show();
+                break;
 
-                case "2":
-                    //NO EXISTE EL USUARIO POR LO QUE SE PASA A COMPROBAR CONTRASEÑA Y SI NOMBRE VACIO
-                    if(!TextUtils.isEmpty(nombre.getText())){
-                        comprobarContrasenia();
-                    }else nombre.setError(getString(R.string.nombre_vacio));
-                    break;
+            case "ERROR_INVALID_CREDENTIAL":
+                Toast.makeText(Registro.this, "La credencial de autenticación proporcionada tiene un formato incorrecto o ha caducado.", Toast.LENGTH_LONG).show();
+                break;
 
-                case "3":
-                    String mensaje3 = response.getString("mensaje");
-                    Toast.makeText(
-                            this,
-                            mensaje3,
-                            Toast.LENGTH_LONG).show();
-                    break;
-            }
+            case "ERROR_INVALID_EMAIL":
+                Toast.makeText(Registro.this, "La dirección de correo electrónico está mal formateada.", Toast.LENGTH_LONG).show();
+                correo.setError("La dirección de correo electrónico está mal formateada.");
+                correo.requestFocus();
+                break;
 
+            case "ERROR_WRONG_PASSWORD":
+                Toast.makeText(Registro.this, "La contraseña no es válida o el usuario no tiene contraseña.", Toast.LENGTH_LONG).show();
+                contra.setError(getString(R.string.contra_incorrecta));
+                contra.requestFocus();
+                contra.setText("");
+                break;
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+            case "ERROR_USER_MISMATCH":
+                Toast.makeText(Registro.this, "Las credenciales proporcionadas no corresponden al usuario que inició sesión anteriormente..", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_REQUIRES_RECENT_LOGIN":
+                Toast.makeText(Registro.this,"Esta operación es sensible y requiere autenticación reciente. Inicie sesión nuevamente antes de volver a intentar esta solicitud.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_ACCOUNT_EXISTS_WITH_DIFFERENT_CREDENTIAL":
+                Toast.makeText(Registro.this, "Ya existe una cuenta con la misma dirección de correo electrónico pero diferentes credenciales de inicio de sesión. Inicie sesión con un proveedor asociado a esta dirección de correo electrónico.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_EMAIL_ALREADY_IN_USE":
+                Toast.makeText(Registro.this, "La dirección de correo electrónico ya está siendo utilizada por otra cuenta..   ", Toast.LENGTH_LONG).show();
+                correo.setError(getString(R.string.correo_en_bd));
+                correo.requestFocus();
+                break;
+
+            case "ERROR_CREDENTIAL_ALREADY_IN_USE":
+                Toast.makeText(Registro.this, "Esta credencial ya está asociada con una cuenta de usuario diferente.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_USER_DISABLED":
+                Toast.makeText(Registro.this, "La cuenta de usuario ha sido inhabilitada por un administrador..", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_USER_TOKEN_EXPIRED":
+                Toast.makeText(Registro.this, "La credencial del usuario ya no es válida. El usuario debe iniciar sesión nuevamente.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_USER_NOT_FOUND":
+                Toast.makeText(Registro.this, "No hay ningún registro de usuario que corresponda a este identificador. Es posible que se haya eliminado al usuario.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_INVALID_USER_TOKEN":
+                Toast.makeText(Registro.this, "La credencial del usuario ya no es válida. El usuario debe iniciar sesión nuevamente.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_OPERATION_NOT_ALLOWED":
+                Toast.makeText(Registro.this, "Esta operación no está permitida. Debes habilitar este servicio en la consola.", Toast.LENGTH_LONG).show();
+                break;
+
+            case "ERROR_WEAK_PASSWORD":
+                Toast.makeText(Registro.this, "La contraseña proporcionada no es válida..", Toast.LENGTH_LONG).show();
+                contra.setError("La contraseña no es válida, debe tener al menos 6 caracteres");
+                contra.requestFocus();
+                break;
+
         }
+
     }
 
 
@@ -160,16 +206,17 @@ public class Registro extends AppCompatActivity {
      *  Al menos un  dígito
      *  NO  hace falta Caracteres especiales
      *  **/
-    private void comprobarContrasenia(){
+    private boolean comprobarContrasenia(){
 
         if(TextUtils.isEmpty(contra.getText())) contra.setError(getString(R.string.contra_vacia));
         else{
             if(contra.getText().toString().equals(confir_contra.getText().toString())) {
                 Pattern pat = Pattern.compile("^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,15}$");
                 Matcher mat = pat.matcher(contra.getText().toString());
-                if(mat.matches()); //registarUsuarioBD();
+                if(mat.matches()) return true;
             }else contra.setError(getString(R.string.contras_no_coinciden));
         }
+        return false;
     }
 
     /*
@@ -239,42 +286,8 @@ public class Registro extends AppCompatActivity {
                 }
         );
 
-    }
-
-     Esta funcion procesa la respuesta enviada por el webservice:
-     *  Estado == 1 Usuario creado correctamente, se crea un toast informando
-     *  Estado == 2 Usuario no se ha creado correctamente, se crea un toast informando
-    private void procesarRespuestaCreacionUsuario(JSONObject response){
-        try {
-            // Obtener atributo "estado"
-            String estado  = response.getString("estado");
-            String mensaje = response.getString("mensaje");
-
-            switch (estado) {
-                case "1": // EXITO
-                    Integer idUsuario = response.getInt("id");
-                    String idUser = Integer.toString(idUsuario);
-                    // Primero, obtén una instancia del objeto SharedPreferences
-                    SharedPreferences prefs = getSharedPreferences("credenciales", MODE_PRIVATE);
-                    // Al iniciar sesión, guarda el id del usuario en las preferencias compartidas
-                    SharedPreferences.Editor editor = prefs.edit();
-                    editor.putString("idusuario", idUser);
-                    editor.apply();
-                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
-                    Intent i = new Intent(Registro.this, PaginaPrincipal.class);
-                    startActivity(i);
-                    break;
-                case "2": // FALLIDO
-                    // Mostrar mensaje
-                    Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
-                    break;
-            }
-
-        } catch (JSONException e) {
-            Log.d("ERROR", e.getMessage());
-        }
-
     }*/
+
 
 
 }

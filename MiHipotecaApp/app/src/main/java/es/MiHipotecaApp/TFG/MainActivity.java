@@ -10,23 +10,46 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.lang.reflect.Type;
+
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.PaginaPrincipal;
+
 public class MainActivity extends AppCompatActivity {
 
     private Button btn_simular_hipoteca;
     private Button btn_iniciar_sesion;
     private Button btn_registrarse;
 
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        comprobarSiSesionIniciada();
         initUI();
+    }
+
+    private void comprobarSiSesionIniciada(){
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if(user != null){
+            Intent i = new Intent(MainActivity.this, PaginaPrincipal.class);
+            startActivity(i);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        comprobarSiSesionIniciada();
     }
 
     private void initUI() {
@@ -59,69 +82,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    /*
-    private void cogerTodosUsuarios() {
-
-        //Hacer una llamada a base de datos para coger todos los usuarios
-
-        String newURL = Constantes.GET_ALL_USERS;
-
-        // Realizar petición
-        VolleySingleton.getInstance(this).addToRequestQueue(
-                new JsonObjectRequest(
-                        Request.Method.GET,
-                        newURL,
-                        null,
-                        new Response.Listener<JSONObject>() {
-
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                // Procesar respuesta Json
-                                procesarRespuesta(response);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("Error", "Error Volley: " + error.getMessage());
-                            }
-                        }
-                )
-        );
-
-    }
-
-    private void procesarRespuesta(JSONObject response) {
-
-        try {
-            // Obtener atributo "estado"
-            String estado = response.getString("estado");
-
-            switch (estado) {
-                case "1":
-                    //Parsear objeto
-                    JSONArray usuariosJson = response.getJSONArray("usuarios");
-                    Type listType = new TypeToken<List<Usuario>>() {}.getType();
-                    ArrayList<Usuario> usuariosApp = gson.fromJson(usuariosJson.toString(), listType);
-                    for (int i = 0; i < usuariosApp.size(); i++){
-                        Log.i("USUARIO","Nombre usuario: " + usuariosApp.get(i).getNombre());
-                    }
-
-                case "2":
-                    //NO HAY USUARIOS
-
-                    break;
-
-                case "3":
-                    String mensaje3 = response.getString("mensaje");
-                    Toast.makeText(this, mensaje3, Toast.LENGTH_LONG).show();
-                    break;
-            }
-
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }*/
 }
