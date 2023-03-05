@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UsuarioRegistrado.PasarPremium">
+    tools:context=".UsuarioRegistrado.PasarPremium"
+    android:background="@color/background_aplicacion">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -15,16 +16,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="50dp"
             android:text="@string/label_pasate_premium"
-            android:textSize="24dp" />
+            android:textStyle="bold"
+            android:textSize="28dp" />
 
         <ViewFlipper
             android:id="@+id/view_flipper"
-            android:layout_width="match_parent"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_gravity="center"
+            android:background="#9300AC"
             android:inAnimation="@android:anim/slide_in_right"
             android:outAnimation="@android:anim/slide_out_left">
             <LinearLayout
@@ -35,7 +38,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hola 1"
+                    android:layout_gravity="center"
+                    android:textColor="@color/white"
+                    android:text="@string/label_ventajas_premium_1"
                     android:textAlignment="center"
                     android:textSize="24dp" />
             </LinearLayout>
@@ -47,7 +52,9 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hola 2"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:text="@string/label_ventajas_premium_2"
                     android:textAlignment="center"
                     android:textSize="24dp" />
             </LinearLayout>
@@ -58,32 +65,85 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Hola 3"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    android:text="@string/label_ventajas_premium_3"
                     android:textAlignment="center"
                     android:textSize="24dp" />
             </LinearLayout>
 
         </ViewFlipper>
-        <!-- <LinearLayout
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
-            <Button
+            android:text="@string/label_plan_actual"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="12dp"
+            android:textSize="24dp"
+            android:textStyle="bold"
+            />
+        <androidx.cardview.widget.CardView
+            android:id="@+id/my_card_view"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="#9300AC"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+            <!-- Contenido de la tarjeta aquí -->
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Previous"
-                android:onClick="previousView"
-                android:layout_marginEnd="78dp"
+                android:text="MiHipotecaApp Free"
+                android:textColor="@color/white"
+                android:layout_gravity="center"/>
+        </androidx.cardview.widget.CardView>
 
-                />
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Next"
-                android:onClick="nextView"
-                />
-        </LinearLayout>
-    -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/my_card_view_2"
+            android:layout_width="200dp"
+            android:layout_height="140dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            app:cardBackgroundColor="#9300AC"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="4dp">
+            <!-- Contenido de la tarjeta aquí -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_plan_premium"
+                    android:textColor="@color/white"
+                    android:layout_marginTop="10dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textSize="16dp"
+
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:textAlignment="center"
+                    android:text="@string/label_info_premium"
+                    android:textColor="@color/white"
+                    android:layout_gravity="center"
+                    />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/txt_btn_pasar_a_premium"
+        android:layout_marginTop="32dp"
+        android:backgroundTint="#9300AC"
+        android:layout_gravity="center"/>
 
     </LinearLayout>
 
