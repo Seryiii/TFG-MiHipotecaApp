@@ -126,7 +126,6 @@ public class Registro extends AppCompatActivity {
                                         avatar = 5;
                                 }
 
-                                //AQUI FALTA METER USUARIO EN FIRESTORE EN COLLECCION USERS
                                 Usuario usu = new Usuario(correo.getText().toString(),
                                                         contra.getText().toString(),
                                                         nombre.getText().toString(),
