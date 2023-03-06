@@ -2,14 +2,18 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -21,7 +25,7 @@ import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.AdaptadorHipotecasSeguimiento;
 
-public class PaginaPrincipal extends AppCompatActivity {
+public class PaginaPrincipal extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private Button btn_simular_hipoteca;
     private Button btn_config_usuario;
     private Button btn_cerrar_sesion;
@@ -29,6 +33,8 @@ public class PaginaPrincipal extends AppCompatActivity {
 
     private RecyclerView recyclerHipotecas;
     private ArrayList<HipotecaSeguimiento> listaHipotecasSeg;
+    private BottomNavigationView bottomNavigationView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +53,10 @@ public class PaginaPrincipal extends AppCompatActivity {
         listaHipotecasSeg.add(h2);
         listaHipotecasSeg.add(h3);
         listaHipotecasSeg.add(h4);
+
+        bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setSelectedItemId(R.id.mis_hipotecas);
 
         AdaptadorHipotecasSeguimiento adapter = new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
         recyclerHipotecas.setAdapter(adapter);
@@ -76,6 +86,35 @@ public class PaginaPrincipal extends AppCompatActivity {
             }
         });
     }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mis_hipotecas:
+                Log.e("hola", "1");
+                return true;
+
+            case R.id.aniadir_hipoteca:
+
+                Intent i = new Intent(PaginaPrincipal.this, IniciarSesion.class);
+                startActivity(i);
+                return true;
+
+            case R.id.calcular_hipoteca:
+                Log.e("hola", "3");
+                return true;
+
+            case R.id.mi_perfil:
+                Intent j = new Intent(PaginaPrincipal.this, InfoPerfilUsuario.class);
+                startActivity(j);
+                return true;
+
+        }
+        return false;
+    }
+
 
 
 }
