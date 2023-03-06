@@ -4,19 +4,17 @@ import java.io.Serializable;
 
 public class Usuario implements Serializable {
 
-    private int id;
     private String correo;
     private String password;
     private String nombre;
-    private int premium;
+    private boolean premium;
     private int avatar;
 
     public Usuario() {
 
     }
 
-    public Usuario(int id, String correo, String password, String nombre, int premium, int avatar) {
-        this.id = id;
+    public Usuario(String correo, String password, String nombre, boolean premium, int avatar) {
         this.correo = correo;
         this.password = password;
         this.nombre = nombre;
@@ -32,11 +30,11 @@ public class Usuario implements Serializable {
         this.password = password;
     }
 
-    public int isPremium() {
+    public boolean isPremium() {
         return premium;
     }
 
-    public void setPremium(int premium) {
+    public void setPremium(boolean premium) {
         this.premium = premium;
     }
 
@@ -48,14 +46,6 @@ public class Usuario implements Serializable {
         this.avatar = avatar;
     }
 
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getCorreo() {
         return correo;

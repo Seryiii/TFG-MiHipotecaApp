@@ -1,7 +1,5 @@
 package es.MiHipotecaApp.TFG;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -21,10 +19,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.basgeekball.awesomevalidation.AwesomeValidation;
 import com.basgeekball.awesomevalidation.ValidationStyle;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,9 +36,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import es.MiHipotecaApp.TFG.Transfers.Usuario;
+
 
 public class Registro extends AppCompatActivity {
 
+    private final String TAG = "REGISTRO ACTIVITY";
     private EditText correo;
     private EditText nombre;
     private EditText contra;
@@ -50,6 +55,8 @@ public class Registro extends AppCompatActivity {
     private RadioGroup avatarRadio;
 
     private FirebaseAuth firebaseAuth;
+
+    private FirebaseFirestore db;
     private AwesomeValidation awesomeValidation;
 
     @Override
@@ -61,6 +68,7 @@ public class Registro extends AppCompatActivity {
 
     private void initUI(){
 
+        db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         awesomeValidation = new AwesomeValidation(ValidationStyle.BASIC);
         awesomeValidation.addValidation(this,R.id.edit_correo_registro, Patterns.EMAIL_ADDRESS,R.string.correo_incorrecto);
@@ -100,10 +108,44 @@ public class Registro extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()){
 
-                                //AQUI FALTA METER USUARIO EN FIRESTORE EN COLLECCION USERS
+                                int avatar = 5;
+                                switch (avatarRadio.getCheckedRadioButtonId()){
+                                    case R.id.avatar1:
+                                        avatar = 1;
+                                        break;
+                                    case R.id.avatar2:
+                                        avatar = 2;
+                                        break;
+                                    case R.id.avatar3:
+                                        avatar = 3;
+                                        break;
+                                    case R.id.avatar4:
+                                        avatar = 4;
+                                        break;
+                                    default:
+                                        avatar = 5;
+                                }
 
-                                Toast.makeText(Registro.this, getString(R.string.usuario_creado_exito), Toast.LENGTH_LONG).show();
-                                finish();
+                                //AQUI FALTA METER USUARIO EN FIRESTORE EN COLLECCION USERS
+                                Usuario usu = new Usuario(correo.getText().toString(),
+                                                        contra.getText().toString(),
+                                                        nombre.getText().toString(),
+                                                        false,
+                                                        avatar
+                                                    );
+                                db.collection("usuarios").add(usu).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                    @Override
+                                    public void onSuccess(DocumentReference documentReference) {
+                                        Toast.makeText(Registro.this, getString(R.string.usuario_creado_exito), Toast.LENGTH_LONG).show();
+                                        finish();
+                                    }
+                                }).addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.w(TAG,"Error al registrar usuario en Firestore: ", task.getException());
+                                    }
+                                });
+
                             }else{
                                 String errorCode = ((FirebaseAuthException) task.getException()).getErrorCode();
                                 dameToastdeerror(errorCode);
@@ -218,76 +260,4 @@ public class Registro extends AppCompatActivity {
         }
         return false;
     }
-
-    /*
-    /** Esta funcion registra un nuevo usuario en la bd*
-    private void registarUsuarioBD(){
-
-
-        HashMap<String, String> map = new HashMap<>();// Mapeo previo
-
-        map.put("nombre", nombre.getText().toString());
-        map.put("correo", correo.getText().toString());
-        map.put("contrasenia", contra.getText().toString());
-        int avatar = 5;
-        switch (avatarRadio.getCheckedRadioButtonId()){
-            case R.id.avatar1:
-                avatar = 1;
-                break;
-            case R.id.avatar2:
-                avatar = 2;
-                break;
-            case R.id.avatar3:
-                avatar = 3;
-                break;
-            case R.id.avatar4:
-                avatar = 4;
-                break;
-            default:
-                avatar = 5;
-        }
-
-        //map.put("avatar", Integer.toString(avatar));
-        map.put("avatar", "1");
-
-        // Crear nuevo objeto Json basado en el mapa
-        JSONObject jobject = new JSONObject(map);
-
-        VolleySingleton.getInstance(this).addToRequestQueue(
-                new JsonObjectRequest(
-                        Request.Method.POST,
-                        Constantes.CREACION_USUARIO,
-                        jobject,
-                        new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                procesarRespuestaCreacionUsuario(response);
-                            }
-                        },
-                        new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                Log.d("ERROR","Error Volley: " + error.toString());
-                            }
-                        }
-                ) {
-                    @Override
-                    public Map<String, String> getHeaders() {
-                        Map<String, String> headers = new HashMap<String, String>();
-                        headers.put("Content-Type", "application/json; charset=utf-8");
-                        headers.put("Accept", "application/json");
-                        return headers;
-                    }
-
-                    @Override
-                    public String getBodyContentType() {
-                        return "application/json; charset=utf-8" + getParamsEncoding();
-                    }
-                }
-        );
-
-    }*/
-
-
-
 }

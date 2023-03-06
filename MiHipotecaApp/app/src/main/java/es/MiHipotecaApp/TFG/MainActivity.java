@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Type;
 
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.PaginaPrincipal;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.PasarPremium;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -78,7 +79,8 @@ public class MainActivity extends AppCompatActivity {
         btn_simular_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent i = new Intent(MainActivity.this, PasarPremium.class);
+                startActivity(i);
             }
         });
     }

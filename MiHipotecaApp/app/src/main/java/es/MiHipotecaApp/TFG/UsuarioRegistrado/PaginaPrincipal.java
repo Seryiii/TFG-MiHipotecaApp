@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.IniciarSesion;
@@ -19,6 +20,7 @@ public class PaginaPrincipal extends AppCompatActivity {
     private Button btn_config_usuario;
     private Button btn_cerrar_sesion;
     private CircleImageView foto_perfil;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
