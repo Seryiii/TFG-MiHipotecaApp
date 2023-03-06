@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UsuarioRegistrado.PasarPremium"
+    tools:context=".UsuarioRegistrado.InformacionUsuario.PasarPremium"
     android:background="@color/background_aplicacion">
     <LinearLayout
         android:layout_width="match_parent"

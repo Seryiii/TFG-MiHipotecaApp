@@ -1,47 +1,50 @@
-package es.MiHipotecaApp.TFG.UsuarioRegistrado;
-
-import static android.app.PendingIntent.getActivity;
+package es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 
-import es.MiHipotecaApp.TFG.IniciarSesion;
 import es.MiHipotecaApp.TFG.R;
-import es.MiHipotecaApp.TFG.RecuperarContra;
 
-public class InfoPerfilUsuario extends AppCompatActivity {
+public class InfoPerfilUsuario extends Fragment {
 
     private Button eliminar_cuenta;
     private Button modificar_datos;
     private Button informar_problema;
     private Button pasar_a_premium;
 
+
+    public InfoPerfilUsuario(){
+
+    }
+    @Nullable
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_info_perfil_usuario);
-        initUI();
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.fragment_info_perfil_usuario, container, false);
+        initUI(view);
+        return view;
     }
 
-    private void initUI() {
-        eliminar_cuenta = findViewById(R.id.eliminar_cuenta);
-        modificar_datos = findViewById(R.id.btn_modificar_datos);
-        informar_problema = findViewById(R.id.btn_notificar_problema);
-        pasar_a_premium = findViewById(R.id.btn_pasar_a_premium);
+    private void initUI(View view) {
+        eliminar_cuenta = view.findViewById(R.id.eliminar_cuenta);
+        modificar_datos = view.findViewById(R.id.btn_modificar_datos);
+        informar_problema = view.findViewById(R.id.btn_notificar_problema);
+        pasar_a_premium = view.findViewById(R.id.btn_pasar_a_premium);
 
         eliminar_cuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog dialogo = new AlertDialog.Builder(InfoPerfilUsuario.this)
+                AlertDialog dialogo = new AlertDialog.Builder(getActivity().getApplicationContext())
                         .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -62,7 +65,7 @@ public class InfoPerfilUsuario extends AppCompatActivity {
         modificar_datos.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(InfoPerfilUsuario.this, ModificarDatosUsuario.class);
+                Intent i = new Intent(getActivity().getApplicationContext(), ModificarDatosUsuario.class);
                 startActivity(i);
             }
         });
@@ -70,7 +73,7 @@ public class InfoPerfilUsuario extends AppCompatActivity {
         informar_problema.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(InfoPerfilUsuario.this, InformarDeUnProblema.class);
+                Intent i = new Intent(getActivity().getApplicationContext(), InformarDeUnProblema.class);
                 startActivity(i);
             }
         });
@@ -78,7 +81,7 @@ public class InfoPerfilUsuario extends AppCompatActivity {
         pasar_a_premium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(InfoPerfilUsuario.this, PasarPremium.class);
+                Intent i = new Intent(getActivity().getApplicationContext(), PasarPremium.class);
                 startActivity(i);
             }
         });

@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 
 
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.PaginaPrincipal;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 
 
 public class IniciarSesion extends AppCompatActivity {
@@ -105,7 +105,7 @@ public class IniciarSesion extends AppCompatActivity {
     }
 
     private void irAPaginaPrincipal(){
-        Intent i = new Intent(IniciarSesion.this, PaginaPrincipal.class);
+        Intent i = new Intent(IniciarSesion.this, TusHipotecas.class);
         startActivity(i);
     }
 

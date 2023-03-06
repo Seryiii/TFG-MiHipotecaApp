@@ -1,4 +1,4 @@
-package es.MiHipotecaApp.TFG.UsuarioRegistrado;
+package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import android.os.Bundle;
 import android.widget.ArrayAdapter;

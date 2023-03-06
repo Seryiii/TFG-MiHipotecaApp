@@ -2,10 +2,8 @@ package es.MiHipotecaApp.TFG;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -13,14 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
-
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.PaginaPrincipal;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.PasarPremium;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.PasarPremium;
 
 public class MainActivity extends AppCompatActivity {
 

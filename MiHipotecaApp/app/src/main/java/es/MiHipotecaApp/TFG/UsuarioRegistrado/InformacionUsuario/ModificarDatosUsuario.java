@@ -1,4 +1,4 @@
-package es.MiHipotecaApp.TFG.UsuarioRegistrado;
+package es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario;
 
 import android.os.Bundle;
 

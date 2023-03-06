@@ -1,4 +1,4 @@
-package es.MiHipotecaApp.TFG;
+package es.MiHipotecaApp.TFG.SimularHipoteca;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,6 +7,8 @@ import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import es.MiHipotecaApp.TFG.R;
 
 public class Filtros extends AppCompatActivity {
     private Spinner sp_bancos;
