@@ -36,6 +36,7 @@ public class TusHipotecas extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tus_hipotecas, container, false);
         recyclerHipotecas = view.findViewById(R.id.recycler_hipotecas_seguimiento);
+        recyclerHipotecas.addItemDecoration(new HorizontalSpaceItemDecoration(40));
         recyclerHipotecas.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL,false));
         listaHipotecasSeg = new ArrayList<>();
         HipotecaSeguimiento h1 = new HipotecaSeguimiento("Hipoteca 1");

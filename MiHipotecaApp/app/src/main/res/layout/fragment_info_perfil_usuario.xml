@@ -7,6 +7,12 @@
     tools:context=".UsuarioRegistrado.InformacionUsuario.InfoPerfilUsuario"
     android:background="@color/background_aplicacion">
 
+<!--   <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </ScrollView>-->
     <de.hdodenhof.circleimageview.CircleImageView
 
         android:id="@+id/circleImageView"
