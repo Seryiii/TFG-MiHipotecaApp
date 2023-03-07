@@ -97,7 +97,7 @@
     <string name="label_gastos">GASTOS</string>
     <string name="label_explicacion_gastos">Indica los gastos que tienes que pagar, en caso de no tener que pagar nada introduce 0.</string>
     <string name="label_notaria">Gastos notaría</string>
-    <string name="label_registro">Gastos registro</string>
+    <string name="label_gastos_registro">Gastos registro</string>
     <string name="label_gestoria">Gastos gestoría</string>
     <string name="label_tasacion">Gastos tasación</string>
 

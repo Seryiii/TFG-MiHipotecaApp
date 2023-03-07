@@ -197,19 +197,23 @@
                 android:id="@+id/checkBoxFijaNuevoSeg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_hipoteca_fija" />
+                android:text="@string/label_hipoteca_fija"
+                android:checked="true"/>
+
 
             <CheckBox
                 android:id="@+id/checkBoxVariableNuevoSeg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_hipoteca_variable" />
+                android:text="@string/label_hipoteca_variable"
+                android:checked="false"/>
 
             <CheckBox
                 android:id="@+id/checkBoxMixtaNuevoSeg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/label_hipoteca_mixta" />
+                android:text="@string/label_hipoteca_mixta"
+                android:checked="false"/>
 
         </LinearLayout>
 
@@ -222,7 +226,7 @@
             android:text="@string/label_porcentaje_fijo"
             android:layout_marginStart="28dp"
             android:layout_marginTop="20dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:textSize="16sp"/>
 
         <EditText
@@ -236,7 +240,7 @@
             android:layout_marginStart="28dp"
             android:hint="Porcentaje fijo"
             android:inputType="numberDecimal"
-            android:visibility="gone"
+            android:visibility="visible"
             android:text="" />
 
         <!-- FIN CAMPOS PARA HIPOTECA FIJA -->
@@ -466,7 +470,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_registro"
+            android:text="@string/label_gastos_registro"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
             android:textSize="16sp"/>
