@@ -41,9 +41,12 @@
     <string name="label_modificar_perfil">Modificar Perfil</string>
     <string name="label_nuevo_seguimiento">Nuevo seguimiento</string>
     <string name="label_combobox_comunidad">¿En que comunidad autónoma se encuentra?</string>
-    <string name="label_tipo_vivienda">¿Vivienda nueva o de segunda mano?</string>
+    <string name="label_tipo_vivienda">¿Vivienda de régimen general o de protección oficial?</string>
+    <string name="label_antiguedad_vivienda">¿Vivienda nueva o de segunda mano?</string>
     <string name="label_vivienda_nueva">Vivienda nueva</string>
     <string name="label_vivienda_segunda_mano">Vivienda de segunda mano</string>
+    <string name="label_vivienda_regimen_general">Vivienda régimen general</string>
+    <string name="label_vivienda_proteccion_oficial">Vivienda protección oficial</string>
     <string name="label_precio_vivienda">¿Precio de la vivienda?</string>
     <string name="label_cantidad_abonada">¿Cantidad abonada por el comprador?</string>
     <string name="label_plazo_prestamo_a_pagar">¿Plazo a pagar de préstamo?</string>
@@ -83,7 +86,20 @@
     <string name="label_plan_premium">Mi HipotecaApp Premium</string>
     <string name="label_info_premium">Sin anuncios, lleva el seguimiento de más de una hipoteca, mayor número y diversidad de datos, gráficos individuales, y mucho más...</string>
     <string name="label_cierre_sesion">Cerrar sesión</string>
-
+    <string name="label_porcentaje_fijo">Porcentaje fijo (TIN)</string>
+    <string name="label_duracion_primer_porcentaje">Duración del primer porcentaje aplicado (en meses)</string>
+    <string name="label_porcentaje_variable_diferencial">Diferencial</string>
+    <string name="label_cada_cuanto_revision">¿Cuando se realiza la revisión para actualizar con el euribor?</string>
+    <string name="label_primer_porcentaje_variable">Primer porcentaje aplicado</string>
+    <string name="label_seis_meses">6 meses</string>
+    <string name="label_un_anio">1 año</string>
+    <string name="label_cuantos_anios_fijo">¿Cuántos años son fijos en la hipoteca?</string>
+    <string name="label_gastos">GASTOS</string>
+    <string name="label_explicacion_gastos">Indica los gastos que tienes que pagar, en caso de no tener que pagar nada introduce 0.</string>
+    <string name="label_notaria">Gastos notaría</string>
+    <string name="label_registro">Gastos registro</string>
+    <string name="label_gestoria">Gastos gestoría</string>
+    <string name="label_tasacion">Gastos tasación</string>
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>

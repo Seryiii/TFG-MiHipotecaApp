@@ -122,9 +122,8 @@
             android:text="0"
             android:textSize="16dp"
             android:layout_gravity="center"/>
+
     <TextView
-
-
         android:id="@+id/textView25"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

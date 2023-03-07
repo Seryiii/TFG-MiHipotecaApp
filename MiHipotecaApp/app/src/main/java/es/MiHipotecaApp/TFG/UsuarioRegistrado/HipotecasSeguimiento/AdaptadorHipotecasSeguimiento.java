@@ -33,7 +33,7 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
     public void onBindViewHolder(@NonNull AdaptadorHipotecasSeguimiento.ViewHolderHipotecasSeguimiento holder, int position) {
         holder.tituloHipoteca.setText(hipotecasSeg.get(position).getNombre());
         if(position == hipotecasSeg.size() - 1) holder.fotoHipoteca.setImageResource(R.drawable.boton_anadir_hipoteca_seg);
-        else holder.fotoHipoteca.setImageResource(R.drawable.foto_hipoteca_seg);
+        else holder.fotoHipoteca.setImageResource(R.drawable.hipoteca_icono);
     }
 
     @Override
