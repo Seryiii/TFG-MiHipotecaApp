@@ -68,17 +68,7 @@ public class TusHipotecas extends Fragment {
     }
 
 
-    //FUNCIONALIDAD CERRAR SESION
-    /*btn_cerrar_sesion.setOnClickListener(new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            FirebaseAuth.getInstance().signOut();
-            Toast.makeText(TusHipotecas.this, getString(R.string.sesion_cerrada), Toast.LENGTH_SHORT).show();
-            Intent i = new Intent(TusHipotecas.this, IniciarSesion.class);
-            startActivity(i);
-            finish();
-        }
-    });*/
+
 
 
 }

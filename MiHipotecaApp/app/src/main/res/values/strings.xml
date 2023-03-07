@@ -12,7 +12,6 @@
     <string name="txt_btn_añadir_hipoteca">AÑADIR HIPOTECA</string>
     <string name="txt_btn_enviar_problema">ENVIAR</string>
     <string name="txt_aplicar_filtro">Aplicar filtros</string>
-    <string name="txt_btn_cerrar_sesion">CERRAR SESIÓN</string>
     <string name="txt_btn_recuperar_contrasenia">RECUPERAR CONTRASEÑA</string>
 
 
@@ -83,6 +82,7 @@
     <string name="label_ventajas_premium_3">Desbloquea la opción de ayudas gráficas para comprender la evolución de tu hipoteca</string>
     <string name="label_plan_premium">Mi HipotecaApp Premium</string>
     <string name="label_info_premium">Sin anuncios, lleva el seguimiento de más de una hipoteca, mayor número y diversidad de datos, gráficos individuales, y mucho más...</string>
+    <string name="label_cierre_sesion">Cerrar sesión</string>
 
 
     <!-- MENSAJES DE ERROR -->

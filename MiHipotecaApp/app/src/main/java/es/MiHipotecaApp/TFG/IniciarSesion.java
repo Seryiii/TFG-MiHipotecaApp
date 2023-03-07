@@ -105,7 +105,7 @@ public class IniciarSesion extends AppCompatActivity {
     }
 
     private void irAPaginaPrincipal(){
-        Intent i = new Intent(IniciarSesion.this, TusHipotecas.class);
+        Intent i = new Intent(IniciarSesion.this, PaginaPrincipal.class);
         startActivity(i);
     }
 
