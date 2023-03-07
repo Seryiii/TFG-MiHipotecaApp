@@ -34,6 +34,9 @@
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.ModificarDatosUsuario"
             android:exported="false" />
+        <activity
+            android:name=".UsuarioRegistrado.InformacionUsuario.InfoPerfilUsuario"
+            android:exported="false" />
 
         <activity
             android:name=".Registro"

@@ -100,6 +100,8 @@
     <string name="label_gastos_registro">Gastos registro</string>
     <string name="label_gestoria">Gastos gestoría</string>
     <string name="label_tasacion">Gastos tasación</string>
+    <string name="label_nombre_hipoteca">Nombre de la hipoteca</string>
+
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>

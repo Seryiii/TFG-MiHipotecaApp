@@ -30,16 +30,6 @@
         app:layout_constraintStart_toEndOf="@+id/btn_config_usuario"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <Button
-        android:id="@+id/btn_config_usuario"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="44dp"
-        android:background="@drawable/img_configuracion"
-        android:backgroundTint="@color/black"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_hipotecas_seguimiento"

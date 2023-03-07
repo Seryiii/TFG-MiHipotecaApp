@@ -31,6 +31,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private EditText gastos_registro;
     private EditText gastos_gestoria;
     private EditText gastos_tasacion;
+    private EditText nombre_hipoteca;
+
     //campos variables
     //Hipoteca Fija
     private TextView label_porcentaje_fijo;
@@ -84,6 +86,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
         gastos_registro=findViewById(R.id.edit_gastos_registro);
         gastos_gestoria=findViewById(R.id.edit_gastos_gestoria);
         gastos_tasacion=findViewById(R.id.edit_gastos_tasacion);
+        nombre_hipoteca=findViewById(R.id.edit_nombre_hipoteca);
+
         //campos variables
         //Hipoteca Fija
         label_porcentaje_fijo=findViewById(R.id.label_porcentaje_fijo);
