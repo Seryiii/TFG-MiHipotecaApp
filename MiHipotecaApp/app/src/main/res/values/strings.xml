@@ -49,7 +49,7 @@
     <string name="label_vivienda_proteccion_oficial">Vivienda protección oficial</string>
     <string name="label_precio_vivienda">¿Precio de la vivienda?</string>
     <string name="label_cantidad_abonada">¿Cantidad abonada por el comprador?</string>
-    <string name="label_plazo_prestamo_a_pagar">¿Plazo a pagar de préstamo?</string>
+    <string name="label_plazo_prestamo_a_pagar">¿Plazo a pagar de préstamo? (en años)</string>
     <string name="label_año_hipoteca_actual">¿Año de hipoteca actual?</string>
     <string name="label_informar_problema">Notificar problema</string>
     <string name="label_has_detectado">¿Has detectado algún fallo que quieras que solucionemos?</string>
@@ -116,6 +116,15 @@
     <string name="completar_campos">Completa todos los campos!</string>
     <string name="formato_correo_incorrecto">El correo formato del correo introducido no es correcto</string>
     <string name="error_enviar_mensaje_recuperar_contra">No se pudo enviar un correo electrónico para restablecer su contraseña</string>
+    <string name="comunidad_vacia">Debes seleccionar una comunidad</string>
+    <string name="precio_vacio">El campo precio vivienda no puede estar vacío</string>
+    <string name="cantidad_abonada_vacio">El campo cantidad abonada no puede estar vacío</string>
+    <string name="plazo_vacio">El campo plazo no puede estar vacío</string>
+    <string name="anio_actual_vacio">El campo año actual no puede estar vacío</string>
+    <string name="nombre_hipoteca_vacio">El campo nombre hipoteca no puede estar vacío</string>
+    <string name="porcentaje_vacio">Los porcentajes no pueden estar vacíos</string>
+    <string name="duracion_vacio">El campo duración no puede estar vacío</string>
+
 
     <!-- MENSAJES DE EXITO -->
     <string name="usuario_creado_exito">Usuario creado con éxito!</string>

@@ -1,17 +1,21 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 
 public class NuevoSeguimiento extends AppCompatActivity {
     //Campos fijos
@@ -31,6 +35,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private EditText gastos_registro;
     private EditText gastos_gestoria;
     private EditText gastos_tasacion;
+
+    private EditText gastos_vinculaciones;
+    private EditText gastos_comisiones;
     private EditText nombre_hipoteca;
 
     //campos variables
@@ -55,6 +62,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private TextView label_cuando_revision;
     private CheckBox check_seis_meses;
     private CheckBox check_un_anio;
+
+    private Button btn_anadir_hipoteca;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -111,13 +120,15 @@ public class NuevoSeguimiento extends AppCompatActivity {
         check_seis_meses=findViewById(R.id.checkBox_revision_seis_meses);
         check_un_anio=findViewById(R.id.checkBox_revision_un_anio);
 
+        btn_anadir_hipoteca = findViewById(R.id.btn_anadir_hipoteca);
+
     }
     private void Eventos() {
         check_vivienda_general.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) check_vivienda_poficial.setChecked(false);
-
+                if(!check_vivienda_poficial.isChecked()) check_vivienda_general.setChecked(true);
             }
         });
 
@@ -125,14 +136,14 @@ public class NuevoSeguimiento extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) check_vivienda_general.setChecked(false);
-
+                if(!check_vivienda_general.isChecked()) check_vivienda_poficial.setChecked(true);
             }
         });
         check_vivienda_nueva.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) check_vivienda_smano.setChecked(false);
-
+                if(!check_vivienda_smano.isChecked()) check_vivienda_nueva.setChecked(true);
             }
         });
 
@@ -140,7 +151,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) check_vivienda_nueva.setChecked(false);
-
+                if(!check_vivienda_nueva.isChecked()) check_vivienda_smano.setChecked(true);
             }
         });
         check_fija.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -151,7 +162,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
                     check_variable.setChecked(false);
                     ActivarCampos("fija");
                 }
-
+                if(!check_variable.isChecked() && !check_mixta.isChecked()) {
+                    check_fija.setChecked(true);
+                }
             }
         });
 
@@ -164,6 +177,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
                     check_fija.setChecked(false);
                     ActivarCampos("variable");
                 }
+                if(!check_fija.isChecked() && !check_mixta.isChecked()) {
+                    check_variable.setChecked(true);
+                }
             }
         });
         check_mixta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -174,11 +190,35 @@ public class NuevoSeguimiento extends AppCompatActivity {
                     check_fija.setChecked(false);
                     ActivarCampos("mixto");
                 }
+                if(!check_fija.isChecked() && !check_variable.isChecked()) {
+                    check_mixta.setChecked(true);
+                }
             }
 
         });
 
+        check_seis_meses.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) check_un_anio.setChecked(false);
+                if(!check_un_anio.isChecked()) check_seis_meses.setChecked(true);
+            }
+        });
 
+        check_un_anio.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) check_seis_meses.setChecked(false);
+                if(!check_seis_meses.isChecked()) check_un_anio.setChecked(true);
+            }
+        });
+
+        btn_anadir_hipoteca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(comprobarCampos()) registrarNuevaHipoteca();
+            }
+        });
 
 
     }
@@ -259,4 +299,107 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
         }
     }
+
+    private boolean comprobarCampos(){
+
+        //PRIMERO COMPROBAR CAMPOS COMUNES
+        if(TextUtils.isEmpty(precio_vivienda.getText())){
+            precio_vivienda.setError(getString(R.string.precio_vacio));
+            return false;
+        }
+        if(TextUtils.isEmpty(cantidad_abonada.getText())){
+            cantidad_abonada.setError(getString(R.string.cantidad_abonada_vacio));
+            return false;
+        }
+        if(TextUtils.isEmpty(plazo.getText())){
+            plazo.setError(getString(R.string.plazo_vacio));
+            return false;
+        }
+        if(TextUtils.isEmpty(anio_actual.getText())){
+            anio_actual.setError(getString(R.string.anio_actual_vacio));
+            return false;
+        }
+        if(TextUtils.isEmpty(nombre_hipoteca.getText())){
+            nombre_hipoteca.setError(getString(R.string.nombre_hipoteca_vacio));
+            return false;
+        }
+
+        //CAMPOS FIJO
+        if(check_fija.isChecked()){
+            if(TextUtils.isEmpty(edit_porcentaje_fijo.getText())){
+                edit_porcentaje_fijo.setError(getString(R.string.porcentaje_vacio));
+                return false;
+            }
+        }else if(check_variable.isChecked()){
+            if(TextUtils.isEmpty(edit_duracion_primer_porcentaje.getText())){
+                edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_vacio));
+                return false;
+            }
+            if(TextUtils.isEmpty(edit_diferencial_variable.getText())){
+                edit_diferencial_variable.setError(getString(R.string.porcentaje_vacio));
+                return false;
+            }
+        }else{
+            if(TextUtils.isEmpty(edit_anios_fija.getText())){
+                edit_anios_fija.setError(getString(R.string.duracion_vacio));
+                return false;
+            }
+            if(TextUtils.isEmpty(edit_porcentaje_fijo_mix.getText())){
+                edit_porcentaje_fijo_mix.setError(getString(R.string.porcentaje_vacio));
+                return false;
+            }
+            if(TextUtils.isEmpty(edit_diferencial_mixto.getText())){
+                edit_diferencial_mixto.setError(getString(R.string.porcentaje_vacio));
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void registrarNuevaHipoteca(){
+
+        String nombre = nombre_hipoteca.getText().toString();
+        String comunidad = sp_comunidad.getSelectedItem().toString();
+        String tipo_vivienda = "general";
+        if(check_vivienda_poficial.isChecked()) tipo_vivienda = "proteccion_oficial";
+        String antiguedad_vivienda = "nueva";
+        if(check_vivienda_smano.isChecked()) antiguedad_vivienda = "segunda_mano";
+        float precio_viv = Float.parseFloat(precio_vivienda.getText().toString());
+        float cant_abonada = Float.parseFloat(cantidad_abonada.getText().toString());
+        int plazo_hip = Integer.parseInt(plazo.getText().toString());
+        int anio_act = Integer.parseInt(anio_actual.getText().toString());
+
+        float gastos_gest, gastos_not, gastos_reg, gastos_tas, gastos_vin, gastos_com;
+        if(TextUtils.isEmpty(gastos_gestoria.getText())) gastos_gest = 0;
+        else gastos_gest = Float.parseFloat(gastos_gestoria.getText().toString());
+        if(TextUtils.isEmpty(gastos_notaria.getText())) gastos_not = 0;
+        else gastos_not = Float.parseFloat(gastos_notaria.getText().toString());
+        if(TextUtils.isEmpty(gastos_registro.getText())) gastos_reg = 0;
+        else gastos_reg = Float.parseFloat(gastos_registro.getText().toString());
+        if(TextUtils.isEmpty(gastos_tasacion.getText())) gastos_tas = 0;
+        else gastos_tas = Float.parseFloat(gastos_tasacion.getText().toString());
+        if(TextUtils.isEmpty(gastos_vinculaciones.getText())) gastos_vin = 0;
+        else gastos_vin = Float.parseFloat(gastos_vinculaciones.getText().toString());
+        if(TextUtils.isEmpty(gastos_comisiones.getText())) gastos_com = 0;
+        else gastos_com = Float.parseFloat(gastos_comisiones.getText().toString());
+        float totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_vin + gastos_com;
+
+        HipotecaSeguimiento nuevaHip = new HipotecaSeguimiento(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo, anio_act, totalGastos);
+
+        //Hipoteca Fija
+        String tipo_hipoteca = "fija";
+        if(check_fija.isChecked()){
+            float porcentaje_fijo = Float.parseFloat(edit_porcentaje_fijo.getText().toString());
+        }else if (check_variable.isChecked()){
+            tipo_hipoteca = "variable";
+            int duracion_primer_porcentaje = Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString());
+            float diferencial_variable = Float.parseFloat(edit_diferencial_variable.getText().toString());
+            boolean revision_anual = true;
+            if(check_seis_meses.isChecked()) revision_anual = false;
+        }else{
+
+        }
+
+    }
+
 }

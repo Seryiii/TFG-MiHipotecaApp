@@ -56,52 +56,56 @@ public class TusHipotecas extends Fragment {
         adapter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                PopupMenu popupMenu = new PopupMenu(getActivity(), v);
-                popupMenu.getMenuInflater().inflate(R.menu.menu_opciones, popupMenu.getMenu());
-                popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        switch (item.getItemId()) {
-                            case R.id.ver_hipoteca:
-                                //Redirigir a la vista de la hipoteca de seguimiento
+                if (recyclerHipotecas.getChildAdapterPosition(v) != listaHipotecasSeg.size() - 1) {
+                    PopupMenu popupMenu = new PopupMenu(getActivity(), v);
+                    popupMenu.getMenuInflater().inflate(R.menu.menu_opciones, popupMenu.getMenu());
+                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                        @Override
+                        public boolean onMenuItemClick(MenuItem item) {
+                            switch (item.getItemId()) {
+                                case R.id.ver_hipoteca:
+                                    //Redirigir a la vista de la hipoteca de seguimiento
 
-                                return true;
-                            case R.id.editar_hipoteca:
-                                //Redirigir a la vista de editar hipoteca seguimiento
+                                    return true;
+                                case R.id.editar_hipoteca:
+                                    //Redirigir a la vista de editar hipoteca seguimiento
 
-                                Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
-                                startActivity(i);
-                                return true;
-                            case R.id.eliminar_hipoetca:
-                                AlertDialog dialogo = new AlertDialog.Builder(getActivity())
-                                        .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
-                                                //Eliminar hipoteca de la base de datos
-                                            }
-                                        })
-                                        .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
-                                            @Override
-                                            public void onClick(DialogInterface dialog, int which) {
+                                    Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
+                                    startActivity(i);
+                                    return true;
+                                case R.id.eliminar_hipoetca:
+                                    AlertDialog dialogo = new AlertDialog.Builder(getActivity())
+                                            .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    //Eliminar hipoteca de la base de datos
+                                                }
+                                            })
+                                            .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
 
-                                            }
-                                        })
-                                        .setTitle("ELIMINAR HIPOTECA").setMessage("¿Desea eliminar la hipoteca?").create();
-                                dialogo.show();
+                                                }
+                                            })
+                                            .setTitle("ELIMINAR HIPOTECA").setMessage("¿Desea eliminar la hipoteca?").create();
+                                    dialogo.show();
 
-                                return true;
-                            default:
-                                return false;
+                                    return true;
+                                default:
+                                    return false;
+                            }
                         }
-                    }
-                });
-                popupMenu.show();
+                    });
+                    popupMenu.show();
+                }else{
+                    Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
+                    startActivity(i);
+                }
             }
         });
         // Coger las hipotecas de seguimiento del usuario de firebase
         foto_perfil = view.findViewById(R.id.foto_perfil_pag_principal);
         return view;
     }
-
 
 }
