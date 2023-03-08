@@ -4,44 +4,31 @@ import java.io.Serializable;
 
 public class HipotecaSeguimiento implements Serializable {
 
-    private String nombre;
-    private String comunidad_autonoma;
-    private String tipo_vivienda;
-    private String antiguedad_vivienda;
-    private float precio_vivienda;
-    private float cantidad_abonada;
-    private int plazo_anios;
-    private int anio_hipoteca_actual;
-    private String tipo_hipoteca;
+    protected String nombre;
+    protected String comunidad_autonoma;
+    protected String tipo_vivienda;
+    protected String antiguedad_vivienda;
+    protected float precio_vivienda;
+    protected float cantidad_abonada;
+    protected int plazo_anios;
+    protected int anio_hipoteca_actual;
+    protected String tipo_hipoteca;
 
-    //Hipoteca fija
-    private float porcentaje_fijo;
-    //Hipoteca variable
-    private int duracion_primer_porcentaje_variable;
-    private float primer_porcentaje_variable;
-    private float porcentaje_diferencial_variable;
-
-    //Hipoteca mixta
-    private int anios_fija_mixta;
-    private float porcentaje_fijo_mixta;
-    private float getPorcentaje_diferencial_mixta;
-    //Hipoteca variable y mixta
-    // Si es false, la revision es cada 6 meses
-    private boolean revision_anual;
+    protected String banco_asociado;
 
     //Gastos
-    private float totalGastos;
+    protected float totalGastos;
 
-    private float totalVinculacionesAnual;
+    protected float totalVinculacionesAnual;
 
-    private String idUsuario;
+    protected String idUsuario;
 
 
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
     }
 
-    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, float precio_vivienda, float cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, float totalGastos, float totalVinculacionesAnual) {
+    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, float precio_vivienda, float cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, float totalGastos, float totalVinculacionesAnual, String banco_asociado) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
         this.tipo_vivienda = tipo_vivienda;
@@ -52,6 +39,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.anio_hipoteca_actual = anio_hipoteca_actual;
         this.totalGastos = totalGastos;
         this.totalVinculacionesAnual = totalVinculacionesAnual;
+        this.banco_asociado = banco_asociado;
     }
 
     //GETTERS
@@ -91,38 +79,6 @@ public class HipotecaSeguimiento implements Serializable {
         return tipo_hipoteca;
     }
 
-    public float getPorcentaje_fijo() {
-        return porcentaje_fijo;
-    }
-
-    public int getDuracion_primer_porcentaje_variable() {
-        return duracion_primer_porcentaje_variable;
-    }
-
-    public float getPrimer_porcentaje_variable() {
-        return primer_porcentaje_variable;
-    }
-
-    public float getPorcentaje_diferencial_variable() {
-        return porcentaje_diferencial_variable;
-    }
-
-    public int getAnios_fija_mixta() {
-        return anios_fija_mixta;
-    }
-
-    public float getPorcentaje_fijo_mixta() {
-        return porcentaje_fijo_mixta;
-    }
-
-    public float getGetPorcentaje_diferencial_mixta() {
-        return getPorcentaje_diferencial_mixta;
-    }
-
-    public boolean isRevision_anual() {
-        return revision_anual;
-    }
-
     public float getTotalGastos() {
         return totalGastos;
     }
@@ -133,6 +89,10 @@ public class HipotecaSeguimiento implements Serializable {
 
     public String getIdUsuario() {
         return idUsuario;
+    }
+
+    public String getBanco_asociado() {
+        return banco_asociado;
     }
 
     //SETTERS
@@ -172,38 +132,6 @@ public class HipotecaSeguimiento implements Serializable {
         this.tipo_hipoteca = tipo_hipoteca;
     }
 
-    public void setPorcentaje_fijo(float porcentaje_fijo) {
-        this.porcentaje_fijo = porcentaje_fijo;
-    }
-
-    public void setDuracion_primer_porcentaje_variable(int duracion_primer_porcentaje_variable) {
-        this.duracion_primer_porcentaje_variable = duracion_primer_porcentaje_variable;
-    }
-
-    public void setPrimer_porcentaje_variable(float primer_porcentaje_variable) {
-        this.primer_porcentaje_variable = primer_porcentaje_variable;
-    }
-
-    public void setPorcentaje_diferencial_variable(float porcentaje_diferencial_variable) {
-        this.porcentaje_diferencial_variable = porcentaje_diferencial_variable;
-    }
-
-    public void setAnios_fija_mixta(int anios_fija_mixta) {
-        this.anios_fija_mixta = anios_fija_mixta;
-    }
-
-    public void setPorcentaje_fijo_mixta(float porcentaje_fijo_mixta) {
-        this.porcentaje_fijo_mixta = porcentaje_fijo_mixta;
-    }
-
-    public void setGetPorcentaje_diferencial_mixta(float getPorcentaje_diferencial_mixta) {
-        this.getPorcentaje_diferencial_mixta = getPorcentaje_diferencial_mixta;
-    }
-
-    public void setRevision_anual(boolean revision_anual) {
-        this.revision_anual = revision_anual;
-    }
-
     public void setTotalGastos(float totalGastos) {
         this.totalGastos = totalGastos;
     }
@@ -214,5 +142,9 @@ public class HipotecaSeguimiento implements Serializable {
 
     public void setIdUsuario(String idUsuario) {
         this.idUsuario = idUsuario;
+    }
+
+    public void setBanco_asociado(String banco_asociado) {
+        this.banco_asociado = banco_asociado;
     }
 }

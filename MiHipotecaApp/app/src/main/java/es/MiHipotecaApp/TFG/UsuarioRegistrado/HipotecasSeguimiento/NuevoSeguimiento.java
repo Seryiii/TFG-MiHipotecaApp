@@ -25,6 +25,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Registro;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 
 public class NuevoSeguimiento extends AppCompatActivity {
@@ -74,8 +77,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private TextView label_cuando_revision;
     private CheckBox check_seis_meses;
     private CheckBox check_un_anio;
-
     private Button btn_anadir_hipoteca;
+    private Spinner sp_bancos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +110,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
         gastos_registro=findViewById(R.id.edit_gastos_registro);
         gastos_gestoria=findViewById(R.id.edit_gastos_gestoria);
         gastos_tasacion=findViewById(R.id.edit_gastos_tasacion);
+        gastos_vinculaciones=findViewById(R.id.edit_gastos_vinculaciones);
+        gastos_comisiones=findViewById(R.id.edit_comisiones);
         nombre_hipoteca=findViewById(R.id.edit_nombre_hipoteca);
 
         //campos variables
@@ -133,6 +138,11 @@ public class NuevoSeguimiento extends AppCompatActivity {
         check_un_anio=findViewById(R.id.checkBox_revision_un_anio);
 
         btn_anadir_hipoteca = findViewById(R.id.btn_anadir_hipoteca);
+
+        sp_bancos = findViewById(R.id.sp_banco_nuevo_seg);
+        String [] bancos = {"ING","SANTANDER","BBVA","CAIXABANK","BANKINTER","EVO BANCO","SABADELL","UNICAJA","DEUTSCHE BANK","OPEN BANK","KUTXA BANK","IBERCAJA","ABANCA"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item,bancos);
+        sp_bancos.setAdapter(adapter);
 
     }
     private void Eventos() {
@@ -370,6 +380,10 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     private void registrarNuevaHipoteca(){
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+
         String nombre = nombre_hipoteca.getText().toString();
         String comunidad = sp_comunidad.getSelectedItem().toString();
         String tipo_vivienda = "general";
@@ -395,26 +409,29 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(TextUtils.isEmpty(gastos_comisiones.getText())) gastos_com = 0;
         else gastos_com = Float.parseFloat(gastos_comisiones.getText().toString());
         float totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_com;
-        HipotecaSeguimiento nuevaHip = new HipotecaSeguimiento(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin);
-
+        String banco_asociado = sp_bancos.getSelectedItem().toString();
+        HipotecaSeguimiento nuevaHip;
         //Hipoteca Fija
         String tipo_hipoteca = "fija";
         if(check_fija.isChecked()){
             float porcentaje_fijo = Float.parseFloat(edit_porcentaje_fijo.getText().toString());
 
+            nuevaHip = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin, banco_asociado, porcentaje_fijo);
+
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
-            nuevaHip.setPorcentaje_fijo(porcentaje_fijo);
+            nuevaHip.setIdUsuario(user.getUid());
         }else if (check_variable.isChecked()){
             tipo_hipoteca = "variable";
             int duracion_primer_porcentaje = Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString());
+            float primer_porc_variable = Float.parseFloat(edit_primer_porcentaje.getText().toString());
             float diferencial_variable = Float.parseFloat(edit_diferencial_variable.getText().toString());
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
 
+            nuevaHip = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin, banco_asociado, duracion_primer_porcentaje, primer_porc_variable, diferencial_variable, revision_anual);
+
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
-            nuevaHip.setDuracion_primer_porcentaje_variable(duracion_primer_porcentaje);
-            nuevaHip.setPorcentaje_diferencial_variable(diferencial_variable);
-            nuevaHip.setRevision_anual(revision_anual);
+            nuevaHip.setIdUsuario(user.getUid());
         }else{
             tipo_hipoteca = "mixta";
             boolean revision_anual = true;
@@ -423,17 +440,13 @@ public class NuevoSeguimiento extends AppCompatActivity {
             float porc_fijo_mixta = Float.parseFloat(edit_porcentaje_fijo_mix.getText().toString());
             float porc_diferencial_mixta = Float.parseFloat(edit_diferencial_mixto.getText().toString());
 
+            nuevaHip = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin, banco_asociado, anios_fijo, porc_fijo_mixta, porc_diferencial_mixta, revision_anual);
+
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
-            nuevaHip.setRevision_anual(revision_anual);
-            nuevaHip.setAnios_fija_mixta(anios_fijo);
-            nuevaHip.setPorcentaje_fijo_mixta(porc_fijo_mixta);
-            nuevaHip.setGetPorcentaje_diferencial_mixta(porc_diferencial_mixta);
+            nuevaHip.setIdUsuario(user.getUid());
         }
 
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
-        nuevaHip.setIdUsuario(user.getUid());
+
 
         db.collection("hipotecas_seguimiento").add(nuevaHip).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
