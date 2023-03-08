@@ -249,79 +249,120 @@ public class NuevoSeguimiento extends AppCompatActivity {
         switch (hipoteca){
             case "fija" :
                 //Fija
-                edit_porcentaje_fijo.setVisibility(View.VISIBLE);
-                label_porcentaje_fijo.setVisibility(View.VISIBLE);
+                /*edit_porcentaje_fijo.setVisibility(View.VISIBLE);
+                label_porcentaje_fijo.setVisibility(View.VISIBLE);*/
+                ModificarCamposFija(View.VISIBLE);
                 //Variable
-                label_duracion_primer_porcentaje.setVisibility(View.GONE);
+                /*label_duracion_primer_porcentaje.setVisibility(View.GONE);
                 edit_duracion_primer_porcentaje.setVisibility(View.GONE);
                 label_primer_porcentaje.setVisibility(View.GONE);
                 edit_primer_porcentaje.setVisibility(View.GONE);
                 label_diferencial_variable.setVisibility(View.GONE);
-                edit_diferencial_variable.setVisibility(View.GONE);
+                edit_diferencial_variable.setVisibility(View.GONE);*/
+                ModificarCamposVariable(View.GONE);
+
                 //Mixto
-                label_anios_fija.setVisibility(View.GONE);
+                /*label_anios_fija.setVisibility(View.GONE);
                 edit_anios_fija.setVisibility(View.GONE);
                 label_porcentaje_fijo_mix.setVisibility(View.GONE);
                 edit_porcentaje_fijo_mix.setVisibility(View.GONE);
                 label_diferencial_mixto.setVisibility(View.GONE);
-                edit_diferencial_mixto.setVisibility(View.GONE);
+                edit_diferencial_mixto.setVisibility(View.GONE);*/
+                ModificarCamposMixta(View.GONE);
                 //Mixto y variable
-                label_cuando_revision.setVisibility(View.GONE);
+                /*label_cuando_revision.setVisibility(View.GONE);
                 check_seis_meses.setVisibility(View.GONE);
-                check_un_anio.setVisibility(View.GONE);
+                check_un_anio.setVisibility(View.GONE);*/
+                ModificarCamposMixtaVariable(View.GONE);
 
 
             break;
             case "variable" :
                 //Fija
-                edit_porcentaje_fijo.setVisibility(View.GONE);
-                label_porcentaje_fijo.setVisibility(View.GONE);
+                /*edit_porcentaje_fijo.setVisibility(View.GONE);
+                label_porcentaje_fijo.setVisibility(View.GONE);*/
+                ModificarCamposFija(View.GONE);
                 //Variable
-                label_duracion_primer_porcentaje.setVisibility(View.VISIBLE);
+                /*label_duracion_primer_porcentaje.setVisibility(View.VISIBLE);
                 edit_duracion_primer_porcentaje.setVisibility(View.VISIBLE);
                 label_primer_porcentaje.setVisibility(View.VISIBLE);
                 edit_primer_porcentaje.setVisibility(View.VISIBLE);
                 label_diferencial_variable.setVisibility(View.VISIBLE);
-                edit_diferencial_variable.setVisibility(View.VISIBLE);
+                edit_diferencial_variable.setVisibility(View.VISIBLE);*/
+                ModificarCamposVariable(View.VISIBLE);
                 //Mixto
-                edit_anios_fija.setVisibility(View.GONE);
+                /*edit_anios_fija.setVisibility(View.GONE);
                 label_anios_fija.setVisibility(View.GONE);
                 label_porcentaje_fijo_mix.setVisibility(View.GONE);
                 edit_porcentaje_fijo_mix.setVisibility(View.GONE);
                 label_diferencial_mixto.setVisibility(View.GONE);
-                edit_diferencial_mixto.setVisibility(View.GONE);
+                edit_diferencial_mixto.setVisibility(View.GONE);*/
+                ModificarCamposMixta(View.GONE);
                 //Mixto y variable
-                label_cuando_revision.setVisibility(View.VISIBLE);
+               /* label_cuando_revision.setVisibility(View.VISIBLE);
                 check_seis_meses.setVisibility(View.VISIBLE);
-                check_un_anio.setVisibility(View.VISIBLE);
+                check_un_anio.setVisibility(View.VISIBLE);*/
+                ModificarCamposMixtaVariable(View.VISIBLE);
             break;
             default:
                 //Fija
-                edit_porcentaje_fijo.setVisibility(View.GONE);
-                label_porcentaje_fijo.setVisibility(View.GONE);
+               /* edit_porcentaje_fijo.setVisibility(View.GONE);
+                label_porcentaje_fijo.setVisibility(View.GONE);*/
+                ModificarCamposFija(View.GONE);
                 //Variable
-                label_duracion_primer_porcentaje.setVisibility(View.GONE);
+               /* label_duracion_primer_porcentaje.setVisibility(View.GONE);
                 edit_duracion_primer_porcentaje.setVisibility(View.GONE);
                 label_primer_porcentaje.setVisibility(View.GONE);
                 edit_primer_porcentaje.setVisibility(View.GONE);
                 label_diferencial_variable.setVisibility(View.GONE);
-                edit_diferencial_variable.setVisibility(View.GONE);
+                edit_diferencial_variable.setVisibility(View.GONE);*/
+                ModificarCamposVariable(View.GONE);
                 //Mixto
-                edit_anios_fija.setVisibility(View.VISIBLE);
+               /* edit_anios_fija.setVisibility(View.VISIBLE);
                 label_anios_fija.setVisibility(View.VISIBLE);
                 label_porcentaje_fijo_mix.setVisibility(View.VISIBLE);
                 edit_porcentaje_fijo_mix.setVisibility(View.VISIBLE);
                 label_diferencial_mixto.setVisibility(View.VISIBLE);
-                edit_diferencial_mixto.setVisibility(View.VISIBLE);
+                edit_diferencial_mixto.setVisibility(View.VISIBLE);*/
+                ModificarCamposMixta(View.VISIBLE);
                 //Mixto y variable
-                label_cuando_revision.setVisibility(View.VISIBLE);
+               /* label_cuando_revision.setVisibility(View.VISIBLE);
                 check_seis_meses.setVisibility(View.VISIBLE);
-                check_un_anio.setVisibility(View.VISIBLE);
+                check_un_anio.setVisibility(View.VISIBLE);*/
+                ModificarCamposMixtaVariable(View.VISIBLE);
             break;
 
         }
     }
+    private void ModificarCamposFija(int view) {
+        edit_porcentaje_fijo.setVisibility(view);
+        label_porcentaje_fijo.setVisibility(view);
 
+    }
+    private void ModificarCamposVariable(int view) {
+        label_duracion_primer_porcentaje.setVisibility(view);
+        edit_duracion_primer_porcentaje.setVisibility(view);
+        label_primer_porcentaje.setVisibility(view);
+        edit_primer_porcentaje.setVisibility(view);
+        label_diferencial_variable.setVisibility(view);
+        edit_diferencial_variable.setVisibility(view);
+
+    }
+    private void ModificarCamposMixta(int view) {
+        edit_anios_fija.setVisibility(view);
+        label_anios_fija.setVisibility(view);
+        label_porcentaje_fijo_mix.setVisibility(view);
+        edit_porcentaje_fijo_mix.setVisibility(view);
+        label_diferencial_mixto.setVisibility(view);
+        edit_diferencial_mixto.setVisibility(view);
+
+    }
+    private void ModificarCamposMixtaVariable(int view) {
+        label_cuando_revision.setVisibility(view);
+        check_seis_meses.setVisibility(view);
+        check_un_anio.setVisibility(view);
+
+    }
     private boolean comprobarCampos(){
 
         //PRIMERO COMPROBAR CAMPOS COMUNES
