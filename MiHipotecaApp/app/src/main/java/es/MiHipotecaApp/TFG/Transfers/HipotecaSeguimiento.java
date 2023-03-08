@@ -34,12 +34,14 @@ public class HipotecaSeguimiento implements Serializable {
 
     private float totalVinculacionesAnual;
 
+    private String idUsuario;
+
 
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
     }
 
-    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, float precio_vivienda, float cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, float totalGastos) {
+    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, float precio_vivienda, float cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, float totalGastos, float totalVinculacionesAnual) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
         this.tipo_vivienda = tipo_vivienda;
@@ -49,6 +51,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.plazo_anios = plazo_anios;
         this.anio_hipoteca_actual = anio_hipoteca_actual;
         this.totalGastos = totalGastos;
+        this.totalVinculacionesAnual = totalVinculacionesAnual;
     }
 
     //GETTERS
@@ -128,6 +131,10 @@ public class HipotecaSeguimiento implements Serializable {
         return totalVinculacionesAnual;
     }
 
+    public String getIdUsuario() {
+        return idUsuario;
+    }
+
     //SETTERS
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -203,5 +210,9 @@ public class HipotecaSeguimiento implements Serializable {
 
     public void setTotalVinculacionesAnual(float totalVinculacionesAnual) {
         this.totalVinculacionesAnual = totalVinculacionesAnual;
+    }
+
+    public void setIdUsuario(String idUsuario) {
+        this.idUsuario = idUsuario;
     }
 }

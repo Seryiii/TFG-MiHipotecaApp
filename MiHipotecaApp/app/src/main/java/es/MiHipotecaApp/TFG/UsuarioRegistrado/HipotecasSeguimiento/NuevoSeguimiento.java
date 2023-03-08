@@ -2,6 +2,7 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,12 +13,23 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.Registro;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 
 public class NuevoSeguimiento extends AppCompatActivity {
+    private final String TAG = "SEGUIMIENTO ACTIVITY";
+
     //Campos fijos
     private Spinner sp_comunidad;
     private CheckBox check_vivienda_general;
@@ -382,24 +394,59 @@ public class NuevoSeguimiento extends AppCompatActivity {
         else gastos_vin = Float.parseFloat(gastos_vinculaciones.getText().toString());
         if(TextUtils.isEmpty(gastos_comisiones.getText())) gastos_com = 0;
         else gastos_com = Float.parseFloat(gastos_comisiones.getText().toString());
-        float totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_vin + gastos_com;
-
-        HipotecaSeguimiento nuevaHip = new HipotecaSeguimiento(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo, anio_act, totalGastos);
+        float totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_com;
+        HipotecaSeguimiento nuevaHip = new HipotecaSeguimiento(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin);
 
         //Hipoteca Fija
         String tipo_hipoteca = "fija";
         if(check_fija.isChecked()){
             float porcentaje_fijo = Float.parseFloat(edit_porcentaje_fijo.getText().toString());
+
+            nuevaHip.setTipo_hipoteca(tipo_hipoteca);
+            nuevaHip.setPorcentaje_fijo(porcentaje_fijo);
         }else if (check_variable.isChecked()){
             tipo_hipoteca = "variable";
             int duracion_primer_porcentaje = Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString());
             float diferencial_variable = Float.parseFloat(edit_diferencial_variable.getText().toString());
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
-        }else{
 
+            nuevaHip.setTipo_hipoteca(tipo_hipoteca);
+            nuevaHip.setDuracion_primer_porcentaje_variable(duracion_primer_porcentaje);
+            nuevaHip.setPorcentaje_diferencial_variable(diferencial_variable);
+            nuevaHip.setRevision_anual(revision_anual);
+        }else{
+            tipo_hipoteca = "mixta";
+            boolean revision_anual = true;
+            if(check_seis_meses.isChecked()) revision_anual = false;
+            int anios_fijo = Integer.parseInt(edit_anios_fija.getText().toString());
+            float porc_fijo_mixta = Float.parseFloat(edit_porcentaje_fijo_mix.getText().toString());
+            float porc_diferencial_mixta = Float.parseFloat(edit_diferencial_mixto.getText().toString());
+
+            nuevaHip.setTipo_hipoteca(tipo_hipoteca);
+            nuevaHip.setRevision_anual(revision_anual);
+            nuevaHip.setAnios_fija_mixta(anios_fijo);
+            nuevaHip.setPorcentaje_fijo_mixta(porc_fijo_mixta);
+            nuevaHip.setGetPorcentaje_diferencial_mixta(porc_diferencial_mixta);
         }
 
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        FirebaseUser user = auth.getCurrentUser();
+        nuevaHip.setIdUsuario(user.getUid());
+
+        db.collection("hipotecas_seguimiento").add(nuevaHip).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                Toast.makeText(NuevoSeguimiento.this, getString(R.string.hipoteca_seguimiento_exito), Toast.LENGTH_LONG).show();
+                finish();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG,"Error al registrar hipoteca de seguimiento en Firestore: ");
+            }
+        });
     }
 
 }

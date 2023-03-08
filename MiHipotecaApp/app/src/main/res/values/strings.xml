@@ -100,6 +100,8 @@
     <string name="label_gastos_registro">Gastos registro</string>
     <string name="label_gestoria">Gastos gestoría</string>
     <string name="label_tasacion">Gastos tasación</string>
+    <string name="label_comisiones">Comisiones</string>
+    <string name="label_gastos_vinculaciones">Vinculaciones anuales</string>
     <string name="label_nombre_hipoteca">Nombre de la hipoteca</string>
 
 
@@ -130,6 +132,7 @@
     <string name="usuario_creado_exito">Usuario creado con éxito!</string>
     <string name="sesion_cerrada">Sesión cerrada</string>
     <string name="mensaje_enviado_recuperar_contra">Se ha enviado un correo electrónico para restablecer su contraseña</string>
+    <string name="hipoteca_seguimiento_exito">Hipoteca creada con éxito!</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>
