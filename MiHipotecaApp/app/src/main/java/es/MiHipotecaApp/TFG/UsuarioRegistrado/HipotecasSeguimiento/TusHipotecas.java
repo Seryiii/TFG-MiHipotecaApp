@@ -42,6 +42,8 @@ public class TusHipotecas extends Fragment {
     private RecyclerView recyclerHipotecas;
     private ArrayList<HipotecaSeguimiento> listaHipotecasSeg;
 
+    private AdaptadorHipotecasSeguimiento adapter;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class TusHipotecas extends Fragment {
         recyclerHipotecas.addItemDecoration(new HorizontalSpaceItemDecoration(40));
         recyclerHipotecas.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL,false));
         listaHipotecasSeg = new ArrayList<>();
+        adapter=new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
         cargarHipotecasUsuario();
             //HipotecaSeguimiento h1 = new HipotecaSeguimiento("Hipoteca 1");
             //HipotecaSeguimiento h2 = new HipotecaSeguimiento("Hipoteca 2");
@@ -118,7 +121,7 @@ public class TusHipotecas extends Fragment {
                 }
 
                 listaHipotecasSeg.add(new HipotecaSeguimiento("Nueva hipoteca"));
-                AdaptadorHipotecasSeguimiento adapter = new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
+                adapter= new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
                 recyclerHipotecas.setAdapter(adapter);
                 adapter.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -179,5 +182,11 @@ public class TusHipotecas extends Fragment {
             }
         });
     }
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        listaHipotecasSeg.clear();
+        cargarHipotecasUsuario();
+        //adapter.notifyDataSetChanged(); // se recarga la lista de datos
+    }
 }

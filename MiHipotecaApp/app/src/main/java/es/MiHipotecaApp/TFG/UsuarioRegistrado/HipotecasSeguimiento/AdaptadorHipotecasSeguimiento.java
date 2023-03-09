@@ -55,6 +55,10 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
         }
     }
 
+    public void setHipotecasSeg(ArrayList<HipotecaSeguimiento> hipotecasSeg) {
+        this.hipotecasSeg = hipotecasSeg;
+    }
+
     public class ViewHolderHipotecasSeguimiento extends RecyclerView.ViewHolder{
 
         TextView tituloHipoteca;
