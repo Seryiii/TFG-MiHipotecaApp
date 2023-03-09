@@ -3,14 +3,18 @@ package es.MiHipotecaApp.TFG.SimularHipoteca;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 
 public class Filtros extends AppCompatActivity {
+
+    private CircleImageView closeIcon;
     private Spinner sp_bancos;
     private SeekBar precio , primer_pago, plazo;
     private TextView tv_precio , tv_primer_pago, tv_plazo;
@@ -18,6 +22,7 @@ public class Filtros extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filtros);
+        closeIcon = findViewById(R.id.close_icon_filtr);
         sp_bancos = findViewById(R.id.sp_bancos);
         precio = findViewById(R.id.seekBar_precio);
         primer_pago = findViewById(R.id.seekBar_primer_pago);
@@ -32,6 +37,12 @@ public class Filtros extends AppCompatActivity {
     }
 
     private void eventos() {
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         precio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int i, boolean b) {

@@ -13,6 +13,7 @@
     <string name="txt_btn_enviar_problema">ENVIAR</string>
     <string name="txt_aplicar_filtro">Aplicar filtros</string>
     <string name="txt_btn_recuperar_contrasenia">RECUPERAR CONTRASEÑA</string>
+    <string name="txt_btn_comparar_hipoteca">COMPARAR HIPOTECA</string>
 
 
     <!-- LABELS -->
@@ -104,6 +105,11 @@
     <string name="label_comisiones">Comisiones</string>
     <string name="label_gastos_vinculaciones">Vinculaciones anuales</string>
     <string name="label_nombre_hipoteca">Nombre de la hipoteca</string>
+    <string name="label_comparador_hipotecas">Comparador de hipotecas</string>
+    <string name="label_tipo_de_vivienda">¿Qué tipo de vivienda va a ser?</string>
+    <string name="label_viv_nueva_seg_mano">¿Vivienda nueva o de segunda mano?</string>
+    <string name="label_viv_nueva">Vivienda nueva</string>
+    <string name="label_viv_seg_mano">Vivienda de segunda mano</string>
 
 
     <!-- MENSAJES DE ERROR -->

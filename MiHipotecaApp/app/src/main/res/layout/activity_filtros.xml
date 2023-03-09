@@ -12,11 +12,21 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:layout_marginStart="16dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/close_icon_filtr"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_gravity="right"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/close_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <TextView
         android:id="@+id/textView21"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="48dp"
         android:layout_gravity="center"
         android:text="@string/label_filtros"
         android:textSize="48dp"

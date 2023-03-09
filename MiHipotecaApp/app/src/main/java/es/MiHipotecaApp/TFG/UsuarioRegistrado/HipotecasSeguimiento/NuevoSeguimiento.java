@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Registro;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
@@ -35,6 +36,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private final String TAG = "SEGUIMIENTO ACTIVITY";
 
     //Campos fijos
+    private CircleImageView closeIcon;
     private Spinner sp_comunidad;
     private CheckBox check_vivienda_general;
     private CheckBox check_vivienda_poficial;
@@ -96,6 +98,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     private void initUI() {
         //Campos fijos
+        closeIcon = findViewById(R.id.close_icon_seg);
         check_vivienda_general = findViewById(R.id.checkBox_ViviendaRegGeneral);
         check_vivienda_poficial= findViewById(R.id.checkBox_ViviendaPOficial);
         check_vivienda_nueva= findViewById(R.id.checkBox_ViviendaNueva);
@@ -147,6 +150,12 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     }
     private void Eventos() {
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         check_vivienda_general.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

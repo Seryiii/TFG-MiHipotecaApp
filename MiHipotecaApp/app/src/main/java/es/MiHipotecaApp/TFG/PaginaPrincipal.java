@@ -10,6 +10,7 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import es.MiHipotecaApp.TFG.SimularHipoteca.CompararNuevaHipoteca;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.InfoPerfilUsuario;
@@ -19,6 +20,7 @@ public class PaginaPrincipal extends AppCompatActivity implements BottomNavigati
     private BottomNavigationView bottomNavigationView;
     private TusHipotecas tusHipotecasFragment           = new TusHipotecas();
     private InfoPerfilUsuario infoPerfilUsuarioFragment = new InfoPerfilUsuario();
+    private CompararNuevaHipoteca compararHipotecaFragment           = new CompararNuevaHipoteca();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,8 +49,9 @@ public class PaginaPrincipal extends AppCompatActivity implements BottomNavigati
                 startActivity(i);
                 return true;
 
-            case R.id.simular_hipoteca:
-                // Crear fragment formulario simular nueva hipoteca a formulario para simular hipoteca
+            case R.id.comparar_hipoteca:
+                Intent j = new Intent(PaginaPrincipal.this, CompararNuevaHipoteca.class);
+                startActivity(j);
                 return true;
 
             case R.id.mi_perfil:
