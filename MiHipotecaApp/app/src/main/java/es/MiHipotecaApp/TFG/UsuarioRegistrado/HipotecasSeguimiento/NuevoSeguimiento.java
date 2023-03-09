@@ -1,5 +1,6 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -431,31 +432,31 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(check_vivienda_poficial.isChecked()) tipo_vivienda = "proteccion_oficial";
         String antiguedad_vivienda = "nueva";
         if(check_vivienda_smano.isChecked()) antiguedad_vivienda = "segunda_mano";
-        float precio_viv = Float.parseFloat(precio_vivienda.getText().toString());
-        float cant_abonada = Float.parseFloat(cantidad_abonada.getText().toString());
+        double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
+        double cant_abonada = Double.parseDouble(cantidad_abonada.getText().toString());
         int plazo_hip = Integer.parseInt(plazo.getText().toString());
         int anio_act = Integer.parseInt(anio_actual.getText().toString());
 
-        float gastos_gest, gastos_not, gastos_reg, gastos_tas, gastos_vin, gastos_com;
+        double gastos_gest, gastos_not, gastos_reg, gastos_tas, gastos_vin, gastos_com;
         if(TextUtils.isEmpty(gastos_gestoria.getText())) gastos_gest = 0;
-        else gastos_gest = Float.parseFloat(gastos_gestoria.getText().toString());
+        else gastos_gest = Double.parseDouble(gastos_gestoria.getText().toString());
         if(TextUtils.isEmpty(gastos_notaria.getText())) gastos_not = 0;
-        else gastos_not = Float.parseFloat(gastos_notaria.getText().toString());
+        else gastos_not = Double.parseDouble(gastos_notaria.getText().toString());
         if(TextUtils.isEmpty(gastos_registro.getText())) gastos_reg = 0;
-        else gastos_reg = Float.parseFloat(gastos_registro.getText().toString());
+        else gastos_reg = Double.parseDouble(gastos_registro.getText().toString());
         if(TextUtils.isEmpty(gastos_tasacion.getText())) gastos_tas = 0;
-        else gastos_tas = Float.parseFloat(gastos_tasacion.getText().toString());
+        else gastos_tas = Double.parseDouble(gastos_tasacion.getText().toString());
         if(TextUtils.isEmpty(gastos_vinculaciones.getText())) gastos_vin = 0;
-        else gastos_vin = Float.parseFloat(gastos_vinculaciones.getText().toString());
+        else gastos_vin = Double.parseDouble(gastos_vinculaciones.getText().toString());
         if(TextUtils.isEmpty(gastos_comisiones.getText())) gastos_com = 0;
-        else gastos_com = Float.parseFloat(gastos_comisiones.getText().toString());
-        float totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_com;
+        else gastos_com = Double.parseDouble(gastos_comisiones.getText().toString());
+        double totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_com;
         String banco_asociado = sp_bancos.getSelectedItem().toString();
         HipotecaSeguimiento nuevaHip;
         //Hipoteca Fija
         String tipo_hipoteca = "fija";
         if(check_fija.isChecked()){
-            float porcentaje_fijo = Float.parseFloat(edit_porcentaje_fijo.getText().toString());
+            double porcentaje_fijo = Double.parseDouble(edit_porcentaje_fijo.getText().toString());
 
             nuevaHip = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin, banco_asociado, porcentaje_fijo);
 
@@ -464,8 +465,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
         }else if (check_variable.isChecked()){
             tipo_hipoteca = "variable";
             int duracion_primer_porcentaje = Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString());
-            float primer_porc_variable = Float.parseFloat(edit_primer_porcentaje.getText().toString());
-            float diferencial_variable = Float.parseFloat(edit_diferencial_variable.getText().toString());
+            double primer_porc_variable = Double.parseDouble(edit_primer_porcentaje.getText().toString());
+            double diferencial_variable = Double.parseDouble(edit_diferencial_variable.getText().toString());
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
 
@@ -478,16 +479,14 @@ public class NuevoSeguimiento extends AppCompatActivity {
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
             int anios_fijo = Integer.parseInt(edit_anios_fija.getText().toString());
-            float porc_fijo_mixta = Float.parseFloat(edit_porcentaje_fijo_mix.getText().toString());
-            float porc_diferencial_mixta = Float.parseFloat(edit_diferencial_mixto.getText().toString());
+            double porc_fijo_mixta = Double.parseDouble(edit_porcentaje_fijo_mix.getText().toString());
+            double porc_diferencial_mixta = Double.parseDouble(edit_diferencial_mixto.getText().toString());
 
             nuevaHip = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, totalGastos, gastos_vin, banco_asociado, anios_fijo, porc_fijo_mixta, porc_diferencial_mixta, revision_anual);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());
         }
-
-
 
         db.collection("hipotecas_seguimiento").add(nuevaHip).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override

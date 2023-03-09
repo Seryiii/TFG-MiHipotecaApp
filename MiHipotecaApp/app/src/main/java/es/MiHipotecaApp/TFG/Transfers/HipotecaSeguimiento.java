@@ -8,8 +8,8 @@ public class HipotecaSeguimiento implements Serializable {
     protected String comunidad_autonoma;
     protected String tipo_vivienda;
     protected String antiguedad_vivienda;
-    protected float precio_vivienda;
-    protected float cantidad_abonada;
+    protected double precio_vivienda;
+    protected double cantidad_abonada;
     protected int plazo_anios;
     protected int anio_hipoteca_actual;
     protected String tipo_hipoteca;
@@ -17,9 +17,9 @@ public class HipotecaSeguimiento implements Serializable {
     protected String banco_asociado;
 
     //Gastos
-    protected float totalGastos;
+    protected double totalGastos;
 
-    protected float totalVinculacionesAnual;
+    protected double totalVinculacionesAnual;
 
     protected String idUsuario;
 
@@ -28,7 +28,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.nombre = nombre;
     }
 
-    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, float precio_vivienda, float cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, float totalGastos, float totalVinculacionesAnual, String banco_asociado) {
+    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
         this.tipo_vivienda = tipo_vivienda;
@@ -59,11 +59,11 @@ public class HipotecaSeguimiento implements Serializable {
         return antiguedad_vivienda;
     }
 
-    public float getPrecio_vivienda() {
+    public double getPrecio_vivienda() {
         return precio_vivienda;
     }
 
-    public float getCantidad_abonada() {
+    public double getCantidad_abonada() {
         return cantidad_abonada;
     }
 
@@ -79,11 +79,11 @@ public class HipotecaSeguimiento implements Serializable {
         return tipo_hipoteca;
     }
 
-    public float getTotalGastos() {
+    public double getTotalGastos() {
         return totalGastos;
     }
 
-    public float getTotalVinculacionesAnual() {
+    public double getTotalVinculacionesAnual() {
         return totalVinculacionesAnual;
     }
 
@@ -112,11 +112,11 @@ public class HipotecaSeguimiento implements Serializable {
         this.antiguedad_vivienda = antiguedad_vivienda;
     }
 
-    public void setPrecio_vivienda(float precio_vivienda) {
+    public void setPrecio_vivienda(double precio_vivienda) {
         this.precio_vivienda = precio_vivienda;
     }
 
-    public void setCantidad_abonada(float cantidad_abonada) {
+    public void setCantidad_abonada(double cantidad_abonada) {
         this.cantidad_abonada = cantidad_abonada;
     }
 
@@ -132,11 +132,11 @@ public class HipotecaSeguimiento implements Serializable {
         this.tipo_hipoteca = tipo_hipoteca;
     }
 
-    public void setTotalGastos(float totalGastos) {
+    public void setTotalGastos(double totalGastos) {
         this.totalGastos = totalGastos;
     }
 
-    public void setTotalVinculacionesAnual(float totalVinculacionesAnual) {
+    public void setTotalVinculacionesAnual(double totalVinculacionesAnual) {
         this.totalVinculacionesAnual = totalVinculacionesAnual;
     }
 
