@@ -133,6 +133,7 @@
     <string name="nombre_hipoteca_vacio">El campo nombre hipoteca no puede estar vacío</string>
     <string name="porcentaje_vacio">Los porcentajes no pueden estar vacíos</string>
     <string name="duracion_vacio">El campo duración no puede estar vacío</string>
+    <string name="ahorro_mayor_80_por_ciento">La cantidad financiada por el banco no puede ser mayor al 80% del precio de la vivienda.</string>
 
 
     <!-- MENSAJES DE EXITO -->

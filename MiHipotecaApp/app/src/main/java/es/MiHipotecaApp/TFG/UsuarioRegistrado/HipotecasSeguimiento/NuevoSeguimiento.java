@@ -25,6 +25,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Registro;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
@@ -321,6 +322,15 @@ public class NuevoSeguimiento extends AppCompatActivity {
             cantidad_abonada.setError(getString(R.string.cantidad_abonada_vacio));
             return false;
         }
+
+        //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
+        double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
+        double ahorro_aport = Double.parseDouble(cantidad_abonada.getText().toString());
+        double dinero_aport_banco = precio_viv - ahorro_aport;
+        if(dinero_aport_banco > precio_viv * 0.8){
+            cantidad_abonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
+            return false;
+        }
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
             return false;
@@ -438,7 +448,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(NuevoSeguimiento.this, getString(R.string.hipoteca_seguimiento_exito), Toast.LENGTH_LONG).show();
-                finish();
+                Intent i = new Intent(NuevoSeguimiento.this, PaginaPrincipal.class);
+                startActivity(i);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override

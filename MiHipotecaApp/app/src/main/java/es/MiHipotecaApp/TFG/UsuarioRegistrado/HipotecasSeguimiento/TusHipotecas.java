@@ -38,11 +38,13 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 public class TusHipotecas extends Fragment {
-    private CircleImageView foto_perfil;
+
     private RecyclerView recyclerHipotecas;
     private ArrayList<HipotecaSeguimiento> listaHipotecasSeg;
 
     private AdaptadorHipotecasSeguimiento adapter;
+
+    private final String TAG = "Tus Hipotecas";
 
     @Nullable
     @Override
@@ -55,17 +57,6 @@ public class TusHipotecas extends Fragment {
         listaHipotecasSeg = new ArrayList<>();
         adapter=new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
         cargarHipotecasUsuario();
-            //HipotecaSeguimiento h1 = new HipotecaSeguimiento("Hipoteca 1");
-            //HipotecaSeguimiento h2 = new HipotecaSeguimiento("Hipoteca 2");
-            //HipotecaSeguimiento h3 = new HipotecaSeguimiento("Hipoteca 3");
-            //HipotecaSeguimiento h4 = new HipotecaSeguimiento("Nueva hipoteca");
-            //listaHipotecasSeg.add(h1);
-            //listaHipotecasSeg.add(h2);
-            //listaHipotecasSeg.add(h3);
-            //listaHipotecasSeg.add(h4);
-
-            // Coger las hipotecas de seguimiento del usuario de firebase
-        foto_perfil = view.findViewById(R.id.foto_perfil_pag_principal);
         return view;
 
     }
@@ -74,7 +65,6 @@ public class TusHipotecas extends Fragment {
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
         FirebaseUser user = auth.getCurrentUser();
-
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
@@ -96,7 +86,6 @@ public class TusHipotecas extends Fragment {
                     double total_gastos = documentSnapshot.getDouble("totalGastos");
                     double total_vinculaciones = documentSnapshot.getDouble("totalVinculacionesAnual");
                     String banco_asociado = documentSnapshot.getString("banco_asociado");
-
                     HipotecaSeguimiento h;
 
                     if (tipo.equals("fija")){
@@ -178,15 +167,9 @@ public class TusHipotecas extends Fragment {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.e("TusHipotecas","Error al traer hipotecas de bd");
+                Log.e(TAG,"Error al traer hipotecas de bd");
             }
         });
     }
-    @Override
-    public void onResume() {
-        super.onResume();
-        listaHipotecasSeg.clear();
-        cargarHipotecasUsuario();
-        //adapter.notifyDataSetChanged(); // se recarga la lista de datos
-    }
+
 }
