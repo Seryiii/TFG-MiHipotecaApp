@@ -124,7 +124,8 @@ public class TusHipotecas extends Fragment {
                                     switch (item.getItemId()) {
                                         case R.id.ver_hipoteca:
                                             //Redirigir a la vista de la hipoteca de seguimiento
-
+                                            Intent j = new Intent(getActivity().getApplicationContext(), VisualizarHipotecaSeguimiento.class);
+                                            startActivity(j);
                                             return true;
                                         case R.id.editar_hipoteca:
                                             //Redirigir a la vista de editar hipoteca seguimiento

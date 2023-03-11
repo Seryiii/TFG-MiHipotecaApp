@@ -13,22 +13,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.time.Clock;
 import java.util.HashMap;
 import java.util.Map;
 
 import es.MiHipotecaApp.TFG.R;
-import es.MiHipotecaApp.TFG.Registro;
 
 public class ModificarDatosUsuario extends AppCompatActivity implements custom_dialog_avatares.customDialogInterface {
     private final String TAG = "OBTENCION AVATAR";
@@ -166,28 +164,25 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
     }
     public void getAvatar(){
         String userMail = currentUser.getCurrentUser().getEmail();
-        CollectionReference user  = db.collection("usuarios");
-        Query query = user.whereEqualTo("correo", userMail);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
 
-        query.get().addOnCompleteListener(task -> {
-
-            if(task.isSuccessful()){
-                if (task.getResult().isEmpty()) {
-                    Log.d("HOLA", "No se encontraron documentos");
-                    return;
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    imgPerfil = document.getLong("avatar");
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
                 }
-                DocumentSnapshot document = task.getResult().getDocuments().get(0);
-                imgPerfil = document.getLong("avatar");
-            }
-            else {
-                Log.d("MainActivity", "Error al obtener los documentos: ", task.getException());
             }
         });
 
     }
     public void setImagenPerfil(){
-
-        switch (imgPerfil.intValue()){
+        switch (imgPerfil.intValue()) {
             case 1:
                 imagenPerfil.setImageResource(R.drawable.avatar1);
 
@@ -204,6 +199,7 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
             default:
                 imagenPerfil.setImageResource(R.drawable.avatar5);
         }
+
     }
 
     @Override

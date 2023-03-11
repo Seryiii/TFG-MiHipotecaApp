@@ -98,6 +98,14 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
             cantidadAbonada.setError(getString(R.string.cantidad_abonada_vacio));
             return false;
         }
+        //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
+        double precio_viv = Double.parseDouble(precioVivienda.getText().toString());
+        double ahorro_aport = Double.parseDouble(cantidadAbonada.getText().toString());
+        double dinero_aport_banco = precio_viv - ahorro_aport;
+        if(dinero_aport_banco > precio_viv * 0.8){
+            cantidadAbonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
+            return false;
+        }
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
             return false;
