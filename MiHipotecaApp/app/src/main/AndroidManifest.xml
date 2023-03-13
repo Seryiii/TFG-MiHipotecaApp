@@ -17,7 +17,7 @@
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.RadarChartActivity"
             android:exported="false" />
         <activity
-            android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.PieChartActivity"
+            android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.GraficosHipotecaFija"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.BarChartActivity"

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.BarChartActivity;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.PieChartActivity;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.GraficosHipotecaFija;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.RadarChartActivity;
 
 public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
@@ -36,7 +36,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
-        goPieChart.setOnClickListener(v -> startActivity(new Intent(this, PieChartActivity.class)));
+        goPieChart.setOnClickListener(v -> startActivity(new Intent(this, GraficosHipotecaFija.class)));
 
         goRadarChart.setOnClickListener(v -> startActivity(new Intent(this, RadarChartActivity.class)));
     }

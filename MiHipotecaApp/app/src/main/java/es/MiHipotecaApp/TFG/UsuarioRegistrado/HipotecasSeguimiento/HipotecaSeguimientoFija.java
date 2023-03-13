@@ -2,6 +2,8 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import android.util.Log;
 
+import java.util.ArrayList;
+
 public class HipotecaSeguimientoFija {
 
     private float capitalTotal, capitalAbonado, porcentajeIntAnual, vinculacionesMensuales;
@@ -142,5 +144,22 @@ public class HipotecaSeguimientoFija {
         Log.e("", "Amortizado total: " + totalAmortizado);
         Log.e("", "Total pago: " + totalPagado);
 
+    }
+
+    public ArrayList getInteresesPorAnio(){
+        ArrayList<Float> array = new ArrayList<Float>();
+        totalIntereses = 0;
+        for(int i = 1; i <= numPagos; i++){
+            totalIntereses += interesesPorMes();
+            if(i % 12 == 0){
+                if(i != 12) {
+                    totalIntereses -= array.get((i/12) - 2);
+                }
+                array.add(totalIntereses);
+            }
+        }
+
+
+        return array;
     }
 }
