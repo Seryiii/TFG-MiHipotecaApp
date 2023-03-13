@@ -67,6 +67,7 @@
         android:fontFamily="@font/allerta"
         android:textSize="18sp"
         android:text="@string/label_recuperar_contrasenia"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_iniciar_sesion" />
@@ -78,6 +79,7 @@
         android:fontFamily="@font/allerta"
         android:textSize="18sp"
         android:text="@string/label_no_tienes_cuenta"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
