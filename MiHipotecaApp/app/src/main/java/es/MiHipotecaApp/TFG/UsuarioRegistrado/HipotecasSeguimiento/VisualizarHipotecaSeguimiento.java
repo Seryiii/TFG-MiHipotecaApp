@@ -41,3 +41,4 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         goRadarChart.setOnClickListener(v -> startActivity(new Intent(this, RadarChartActivity.class)));
     }
 }
+

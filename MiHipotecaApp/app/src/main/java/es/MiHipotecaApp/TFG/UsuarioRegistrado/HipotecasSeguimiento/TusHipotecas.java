@@ -126,6 +126,9 @@ public class TusHipotecas extends Fragment {
                                             //Redirigir a la vista de la hipoteca de seguimiento
                                             Intent j = new Intent(getActivity().getApplicationContext(), VisualizarHipotecaSeguimiento.class);
                                             startActivity(j);
+
+                                            //HipotecaSeguimientoFija h = new HipotecaSeguimientoFija(100000, 50000, 9, 128, 25);
+                                            //h.calcularHipoteca();
                                             return true;
                                         case R.id.editar_hipoteca:
                                             //Redirigir a la vista de editar hipoteca seguimiento
