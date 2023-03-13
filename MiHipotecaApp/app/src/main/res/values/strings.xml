@@ -14,7 +14,8 @@
     <string name="txt_aplicar_filtro">Aplicar filtros</string>
     <string name="txt_btn_recuperar_contrasenia">RECUPERAR CONTRASEÑA</string>
     <string name="txt_btn_comparar_hipoteca">COMPARAR HIPOTECA</string>
-
+    <string name="txt_btn_cuadro_amortizacion">CUADRO DE AMORTIZACIÓN</string>
+    <string name="txt_btn_amortizar_antes">AMORTIZAR ANTES</string>
 
     <!-- LABELS -->
     <string name="label_correo_electronico">Correo Eléctronico</string>
@@ -110,7 +111,11 @@
     <string name="label_viv_nueva_seg_mano">¿Vivienda nueva o de segunda mano?</string>
     <string name="label_viv_nueva">Vivienda nueva</string>
     <string name="label_viv_seg_mano">Vivienda de segunda mano</string>
-
+    <string name="label_seguimiento">Seguimiento</string>
+    <string name="label_tipo_de_hipoteca">Tipo de Hipoteca: </string>
+    <string name="label_dinero_que_falta_por_pagar">Dinero que falta por pagar</string>
+    <string name="label_anios_restantes">Años restantes</string>
+    <string name="label_cuota_de">CUOTA DE </string>
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>

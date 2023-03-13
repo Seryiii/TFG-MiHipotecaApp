@@ -23,6 +23,10 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
         this.hipotecasSeg = hipotecasSeg;
     }
 
+    public HipotecaSeguimiento getItem(int position){
+        return hipotecasSeg.get(position);
+    }
+
     @NonNull
     @Override
     public AdaptadorHipotecasSeguimiento.ViewHolderHipotecasSeguimiento onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

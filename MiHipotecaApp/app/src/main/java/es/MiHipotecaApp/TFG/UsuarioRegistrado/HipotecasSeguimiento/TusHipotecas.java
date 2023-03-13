@@ -124,7 +124,9 @@ public class TusHipotecas extends Fragment {
                                     switch (item.getItemId()) {
                                         case R.id.ver_hipoteca:
                                             //Redirigir a la vista de la hipoteca de seguimiento
+                                            HipotecaSeguimiento hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
                                             Intent j = new Intent(getActivity().getApplicationContext(), VisualizarHipotecaSeguimiento.class);
+                                            j.putExtra("hipoteca", hip);
                                             startActivity(j);
 
                                             //HipotecaSeguimientoFija h = new HipotecaSeguimientoFija(100000, 50000, 9, 128, 25);

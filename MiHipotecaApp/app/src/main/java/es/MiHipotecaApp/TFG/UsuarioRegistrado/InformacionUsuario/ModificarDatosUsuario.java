@@ -53,7 +53,7 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
         btn_aplicar_cambios = findViewById(R.id.btn_aplicar_cambios);
         context = this;
         getAvatar();
-        setImagenPerfil();
+
         eventos();
     }
     public void eventos(){
@@ -92,7 +92,6 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
                             docRef.update(updates).addOnCompleteListener(updateTask ->{
                                 if(updateTask.isSuccessful()){
                                     Toast.makeText(ModificarDatosUsuario.this, "Usuario modificado correctamente", Toast.LENGTH_LONG).show();
-
                                 }
                                 else{
                                     Toast.makeText(ModificarDatosUsuario.this, "Usuario no modificado", Toast.LENGTH_LONG).show();
@@ -174,6 +173,7 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
                     QuerySnapshot querySnapshot = task.getResult();
                     DocumentSnapshot document = querySnapshot.getDocuments().get(0);
                     imgPerfil = document.getLong("avatar");
+                    setImagenPerfil(imgPerfil.intValue());
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
@@ -181,8 +181,8 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
         });
 
     }
-    public void setImagenPerfil(){
-        switch (imgPerfil.intValue()) {
+    public void setImagenPerfil(int avatar){
+        switch (avatar) {
             case 1:
                 imagenPerfil.setImageResource(R.drawable.avatar1);
 
