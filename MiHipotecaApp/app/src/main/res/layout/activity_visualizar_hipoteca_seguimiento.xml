@@ -19,8 +19,9 @@
         android:gravity="center">
 
         <TextView
-            android:layout_width="297dp"
-            android:layout_height="101dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
             android:layout_marginStart="50dp"
             android:layout_marginEnd="50dp"
             android:fontFamily="@font/allerta"
@@ -30,14 +31,257 @@
 
         <TextView
         android:id="@+id/titulo_seguimiento_hipoteca"
-        android:layout_width="297dp"
-        android:layout_height="101dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
         android:layout_marginEnd="50dp"
         android:fontFamily="@font/allerta"
         android:gravity="center"
-        android:text=""
-        android:textSize="40sp" />
+        android:text="Titulo"
+        android:textSize="35sp" />
+
+        <TextView
+            android:id="@+id/tv_tipo_hipoteca_seguimiento"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/label_tipo_de_hipoteca"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/black"
+                    android:text="@string/label_dinero_que_falta_por_pagar"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/label_cantidad_pendiente_seguimiento_hip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/black"
+                    android:text="150000"
+                    android:textStyle="bold"
+                    android:textSize="22sp"/>
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_bordes_redondos"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/txt_btn_cuadro_amortizacion"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/black"
+                    android:text="@string/label_anios_restantes"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/label_anios_restantes_seguimiento_hip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginStart="8dp"
+                    android:textColor="@color/black"
+                    android:text="20 años"
+                    android:textStyle="bold"
+                    android:textSize="22sp"/>
+
+
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/btn_bordes_redondos"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/txt_btn_amortizar_antes"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="@string/label_cuota_de"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/nombre_mes_actual_seguimiento_hip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:text="Enero"
+            android:textStyle="bold"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:orientation="vertical"
+            android:background="@drawable/btn_bordes_redondos">
+
+            <TextView
+                android:id="@+id/cuota_mensual_seguimiento_hip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="Cuota: "
+                android:textSize="22sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp">
+
+
+                <TextView
+                    android:id="@+id/capital_cuota_mensual_hip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:text="Capital: "
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/intereses_cuota_mensual_hip"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:text="Intereses: "
+                    android:textSize="22sp" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/btn_valor_aportado_vs_a_financiar"
+                android:layout_height="50dp"
+                android:layout_width="180dp"
+                android:layout_marginTop="20dp"
+                android:text="valor"
+                android:textSize="20dp"
+                android:background="@drawable/btn_bordes_redondos">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_porcentaje_aportado_vs_a_financiar"
+                android:layout_width="180dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="20dp"
+                android:text="Porcentaje"
+                android:textSize="20dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/btn_bordes_redondos">
+
+            </Button>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Aportado vs cantidad a financiar"
+            android:textSize="22sp" />
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart_aportado_vs_a_financiar_valor"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="300dp"
+            android:visibility="visible">
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart_aportado_vs_a_financiar_porcentaje"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="300dp"
+            android:visibility="gone">
+
+        </com.github.mikephil.charting.charts.PieChart>
+
 
         <Button
             android:id="@+id/go_bar_chart"
