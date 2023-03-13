@@ -18,6 +18,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -27,9 +28,9 @@
         android:text="@string/titulo_actividad_principal"
         android:textSize="28dp"
         app:layout_constraintEnd_toStartOf="@+id/foto_perfil_pag_principal"
-        app:layout_constraintStart_toEndOf="@+id/btn_config_usuario"
+        app:layout_constraintHorizontal_bias="0.662"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_hipotecas_seguimiento"
