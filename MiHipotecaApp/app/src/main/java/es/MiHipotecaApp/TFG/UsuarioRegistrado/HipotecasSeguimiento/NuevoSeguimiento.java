@@ -111,7 +111,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         plazo=findViewById(R.id.edit_plazo_pagar);
         anio_actual=findViewById(R.id.edit_anio_actual);
         sp_mes_actual = findViewById(R.id.sp_mes_actual);
-        String [] meses = {"ENERO", "FEBRERO", "MARZO", "ABRIl", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"};
+        String [] meses = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
         ArrayAdapter<String> adapterMeses = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, meses);
         sp_mes_actual.setAdapter(adapterMeses);
         check_fija=findViewById(R.id.checkBoxFijaNuevoSeg);
