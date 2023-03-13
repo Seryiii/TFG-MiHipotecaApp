@@ -10,8 +10,8 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
     private double porcentaje_diferencial_mixta;
     private boolean revision_anual;
 
-    public HipotecaSegMixta(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado, int anios_fija_mixta, double porcentaje_fijo_mixta, double porcentaje_diferencial_mixta, boolean revision_anual) {
-        super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, anio_hipoteca_actual, totalGastos, totalVinculacionesAnual, banco_asociado);
+    public HipotecaSegMixta(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, int mes_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado, int anios_fija_mixta, double porcentaje_fijo_mixta, double porcentaje_diferencial_mixta, boolean revision_anual) {
+        super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, anio_hipoteca_actual, mes_hipoteca_actual, totalGastos, totalVinculacionesAnual, banco_asociado);
         this.anios_fija_mixta = anios_fija_mixta;
         this.porcentaje_fijo_mixta = porcentaje_fijo_mixta;
         this.porcentaje_diferencial_mixta = porcentaje_diferencial_mixta;

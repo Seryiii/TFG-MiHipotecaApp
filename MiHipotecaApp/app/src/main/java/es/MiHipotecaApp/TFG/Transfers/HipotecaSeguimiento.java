@@ -12,6 +12,7 @@ public class HipotecaSeguimiento implements Serializable {
     protected double cantidad_abonada;
     protected int plazo_anios;
     protected int anio_hipoteca_actual;
+    protected int mes_hipoteca_actual;
     protected String tipo_hipoteca;
 
     protected String banco_asociado;
@@ -28,7 +29,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.nombre = nombre;
     }
 
-    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
+    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, int mes_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
         this.tipo_vivienda = tipo_vivienda;
@@ -37,6 +38,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.cantidad_abonada = cantidad_abonada;
         this.plazo_anios = plazo_anios;
         this.anio_hipoteca_actual = anio_hipoteca_actual;
+        this.mes_hipoteca_actual = mes_hipoteca_actual;
         this.totalGastos = totalGastos;
         this.totalVinculacionesAnual = totalVinculacionesAnual;
         this.banco_asociado = banco_asociado;
@@ -73,6 +75,10 @@ public class HipotecaSeguimiento implements Serializable {
 
     public int getAnio_hipoteca_actual() {
         return anio_hipoteca_actual;
+    }
+
+    public int getMes_hipoteca_actual() {
+        return mes_hipoteca_actual;
     }
 
     public String getTipo_hipoteca() {
@@ -126,6 +132,10 @@ public class HipotecaSeguimiento implements Serializable {
 
     public void setAnio_hipoteca_actual(int anio_hipoteca_actual) {
         this.anio_hipoteca_actual = anio_hipoteca_actual;
+    }
+
+    public void setMes_hipoteca_actual(int mes_hipoteca_actual) {
+        this.mes_hipoteca_actual = mes_hipoteca_actual;
     }
 
     public void setTipo_hipoteca(String tipo_hipoteca) {

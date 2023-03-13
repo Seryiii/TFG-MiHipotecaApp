@@ -10,8 +10,8 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
     private double porcentaje_diferencial_variable;
     private boolean revision_anual;
 
-    public HipotecaSegVariable(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado, int duracion_primer_porcentaje_variable, double primer_porcentaje_variable, double porcentaje_diferencial_variable, boolean revision_anual) {
-        super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, anio_hipoteca_actual, totalGastos, totalVinculacionesAnual, banco_asociado);
+    public HipotecaSegVariable(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, int mes_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado, int duracion_primer_porcentaje_variable, double primer_porcentaje_variable, double porcentaje_diferencial_variable, boolean revision_anual) {
+        super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, anio_hipoteca_actual, mes_hipoteca_actual, totalGastos, totalVinculacionesAnual, banco_asociado);
         this.duracion_primer_porcentaje_variable = duracion_primer_porcentaje_variable;
         this.primer_porcentaje_variable = primer_porcentaje_variable;
         this.porcentaje_diferencial_variable = porcentaje_diferencial_variable;

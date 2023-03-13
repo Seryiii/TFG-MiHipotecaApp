@@ -83,6 +83,8 @@ public class TusHipotecas extends Fragment {
                     int plazo = (int) plazo_l;
                     long anio_actual_l = documentSnapshot.getLong("anio_hipoteca_actual");
                     int anio_actual = (int) anio_actual_l;
+                    long mes_actual_l = documentSnapshot.getLong("mes_hipoteca_actual");
+                    int mes_actual = (int) mes_actual_l;
                     double total_gastos = documentSnapshot.getDouble("totalGastos");
                     double total_vinculaciones = documentSnapshot.getDouble("totalVinculacionesAnual");
                     String banco_asociado = documentSnapshot.getString("banco_asociado");
@@ -90,21 +92,21 @@ public class TusHipotecas extends Fragment {
 
                     if (tipo.equals("fija")){
                         double porcen_fijo = documentSnapshot.getDouble("porcentaje_fijo");
-                        h = new HipotecaSegFija(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, total_gastos, total_vinculaciones, banco_asociado, porcen_fijo);
+                        h = new HipotecaSegFija(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, mes_actual, total_gastos, total_vinculaciones, banco_asociado, porcen_fijo);
                     }else if(tipo.equals("variable")){
                         long duracion_primer_por_l = documentSnapshot.getLong("duracion_primer_porcentaje_variable");
                         int duracion_primer_por = (int) duracion_primer_por_l;
                         double primer_porcen = documentSnapshot.getDouble("primer_porcentaje_variable");
                         double porcentaje_diferen = documentSnapshot.getDouble("porcentaje_diferencial_variable");
                         boolean revision = documentSnapshot.getBoolean("revision_anual");
-                        h = new HipotecaSegVariable(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, total_gastos, total_vinculaciones, banco_asociado, duracion_primer_por, primer_porcen, porcentaje_diferen, revision);
+                        h = new HipotecaSegVariable(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, mes_actual, total_gastos, total_vinculaciones, banco_asociado, duracion_primer_por, primer_porcen, porcentaje_diferen, revision);
                     }else{
                         long anios_fija_mix_l =  documentSnapshot.getLong("anios_fija_mixta");
                         int anios_fija_mix = (int) anios_fija_mix_l;
                         double porcen_fijo_mix = documentSnapshot.getDouble("porcentaje_fijo_mixta");
                         double porcent_diferen_mix = documentSnapshot.getDouble("porcentaje_diferencial_mixta");
                         boolean revision = documentSnapshot.getBoolean("revision_anual");
-                        h = new HipotecaSegMixta(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, total_gastos, total_vinculaciones, banco_asociado, anios_fija_mix, porcen_fijo_mix, porcent_diferen_mix, revision);
+                        h = new HipotecaSegMixta(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, mes_actual, total_gastos, total_vinculaciones, banco_asociado, anios_fija_mix, porcen_fijo_mix, porcent_diferen_mix, revision);
                     }
                     listaHipotecasSeg.add(h);
                 }
