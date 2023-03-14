@@ -22,6 +22,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +40,8 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
     Context context;
     private FirebaseFirestore db;
     private FirebaseAuth currentUser;
+
+    private StorageReference storageRefer;
     private Long imgPerfil;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +227,13 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
                 imagenPerfil.setImageResource(R.drawable.avatar5);
         }
         imgPerfil = Long.valueOf(avatar);
+
+    }
+    private void ElegirImagenPerfil()
+    {
+        //crear una instancia que haga referencia al almacenamiento
+        storageRefer=FirebaseStorage.getInstance().getReference();
+        //String archive="profile_"+
 
     }
 }
