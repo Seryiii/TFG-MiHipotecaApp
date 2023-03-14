@@ -221,34 +221,6 @@
             </LinearLayout>
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center_horizontal">
-            <Button
-                android:id="@+id/btn_valor_aportado_vs_a_financiar"
-                android:layout_height="50dp"
-                android:layout_width="180dp"
-                android:layout_marginTop="20dp"
-                android:text="valor"
-                android:textSize="20dp"
-                android:background="@drawable/btn_bordes_redondos">
-
-            </Button>
-
-            <Button
-                android:id="@+id/btn_porcentaje_aportado_vs_a_financiar"
-                android:layout_width="180dp"
-                android:layout_height="50dp"
-                android:layout_marginTop="20dp"
-                android:text="Porcentaje"
-                android:textSize="20dp"
-                android:layout_marginLeft="30dp"
-                android:background="@drawable/btn_bordes_redondos">
-
-            </Button>
-        </LinearLayout>
-
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -260,29 +232,112 @@
             android:text="Aportado vs cantidad a financiar"
             android:textSize="22sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/btn_valor_aportado_vs_a_financiar"
+                android:layout_height="40dp"
+                android:layout_width="180dp"
+                android:layout_marginTop="20dp"
+                android:text="valor"
+                android:textSize="17dp"
+                android:background="@drawable/btn_bordes_redondos">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_porcentaje_aportado_vs_a_financiar"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:text="Porcentaje"
+                android:textSize="17dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/btn_bordes_redondos">
+
+            </Button>
+        </LinearLayout>
+
         <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pie_chart_aportado_vs_a_financiar_valor"
+            android:id="@+id/pie_chart_aportado_vs_a_financiar"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="20dp">
+        </com.github.mikephil.charting.charts.PieChart>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Gastos totales"
+            android:textSize="22sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal">
+            <Button
+                android:id="@+id/btn_valor_gastos_totales"
+                android:layout_height="40dp"
+                android:layout_width="180dp"
+                android:layout_marginTop="20dp"
+                android:text="valor"
+                android:textSize="17dp"
+                android:background="@drawable/btn_bordes_redondos">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btn_porcentaje_gastos_totales"
+                android:layout_width="180dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:text="Porcentaje"
+                android:textSize="17dp"
+                android:layout_marginLeft="30dp"
+                android:background="@drawable/btn_bordes_redondos">
+
+            </Button>
+        </LinearLayout>
+
+        <com.github.mikephil.charting.charts.PieChart
+            android:id="@+id/pie_chart_gastos_totales"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="300dp"
-            android:visibility="visible">
+            android:layout_marginBottom="300dp">
         </com.github.mikephil.charting.charts.PieChart>
 
-        <com.github.mikephil.charting.charts.PieChart
-            android:id="@+id/pie_chart_aportado_vs_a_financiar_porcentaje"
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Intereses mensuales vs capital menusal"
+            android:textSize="22sp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/line_chart_intereses_vs_capital"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="300dp"
-            android:visibility="gone">
-
-        </com.github.mikephil.charting.charts.PieChart>
-
+            android:layout_marginBottom="300dp">
+        </com.github.mikephil.charting.charts.LineChart>
 
         <Button
             android:id="@+id/go_bar_chart"
