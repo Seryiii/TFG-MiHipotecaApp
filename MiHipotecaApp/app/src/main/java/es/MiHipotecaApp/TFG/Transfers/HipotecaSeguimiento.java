@@ -157,4 +157,6 @@ public class HipotecaSeguimiento implements Serializable {
     public void setBanco_asociado(String banco_asociado) {
         this.banco_asociado = banco_asociado;
     }
+
+
 }

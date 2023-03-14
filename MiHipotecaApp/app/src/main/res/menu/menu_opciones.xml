@@ -7,6 +7,6 @@
         android:id="@+id/editar_hipoteca"
         android:title="Editar" />
     <item
-        android:id="@+id/eliminar_hipoetca"
+        android:id="@+id/eliminar_hipoteca"
         android:title="Eliminar" />
 </menu>

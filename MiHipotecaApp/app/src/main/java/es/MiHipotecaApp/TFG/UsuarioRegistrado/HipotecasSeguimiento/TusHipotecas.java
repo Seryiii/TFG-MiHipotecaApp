@@ -1,7 +1,5 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
-import static android.content.ContentValues.TAG;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -32,8 +30,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+
 import java.util.ArrayList;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
@@ -67,6 +65,7 @@ public class TusHipotecas extends Fragment {
         listaHipotecasSeg = new ArrayList<>();
         adapter=new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
         cargarHipotecasUsuario();
+
         return view;
 
     }
@@ -156,12 +155,30 @@ public class TusHipotecas extends Fragment {
                                             Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
                                             startActivity(i);
                                             return true;
-                                        case R.id.eliminar_hipoetca:
+                                        case R.id.eliminar_hipoteca:
                                             AlertDialog dialogo = new AlertDialog.Builder(getActivity())
                                                     .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             //Eliminar hipoteca de la base de datos
+                                                            HipotecaSeguimiento hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
+
+                                                            hipotecasRef.document(hip.toString()).delete().
+
+                                                                    addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                        @Override
+                                                                        public void onSuccess(Void unused) {
+                                                                            Log.d(TAG, "Hipoteca eliminada con exito");
+                                                                        }
+                                                                    })
+                                                                   .addOnFailureListener(new OnFailureListener() {
+                                                                       @Override
+                                                                       public void onFailure(@NonNull Exception e) {
+                                                                           Log.w(TAG, "Error eliminando Hipoteca", e);
+                                                                       }
+                                                                   });
+
+
                                                         }
                                                     })
                                                     .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
