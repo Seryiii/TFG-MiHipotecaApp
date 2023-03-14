@@ -23,8 +23,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.IniciarSesion;
+import es.MiHipotecaApp.TFG.MainActivity;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Usuario;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
@@ -38,6 +44,8 @@ public class InfoPerfilUsuario extends Fragment {
 
     private Button cerrar_sesion;
     private FirebaseAuth firebaseAuth;
+    private CircleImageView imagen_perfil;
+    private Long imgPerfil;
 
 
     public InfoPerfilUsuario(){
@@ -53,12 +61,19 @@ public class InfoPerfilUsuario extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAvatar();
+    }
+
     private void initUI(View view) {
         eliminar_cuenta = view.findViewById(R.id.eliminar_cuenta);
         modificar_datos = view.findViewById(R.id.btn_modificar_datos);
         informar_problema = view.findViewById(R.id.btn_notificar_problema);
         pasar_a_premium = view.findViewById(R.id.btn_pasar_a_premium);
         cerrar_sesion = view.findViewById(R.id.cerrar_sesion);
+        imagen_perfil = view.findViewById(R.id.imagen_perfil_usuario);
 
         eliminar_cuenta.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,10 +125,53 @@ public class InfoPerfilUsuario extends Fragment {
             public void onClick(View view) {
                 FirebaseAuth.getInstance().signOut();
                 Toast.makeText(getActivity().getApplicationContext(), getString(R.string.sesion_cerrada), Toast.LENGTH_SHORT).show();
-                Intent i = new Intent(getActivity().getApplicationContext(), IniciarSesion.class);
+                Intent i = new Intent(getActivity().getApplicationContext(), MainActivity.class);
                 startActivity(i);
                 getActivity().finish();
             }
         });
     }
+
+    public void getAvatar(){
+        String userMail = firebaseAuth.getCurrentUser().getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    imgPerfil = document.getLong("avatar");
+                    setImagenPerfil(imgPerfil.intValue());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+    }
+
+    public void setImagenPerfil(int avatar){
+        switch (avatar) {
+            case 1:
+                imagen_perfil.setImageResource(R.drawable.avatar1);
+
+                break;
+            case 2:
+                imagen_perfil.setImageResource(R.drawable.avatar2);
+                break;
+            case 3:
+                imagen_perfil.setImageResource(R.drawable.avatar3);
+                break;
+            case 4:
+                imagen_perfil.setImageResource(R.drawable.avatar4);
+                break;
+            default:
+                imagen_perfil.setImageResource(R.drawable.avatar5);
+        }
+
+    }
+
 }

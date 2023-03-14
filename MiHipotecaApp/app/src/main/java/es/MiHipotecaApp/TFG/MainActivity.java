@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import es.MiHipotecaApp.TFG.SimularHipoteca.CompararNuevaHipoteca;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.PasarPremium;
 
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         btn_simular_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(MainActivity.this, PasarPremium.class);
+                Intent i = new Intent(MainActivity.this, CompararNuevaHipoteca.class);
                 startActivity(i);
             }
         });

@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
+import static android.content.ContentValues.TAG;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,8 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -43,6 +47,9 @@ public class TusHipotecas extends Fragment {
     private ArrayList<HipotecaSeguimiento> listaHipotecasSeg;
 
     private AdaptadorHipotecasSeguimiento adapter;
+    private CircleImageView imagen_perfil;
+    private Long imgPerfil;
+    private FirebaseAuth firebaseAuth;
 
     private final String TAG = "Tus Hipotecas";
 
@@ -52,6 +59,9 @@ public class TusHipotecas extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tus_hipotecas, container, false);
         recyclerHipotecas = view.findViewById(R.id.recycler_hipotecas_seguimiento);
+        firebaseAuth = FirebaseAuth.getInstance();
+
+        imagen_perfil = view.findViewById(R.id.foto_perfil_pag_principal);
         recyclerHipotecas.addItemDecoration(new HorizontalSpaceItemDecoration(40));
         recyclerHipotecas.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL,false));
         listaHipotecasSeg = new ArrayList<>();
@@ -59,6 +69,12 @@ public class TusHipotecas extends Fragment {
         cargarHipotecasUsuario();
         return view;
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAvatar();
     }
 
     private void cargarHipotecasUsuario(){
@@ -178,6 +194,47 @@ public class TusHipotecas extends Fragment {
                 Log.e(TAG,"Error al traer hipotecas de bd");
             }
         });
+    }
+    public void getAvatar(){
+        String userMail = firebaseAuth.getCurrentUser().getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    imgPerfil = document.getLong("avatar");
+                    setImagenPerfil(imgPerfil.intValue());
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+    }
+
+    public void setImagenPerfil(int avatar){
+        switch (avatar) {
+            case 1:
+                imagen_perfil.setImageResource(R.drawable.avatar1);
+
+                break;
+            case 2:
+                imagen_perfil.setImageResource(R.drawable.avatar2);
+                break;
+            case 3:
+                imagen_perfil.setImageResource(R.drawable.avatar3);
+                break;
+            case 4:
+                imagen_perfil.setImageResource(R.drawable.avatar4);
+                break;
+            default:
+                imagen_perfil.setImageResource(R.drawable.avatar5);
+        }
+
     }
 
 }
