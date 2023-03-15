@@ -39,7 +39,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
     //Funcion que devuelve el interes pagado de un determinado numero de pago
     public double calcularInteresMensualConNumeroMes(int numPago){
-        double capitalPendiente = cuotaMensual * numPago;
+        double capitalPendiente = cuotaMensual * numPago; //MAAAAAL
         return capitalPendiente * (porcentaje_fijo / 100) / 12;
     }
 
@@ -48,11 +48,16 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         return cuotaMensual - calcularInteresMensualConCapitalPendiente(capitalPendiente);
     }
 
-    private double interesesTotales = 0;
-    public void obtenerImpuestosTotales(){
+    public double obtenerInteresesTotales(){
+        double interesesTotales = 0;
+        double capPendiente = precio_vivienda - cantidad_abonada;
+
         for(int i = 0; i < plazo_anios * 12; i++){
-            interesesTotales += calcularInteresMensualConNumeroMes(i);
+            capPendiente -= (cuotaMensual - calcularInteresMensualConCapitalPendiente(capPendiente));
+            interesesTotales += calcularInteresMensualConCapitalPendiente(capPendiente);
         }
+
+        return interesesTotales;
     }
 
     public double obtenerDineroAportadoActual(int numPago){
@@ -60,5 +65,9 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     }
     public double obtenerDineroRestanteActual(int numPago){
         return cuotaMensual*(plazo_anios*12 - numPago);
+    }
+
+    public double obtenerGastosTotales(){
+        return cuotaMensual*plazo_anios*12 + totalVinculacionesAnual*plazo_anios + totalGastos;
     }
 }
