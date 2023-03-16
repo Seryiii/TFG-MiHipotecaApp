@@ -14,19 +14,14 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.BarChartActivity;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.GraficosHipotecaFija;
@@ -42,7 +37,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private PieChart gastos_totales;
     private LineChart intereses_vs_capital_mensual;
 
-    private HipotecaSegFija hip;
+    private HipotecaSeguimiento hip;
     private Button btn_aportado_vs_financiar_valor;
     private Button btn_aportado_vs_financiar_porcentaje;
     private Button btn_gastos_totales_valor;
@@ -54,7 +49,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_hipoteca_seguimiento);
 
-        hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
+        if(getIntent().getStringExtra("tipo").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
+        else if (getIntent().getStringExtra("tipo").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
+        else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+
         goBarChart = findViewById(R.id.go_bar_chart);
         goPieChart = findViewById(R.id.go_pie_chart);
         goRadarChart = findViewById(R.id.go_radar_chart);
@@ -177,7 +175,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     public void pieChartGastosTotalesValor(){
         ArrayList<PieEntry> list = new ArrayList();
 
-        list.add(new PieEntry((float) ((hip.getCuotaMensual() * hip.getPlazo_anios() * 12) - hip.obtenerInteresesTotales()), "CAPITAL TOTAL"));
+        list.add(new PieEntry((float) ((hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada()) * hip.getPlazo_anios() * 12) - hip.obtenerInteresesTotales()), "CAPITAL TOTAL"));
         list.add(new PieEntry((float) hip.obtenerInteresesTotales(), "INTERESES TOTALES"));
         list.add(new PieEntry((float) hip.getTotalGastos(), "OTROS GASTOS"));
         list.add(new PieEntry((float) hip.getTotalVinculacionesAnual() * hip.getPlazo_anios(), "VINCULACIONES"));
@@ -208,7 +206,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     public void pieChartGastosTotalesPorcentaje(){
         ArrayList<PieEntry> list = new ArrayList();
         double total = hip.obtenerGastosTotales();
-        list.add(new PieEntry((float) pasarEnteroAPorcentaje((hip.getCuotaMensual() * hip.getPlazo_anios() * 12) - hip.obtenerInteresesTotales(), total), "CAPITAL TOTAL"));
+        list.add(new PieEntry((float) pasarEnteroAPorcentaje((hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada()) * hip.getPlazo_anios() * 12) - hip.obtenerInteresesTotales(), total), "CAPITAL TOTAL"));
         list.add(new PieEntry((float) pasarEnteroAPorcentaje(hip.obtenerInteresesTotales(), total), "INTERESES TOTALES"));
         list.add(new PieEntry((float) pasarEnteroAPorcentaje(hip.getTotalGastos(), total),"OTROS GASTOS"));
         list.add(new PieEntry((float) pasarEnteroAPorcentaje(hip.getTotalVinculacionesAnual() * hip.getPlazo_anios(), total), "VINCULACIONES"));

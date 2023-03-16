@@ -14,21 +14,16 @@ public class HipotecaSeguimiento implements Serializable {
     protected int anio_hipoteca_actual;
     protected int mes_hipoteca_actual;
     protected String tipo_hipoteca;
-
     protected String banco_asociado;
 
     //Gastos
     protected double totalGastos;
-
     protected double totalVinculacionesAnual;
-
     protected String idUsuario;
-
 
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
     }
-
     public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, int mes_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
@@ -42,6 +37,51 @@ public class HipotecaSeguimiento implements Serializable {
         this.totalGastos = totalGastos;
         this.totalVinculacionesAnual = totalVinculacionesAnual;
         this.banco_asociado = banco_asociado;
+    }
+
+    //FUNCIONES
+
+    /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
+     *  y de la cantidad pendiente del prestamo **/
+    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente){
+        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), plazo_anios * 12);
+        return ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
+    }
+
+    /** Funcion que devuelve el interes pagado en funcion del capital que quede por pagar
+     *  y un porcentaje aplicado **/
+    public double getInteresMensual(double capitalPendiente, double porcentaje_aplicado){
+        return capitalPendiente * (porcentaje_aplicado / 100) / 12;
+    }
+
+    /** Funcion que devuelve el capital amortizado mensual en funcion del capital pendiente y un
+     *  porcentaje aplicado **/
+    public double getCapitalAmortizadoMensual(double capitalPendiente, double porcentaje_aplicado){
+        return getCuotaMensual(porcentaje_aplicado, capitalPendiente) - getInteresMensual(capitalPendiente, porcentaje_aplicado);
+    }
+
+    /** Funcion que devuelve el interes pagado de un determinado numero de pago **/
+    /*public double calcularInteresMensualConNumeroMes(int numPago){
+        double capitalPendiente = super.obtenerCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada)  * numPago; //MAAAAAL
+        return capitalPendiente * (porcentaje_fijo / 100) / 12;
+    }*/
+
+    /** Esta funcion devuelve los intereses en un plazo pasandole el capital pendiente, el numero de cuotas, y el
+     *  porcentaje aplicado**/
+    public double obtenerInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado){
+        double interesesTotales = 0;
+
+        for(int i = 0; i < numeroCuotas; i++){
+            interesesTotales += getInteresMensual(capital_pendiente, porcentaje_aplicado);
+            capital_pendiente -= (getCuotaMensual(porcentaje_aplicado, capital_pendiente) - getInteresMensual(capital_pendiente, porcentaje_aplicado));
+        }
+        return interesesTotales;
+    }
+
+
+    //GETTERS Y SETTERS SOBREESCRITOS
+    public double getPorcentaje_fijo() {
+        return 0;
     }
 
     //GETTERS
@@ -158,5 +198,11 @@ public class HipotecaSeguimiento implements Serializable {
         this.banco_asociado = banco_asociado;
     }
 
+    public double obtenerDineroAportadoActual(int i) { return 0;}
 
+    public double obtenerDineroRestanteActual(int i) { return 0;}
+
+    public double obtenerInteresesTotales() { return 0;}
+
+    public double obtenerGastosTotales() { return 0;}
 }
