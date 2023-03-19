@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -23,6 +24,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.PaginaPrincipal;
@@ -46,9 +50,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private EditText precio_vivienda;
     private EditText cantidad_abonada;
     private EditText plazo;
-    private EditText anio_actual;
-    private Spinner sp_mes_actual;
-
+    private DatePicker inicio_hipoteca;
     private CheckBox check_fija;
     private CheckBox check_variable;
     private CheckBox check_mixta;
@@ -109,11 +111,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         precio_vivienda= findViewById(R.id.edit_precio_vivienda);
         cantidad_abonada=findViewById(R.id.edit_cant_abonada_comprador);
         plazo=findViewById(R.id.edit_plazo_pagar);
-        anio_actual=findViewById(R.id.edit_anio_actual);
-        sp_mes_actual = findViewById(R.id.sp_mes_actual);
-        String [] meses = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
-        ArrayAdapter<String> adapterMeses = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, meses);
-        sp_mes_actual.setAdapter(adapterMeses);
+        inicio_hipoteca = findViewById(R.id.inicio_hipoteca);
         check_fija=findViewById(R.id.checkBoxFijaNuevoSeg);
         check_variable=findViewById(R.id.checkBoxVariableNuevoSeg);
         check_mixta=findViewById(R.id.checkBoxMixtaNuevoSeg);
@@ -341,10 +339,24 @@ public class NuevoSeguimiento extends AppCompatActivity {
             plazo.setError(getString(R.string.plazo_vacio));
             return false;
         }
-        if(TextUtils.isEmpty(anio_actual.getText())){
-            anio_actual.setError(getString(R.string.anio_actual_vacio));
+
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+        int selectedYear = inicio_hipoteca.getYear();
+        int selectedMonth = inicio_hipoteca.getMonth();
+        int selectedDayOfMonth = inicio_hipoteca.getDayOfMonth();
+
+        // Comprobar si la fecha seleccionada es mayor que la fecha actual
+        if (selectedYear > year ||
+                (selectedYear == year && selectedMonth > month) ||
+                (selectedYear == year && selectedMonth == month && selectedDayOfMonth > dayOfMonth)) {
+            Toast.makeText(this, "La fecha seleccionada no puede ser mayor o igual que la fecha actual", Toast.LENGTH_SHORT).show();
             return false;
         }
+
         if(TextUtils.isEmpty(nombre_hipoteca.getText())){
             nombre_hipoteca.setError(getString(R.string.nombre_hipoteca_vacio));
             return false;
@@ -397,8 +409,13 @@ public class NuevoSeguimiento extends AppCompatActivity {
         double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
         double cant_abonada = Double.parseDouble(cantidad_abonada.getText().toString());
         int plazo_hip = Integer.parseInt(plazo.getText().toString());
-        int anio_act = Integer.parseInt(anio_actual.getText().toString());
-        int mes_act = Integer.parseInt(sp_mes_actual.getSelectedItem().toString());
+
+        int year = inicio_hipoteca.getYear();
+        int month = inicio_hipoteca.getMonth();
+        int dayOfMonth = inicio_hipoteca.getDayOfMonth();
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, dayOfMonth);
+        Date fecha_inicio = calendar.getTime();
 
         double gastos_gest, gastos_not, gastos_reg, gastos_tas, gastos_vin, gastos_com;
         if(TextUtils.isEmpty(gastos_gestoria.getText())) gastos_gest = 0;
@@ -421,7 +438,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(check_fija.isChecked()){
             double porcentaje_fijo = Double.parseDouble(edit_porcentaje_fijo.getText().toString());
 
-            nuevaHip = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, mes_act, totalGastos, gastos_vin, banco_asociado, porcentaje_fijo);
+            nuevaHip = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, porcentaje_fijo);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());
@@ -433,7 +450,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
 
-            nuevaHip = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, mes_act, totalGastos, gastos_vin, banco_asociado, duracion_primer_porcentaje, primer_porc_variable, diferencial_variable, revision_anual);
+            nuevaHip = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, duracion_primer_porcentaje, primer_porc_variable, diferencial_variable, revision_anual);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());
@@ -445,7 +462,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
             double porc_fijo_mixta = Double.parseDouble(edit_porcentaje_fijo_mix.getText().toString());
             double porc_diferencial_mixta = Double.parseDouble(edit_diferencial_mixto.getText().toString());
 
-            nuevaHip = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, anio_act, mes_act, totalGastos, gastos_vin, banco_asociado, anios_fijo, porc_fijo_mixta, porc_diferencial_mixta, revision_anual);
+            nuevaHip = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, anios_fijo, porc_fijo_mixta, porc_diferencial_mixta, revision_anual);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());

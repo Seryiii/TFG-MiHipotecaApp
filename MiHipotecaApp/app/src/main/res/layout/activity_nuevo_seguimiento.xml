@@ -190,38 +190,19 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="@string/label_año_hipoteca_actual"
+            android:text="@string/label_fecha_inicio_hipoteca"
             android:textSize="20sp"
             android:layout_gravity="center"
             android:layout_marginBottom="10dp" />
 
-        <EditText
-            android:id="@+id/edit_anio_actual"
-            android:layout_width="300dp"
-            android:layout_height="48dp"
-            android:paddingLeft="10dp"
-            android:background="@drawable/rounded_edit_text"
-            android:fontFamily="@font/allerta"
-            android:layout_gravity="center"
-            android:hint="Año actual"
-            android:inputType="number"
-            android:text="" />
-
-        <TextView
+        <DatePicker
+            android:id="@+id/inicio_hipoteca"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_mes_actual"
-            android:textSize="20dp"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"/>
-        <Spinner
-            android:id="@+id/sp_mes_actual"
-            android:layout_width="297dp"
-            android:layout_height="48dp"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="center"
-            />
-
+            android:clickable="true"
+            android:datePickerMode="calendar">
+        </DatePicker>
 
         <TextView
             android:layout_width="wrap_content"

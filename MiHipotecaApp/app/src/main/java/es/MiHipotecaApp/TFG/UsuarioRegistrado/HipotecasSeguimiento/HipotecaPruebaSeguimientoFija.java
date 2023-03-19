@@ -4,13 +4,13 @@ import android.util.Log;
 
 import java.util.ArrayList;
 
-public class HipotecaSeguimientoFija {
+public class HipotecaPruebaSeguimientoFija {
 
     private float capitalTotal, capitalAbonado, porcentajeIntAnual, vinculacionesMensuales;
     private int numAnios;
 
 
-    public HipotecaSeguimientoFija(float capitalTotal, float capitalAbonado, float porcentajeIntAnual, float vinculacionesMensuales, int numAnios) {
+    public HipotecaPruebaSeguimientoFija(float capitalTotal, float capitalAbonado, float porcentajeIntAnual, float vinculacionesMensuales, int numAnios) {
         this.capitalTotal = capitalTotal;
         this.capitalAbonado = capitalAbonado;
         this.porcentajeIntAnual = porcentajeIntAnual;

@@ -30,7 +30,7 @@
             android:textSize="40sp" />
 
         <TextView
-        android:id="@+id/titulo_seguimiento_hipoteca"
+        android:id="@+id/nombre_seguimiento_hipoteca"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="50dp"
@@ -40,18 +40,31 @@
         android:text="Titulo"
         android:textSize="35sp" />
 
-        <TextView
-            android:id="@+id/tv_tipo_hipoteca_seguimiento"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
-            android:fontFamily="@font/allerta"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:text="@string/label_tipo_de_hipoteca"
-            android:textSize="22sp" />
+            android:gravity="center">
+            <TextView
+                android:id="@+id/tv_tipo_hipoteca_seguimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="@string/label_tipo_de_hipoteca"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/tipo_hipoteca_seguimiento"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="15dp"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:textColor="@color/black"
+                android:text="Fija"
+                android:textSize="22sp" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -177,16 +190,34 @@
             android:orientation="vertical"
             android:background="@drawable/btn_bordes_redondos">
 
-            <TextView
-                android:id="@+id/cuota_mensual_seguimiento_hip"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:fontFamily="@font/allerta"
                 android:gravity="center"
-                android:textColor="@color/black"
-                android:text="Cuota: "
-                android:textSize="22sp" />
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+                <TextView
+                    android:id="@+id/cuota_mensual_seguimiento_hip"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:fontFamily="@font/allerta"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:text="Cuota: "
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/cuota_mensual_seguimiento"
+                    android:layout_width="100dp"
+                    android:layout_height="35dp"
+                    android:text="500€"
+                    android:fontFamily="@font/allerta"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textSize="22sp" />
+
+             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"

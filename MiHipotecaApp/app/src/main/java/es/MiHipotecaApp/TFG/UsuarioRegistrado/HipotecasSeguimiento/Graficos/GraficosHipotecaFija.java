@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.MiHipotecaApp.TFG.R;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.HipotecaSeguimientoFija;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.HipotecaPruebaSeguimientoFija;
 
 public class GraficosHipotecaFija extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class GraficosHipotecaFija extends AppCompatActivity {
     LineChart lineChart;
     Button btn_euros;
     Button btn_porcentaje;
-    HipotecaSeguimientoFija h;
+    HipotecaPruebaSeguimientoFija h;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +42,7 @@ public class GraficosHipotecaFija extends AppCompatActivity {
         btn_euros = findViewById(R.id.btn_euros);
         btn_porcentaje = findViewById(R.id.btn_porcentaje);
 
-        h = new HipotecaSeguimientoFija(100000, 50000, 9, 128, 25);
+        h = new HipotecaPruebaSeguimientoFija(100000, 50000, 9, 128, 25);
         h.calcularHipoteca();
         btn_euros.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,7 +136,7 @@ public class GraficosHipotecaFija extends AppCompatActivity {
         btn_porcentaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                HipotecaSeguimientoFija h = new HipotecaSeguimientoFija(100000, 50000, 9, 128, 25);
+                HipotecaPruebaSeguimientoFija h = new HipotecaPruebaSeguimientoFija(100000, 50000, 9, 128, 25);
                 h.calcularHipoteca();
 
                 ArrayList<PieEntry> list = new ArrayList();

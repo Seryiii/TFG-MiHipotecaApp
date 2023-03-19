@@ -32,6 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
@@ -90,38 +91,36 @@ public class TusHipotecas extends Fragment {
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
                     String nombre = documentSnapshot.getString("nombre");
                     String comunidad = documentSnapshot.getString("comunidad_autonoma");
-                    String tipo = documentSnapshot.getString("tipo_hipoteca");
+                    String tipo_vivienda = documentSnapshot.getString("tipo_vivienda");
                     String antiguedad = documentSnapshot.getString("antiguedad_vivienda");
                     double precio_vivienda = documentSnapshot.getDouble("precio_vivienda");
                     double cantidad_abonada = documentSnapshot.getDouble("cantidad_abonada");
                     long plazo_l = documentSnapshot.getLong("plazo_anios");
                     int plazo = (int) plazo_l;
-                    long anio_actual_l = documentSnapshot.getLong("anio_hipoteca_actual");
-                    int anio_actual = (int) anio_actual_l;
-                    long mes_actual_l = documentSnapshot.getLong("mes_hipoteca_actual");
-                    int mes_actual = (int) mes_actual_l;
+                    Date fecha_inicio = documentSnapshot.getDate("fecha_inicio");
+                    String tipo_hipoteca = documentSnapshot.getString("tipo_hipoteca");
                     double total_gastos = documentSnapshot.getDouble("totalGastos");
                     double total_vinculaciones = documentSnapshot.getDouble("totalVinculacionesAnual");
                     String banco_asociado = documentSnapshot.getString("banco_asociado");
                     HipotecaSeguimiento h;
 
-                    if (tipo.equals("fija")){
+                    if (tipo_hipoteca.equals("fija")){
                         double porcen_fijo = documentSnapshot.getDouble("porcentaje_fijo");
-                        h = new HipotecaSegFija(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, mes_actual, total_gastos, total_vinculaciones, banco_asociado, porcen_fijo);
-                    }else if(tipo.equals("variable")){
+                        h = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, total_vinculaciones, banco_asociado, porcen_fijo);
+                    }else if(tipo_hipoteca.equals("variable")){
                         long duracion_primer_por_l = documentSnapshot.getLong("duracion_primer_porcentaje_variable");
                         int duracion_primer_por = (int) duracion_primer_por_l;
                         double primer_porcen = documentSnapshot.getDouble("primer_porcentaje_variable");
                         double porcentaje_diferen = documentSnapshot.getDouble("porcentaje_diferencial_variable");
                         boolean revision = documentSnapshot.getBoolean("revision_anual");
-                        h = new HipotecaSegVariable(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, mes_actual, total_gastos, total_vinculaciones, banco_asociado, duracion_primer_por, primer_porcen, porcentaje_diferen, revision);
+                        h = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, total_vinculaciones, banco_asociado, duracion_primer_por, primer_porcen, porcentaje_diferen, revision);
                     }else{
                         long anios_fija_mix_l =  documentSnapshot.getLong("anios_fija_mixta");
                         int anios_fija_mix = (int) anios_fija_mix_l;
                         double porcen_fijo_mix = documentSnapshot.getDouble("porcentaje_fijo_mixta");
                         double porcent_diferen_mix = documentSnapshot.getDouble("porcentaje_diferencial_mixta");
                         boolean revision = documentSnapshot.getBoolean("revision_anual");
-                        h = new HipotecaSegMixta(nombre, comunidad, tipo, antiguedad, precio_vivienda, cantidad_abonada, plazo, anio_actual, mes_actual, total_gastos, total_vinculaciones, banco_asociado, anios_fija_mix, porcen_fijo_mix, porcent_diferen_mix, revision);
+                        h = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, total_vinculaciones, banco_asociado, anios_fija_mix, porcen_fijo_mix, porcent_diferen_mix, revision);
                     }
                     listaHipotecasSeg.add(h);
                 }
@@ -143,7 +142,7 @@ public class TusHipotecas extends Fragment {
                                             //Redirigir a la vista de la hipoteca de seguimiento
                                             HipotecaSeguimiento hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
                                             Intent j = new Intent(getActivity().getApplicationContext(), VisualizarHipotecaSeguimiento.class);
-                                            j.putExtra("tipo", hip.getTipo_hipoteca());
+                                            j.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                                             j.putExtra("hipoteca", hip);
                                             startActivity(j);
 

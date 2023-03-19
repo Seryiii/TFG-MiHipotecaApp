@@ -52,6 +52,7 @@
     <string name="label_precio_vivienda">¿Precio de la vivienda?</string>
     <string name="label_cantidad_abonada">¿Cantidad abonada por el comprador?</string>
     <string name="label_plazo_prestamo_a_pagar">¿Plazo a pagar de préstamo? (en años)</string>
+    <string name="label_fecha_inicio_hipoteca">¿Fecha de inicio de la hipoteca?</string>
     <string name="label_año_hipoteca_actual">¿Año de hipoteca actual?</string>
     <string name="label_mes_actual">¿Mes de hipoteca actual?</string>
     <string name="label_informar_problema">Notificar problema</string>

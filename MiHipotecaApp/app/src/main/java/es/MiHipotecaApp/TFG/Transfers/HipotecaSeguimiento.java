@@ -1,6 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class HipotecaSeguimiento implements Serializable {
 
@@ -11,8 +12,7 @@ public class HipotecaSeguimiento implements Serializable {
     protected double precio_vivienda;
     protected double cantidad_abonada;
     protected int plazo_anios;
-    protected int anio_hipoteca_actual;
-    protected int mes_hipoteca_actual;
+    protected Date fecha_inicio;
     protected String tipo_hipoteca;
     protected String banco_asociado;
 
@@ -24,7 +24,7 @@ public class HipotecaSeguimiento implements Serializable {
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
     }
-    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, int anio_hipoteca_actual, int mes_hipoteca_actual, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
+    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, Date fecha_inicio, String tipo_hipoteca, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
         this.tipo_vivienda = tipo_vivienda;
@@ -32,8 +32,8 @@ public class HipotecaSeguimiento implements Serializable {
         this.precio_vivienda = precio_vivienda;
         this.cantidad_abonada = cantidad_abonada;
         this.plazo_anios = plazo_anios;
-        this.anio_hipoteca_actual = anio_hipoteca_actual;
-        this.mes_hipoteca_actual = mes_hipoteca_actual;
+        this.fecha_inicio = fecha_inicio;
+        this.tipo_hipoteca = tipo_hipoteca;
         this.totalGastos = totalGastos;
         this.totalVinculacionesAnual = totalVinculacionesAnual;
         this.banco_asociado = banco_asociado;
@@ -113,13 +113,7 @@ public class HipotecaSeguimiento implements Serializable {
         return plazo_anios;
     }
 
-    public int getAnio_hipoteca_actual() {
-        return anio_hipoteca_actual;
-    }
-
-    public int getMes_hipoteca_actual() {
-        return mes_hipoteca_actual;
-    }
+    public Date getFecha_inicio() { return fecha_inicio; }
 
     public String getTipo_hipoteca() {
         return tipo_hipoteca;
@@ -170,12 +164,8 @@ public class HipotecaSeguimiento implements Serializable {
         this.plazo_anios = plazo_anios;
     }
 
-    public void setAnio_hipoteca_actual(int anio_hipoteca_actual) {
-        this.anio_hipoteca_actual = anio_hipoteca_actual;
-    }
-
-    public void setMes_hipoteca_actual(int mes_hipoteca_actual) {
-        this.mes_hipoteca_actual = mes_hipoteca_actual;
+    public void setFecha_inicio(Date fecha_inicio) {
+        this.fecha_inicio = fecha_inicio;
     }
 
     public void setTipo_hipoteca(String tipo_hipoteca) {
@@ -198,11 +188,11 @@ public class HipotecaSeguimiento implements Serializable {
         this.banco_asociado = banco_asociado;
     }
 
-    public double obtenerDineroAportadoActual(int i) { return 0;}
+    public double getDineroAportadoActual(int i) { return 0;}
 
-    public double obtenerDineroRestanteActual(int i) { return 0;}
+    public double getDineroRestanteActual(int i) { return 0;}
 
-    public double obtenerInteresesTotales() { return 0;}
+    public double getInteresesTotales() { return 0;}
 
-    public double obtenerGastosTotales() { return 0;}
+    public double getGastosTotalesHipoteca() { return 0;}
 }
