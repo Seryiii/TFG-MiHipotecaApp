@@ -64,38 +64,60 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+        initUI();
+        rellenarUI();
+        eventos();
+    }
 
-        goBarChart = findViewById(R.id.go_bar_chart);
-        goPieChart = findViewById(R.id.go_pie_chart);
-        goRadarChart = findViewById(R.id.go_radar_chart);
-        dinero_restante_a_pagar = findViewById(R.id.label_cantidad_pendiente_seguimiento_hip);
+    private void initUI(){
+        goBarChart                = findViewById(R.id.go_bar_chart);
+        goPieChart                = findViewById(R.id.go_pie_chart);
+        goRadarChart              = findViewById(R.id.go_radar_chart);
+        dinero_restante_a_pagar   = findViewById(R.id.label_cantidad_pendiente_seguimiento_hip);
+        nombre_hipoteca           = findViewById(R.id.nombre_seguimiento_hipoteca);
+        tipo_hipoteca_seg         = findViewById(R.id.tipo_hipoteca_seguimiento);
+        anios_restantes_hipoteca  = findViewById(R.id.label_anios_restantes_seguimiento_hip);
+        mes_actual_cuota          = findViewById(R.id.nombre_mes_actual_seguimiento_hip);
+        cuota_mensual_seguimiento = findViewById(R.id.cuota_mensual_seguimiento);
 
+        //BOTONES
+        btn_aportado_vs_financiar_valor      = findViewById(R.id.btn_valor_aportado_vs_a_financiar);
+        btn_aportado_vs_financiar_porcentaje = findViewById(R.id.btn_porcentaje_aportado_vs_a_financiar);
+        aportado_vs_a_financiar              = findViewById(R.id.pie_chart_aportado_vs_a_financiar);
+
+        btn_gastos_totales_valor             = findViewById(R.id.btn_valor_gastos_totales);
+        btn_gastos_totales_porcentaje        = findViewById(R.id.btn_porcentaje_gastos_totales);
+        gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
+    }
+
+    private void rellenarUI(){
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
         String numeroFormateado = formato.format(hip.getDineroRestanteActual(pasarDateANumPago(hip.getFecha_inicio())))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
 
-        nombre_hipoteca = findViewById(R.id.nombre_seguimiento_hipoteca);
+
         nombre_hipoteca.setText(hip.getNombre());
 
-        tipo_hipoteca_seg = findViewById(R.id.tipo_hipoteca_seguimiento);
+
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
 
-        anios_restantes_hipoteca = findViewById(R.id.label_anios_restantes_seguimiento_hip);
-        Calendar fechaActual = Calendar.getInstance();
+
+        /*Calendar fechaActual = Calendar.getInstance();
         Calendar fechaInicioCalendar = Calendar.getInstance();
         fechaInicioCalendar.setTime(hip.getFecha_inicio());
         fechaInicioCalendar.add(Calendar.YEAR, hip.getPlazo_anios());
         long diferenciaMillis = fechaInicioCalendar.getTimeInMillis() - fechaActual.getTimeInMillis();
         Calendar diferenciaCalendar = Calendar.getInstance();
         diferenciaCalendar.setTimeInMillis(diferenciaMillis);
-        anios_restantes_hipoteca.setText(Integer.toString(diferenciaCalendar.get(Calendar.YEAR) - 1970)  + " años");
+        anios_restantes_hipoteca.setText(Integer.toString(diferenciaCalendar.get(Calendar.YEAR) - 1970)  + " años");*/
+        anios_restantes_hipoteca.setText(hip.getAniosRestantes() + " años");
 
-        mes_actual_cuota = findViewById(R.id.nombre_mes_actual_seguimiento_hip);
-        String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
-        mes_actual_cuota.setText(nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1));
+
+        /*String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
+        mes_actual_cuota.setText(nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1));*/
+        mes_actual_cuota.setText(hip.getNombreMesActual());
 
         if(hip.getTipo_hipoteca().equals("fija")) {
-            cuota_mensual_seguimiento = findViewById(R.id.cuota_mensual_seguimiento);
             String cuotaFormateada = formato.format(hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada())) + "€"; // Formatear el número
             cuota_mensual_seguimiento.setText(cuotaFormateada);
         } else if(hip.getTipo_hipoteca().equals("variable")) {
@@ -103,16 +125,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         } else {
             //...
         }
-
-
-            btn_aportado_vs_financiar_valor = findViewById(R.id.btn_valor_aportado_vs_a_financiar);
-        btn_aportado_vs_financiar_porcentaje = findViewById(R.id.btn_porcentaje_aportado_vs_a_financiar);
-        aportado_vs_a_financiar = findViewById(R.id.pie_chart_aportado_vs_a_financiar);
-
-        btn_gastos_totales_valor = findViewById(R.id.btn_valor_gastos_totales);
-        btn_gastos_totales_porcentaje = findViewById(R.id.btn_porcentaje_gastos_totales);
-        gastos_totales = findViewById(R.id.pie_chart_gastos_totales);
-
+    }
+    private void eventos(){
         pieChartAportadoVsFinanciarValor(); //Se visualiza por defecto el grafico de valor
         btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
             @Override

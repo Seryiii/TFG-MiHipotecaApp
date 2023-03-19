@@ -1,7 +1,13 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class HipotecaSeguimiento implements Serializable {
 
@@ -68,7 +74,7 @@ public class HipotecaSeguimiento implements Serializable {
 
     /** Esta funcion devuelve los intereses en un plazo pasandole el capital pendiente, el numero de cuotas, y el
      *  porcentaje aplicado**/
-    public double obtenerInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado){
+    public double getInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado){
         double interesesTotales = 0;
 
         for(int i = 0; i < numeroCuotas; i++){
@@ -77,6 +83,29 @@ public class HipotecaSeguimiento implements Serializable {
         }
         return interesesTotales;
     }
+
+    public int getAniosRestantes(){
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        // Dia actual
+        Calendar actual = Calendar.getInstance();
+        // Calcula la diferencia de años
+        int diferencia = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        // Si la diferencia de años es 0, no hay que restar nada
+        // Si el año del dia de la fecha que yo paso es mayor que la actual, resto uno
+        if (diferencia != 0 && (inicio.get(Calendar.DAY_OF_YEAR) > actual.get(Calendar.DAY_OF_YEAR))) diferencia--;
+
+        return plazo_anios - diferencia;
+    }
+
+
+    public String getNombreMesActual(){
+        Calendar fechaActual = Calendar.getInstance();
+        String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
+        return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
+    }
+
+
 
 
     //GETTERS Y SETTERS SOBREESCRITOS
