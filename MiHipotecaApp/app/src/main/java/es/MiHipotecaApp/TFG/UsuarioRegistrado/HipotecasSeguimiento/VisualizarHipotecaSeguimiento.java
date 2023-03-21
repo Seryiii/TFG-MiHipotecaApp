@@ -110,10 +110,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
 
         if(hip.getTipo_hipoteca().equals("fija")) {
-            String cuotaFormateada = formato.format(hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada())) + "€"; // Formatear el número
+            double cuota_mensual = hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada());
+            String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
             cuota_mensual_seguimiento.setText(cuotaFormateada);
             double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-            String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
+            String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, hip.getPorcentaje_fijo())) + "€";
             capital_cuota_mensual.setText(capitalFormateado);
             String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
             intereses_cuota_mensual.setText(interesesFormateado);

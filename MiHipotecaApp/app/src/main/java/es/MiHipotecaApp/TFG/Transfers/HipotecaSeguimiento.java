@@ -1,6 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
@@ -51,19 +52,22 @@ public class HipotecaSeguimiento implements Serializable {
      *  y de la cantidad pendiente del prestamo **/
     public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente){
         double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), plazo_anios * 12);
-        return ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
+        double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
+        return Math.round(cuotaMensual * 100.0) / 100.0;
     }
 
     /** Funcion que devuelve el interes pagado en funcion del capital que quede por pagar
      *  y un porcentaje aplicado **/
     public double getInteresMensual(double capitalPendiente, double porcentaje_aplicado){
-        return capitalPendiente * (porcentaje_aplicado / 100) / 12;
+        double interesesMensual = (capitalPendiente * (porcentaje_aplicado / 100) / 12);
+        return Math.round(interesesMensual * 100.0) / 100.0;
     }
 
     /** Funcion que devuelve el capital amortizado mensual en funcion del capital pendiente y un
      *  porcentaje aplicado **/
-    public double getCapitalAmortizadoMensual(double capitalPendiente, double porcentaje_aplicado){
-        return getCuotaMensual(porcentaje_aplicado, capitalPendiente) - getInteresMensual(capitalPendiente, porcentaje_aplicado);
+    public double getCapitalAmortizadoMensual(double cuota_mensual, double capitalPendiente, double porcentaje_aplicado){
+        double capitalAmortizadoMensual = cuota_mensual - getInteresMensual(capitalPendiente, porcentaje_aplicado);
+        return Math.round(capitalAmortizadoMensual * 100.0) / 100.0;
     }
 
     /** Funcion que devuelve el interes pagado de un determinado numero de pago **/
