@@ -43,6 +43,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private TextView dinero_restante_a_pagar;
     private TextView anios_restantes_hipoteca;
     private TextView mes_actual_cuota;
+
+    private TextView capital_cuota_mensual;
+    private TextView intereses_cuota_mensual;
+    private TextView numero_cuota_actual;
     private TextView cuota_mensual_seguimiento;
 
     private PieChart aportado_vs_a_financiar;
@@ -79,6 +83,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         anios_restantes_hipoteca  = findViewById(R.id.label_anios_restantes_seguimiento_hip);
         mes_actual_cuota          = findViewById(R.id.nombre_mes_actual_seguimiento_hip);
         cuota_mensual_seguimiento = findViewById(R.id.cuota_mensual_seguimiento);
+        capital_cuota_mensual     = findViewById(R.id.capital_cuota_mensual_hip);
+        intereses_cuota_mensual   = findViewById(R.id.intereses_cuota_mensual_hip);
+        numero_cuota_actual       = findViewById(R.id.numero_cuota_actual_hip);
 
         //BOTONES
         btn_aportado_vs_financiar_valor      = findViewById(R.id.btn_valor_aportado_vs_a_financiar);
@@ -94,32 +101,22 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
         String numeroFormateado = formato.format(hip.getDineroRestanteActual(pasarDateANumPago(hip.getFecha_inicio())))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
-
-
         nombre_hipoteca.setText(hip.getNombre());
-
-
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
-
-
-        /*Calendar fechaActual = Calendar.getInstance();
-        Calendar fechaInicioCalendar = Calendar.getInstance();
-        fechaInicioCalendar.setTime(hip.getFecha_inicio());
-        fechaInicioCalendar.add(Calendar.YEAR, hip.getPlazo_anios());
-        long diferenciaMillis = fechaInicioCalendar.getTimeInMillis() - fechaActual.getTimeInMillis();
-        Calendar diferenciaCalendar = Calendar.getInstance();
-        diferenciaCalendar.setTimeInMillis(diferenciaMillis);
-        anios_restantes_hipoteca.setText(Integer.toString(diferenciaCalendar.get(Calendar.YEAR) - 1970)  + " años");*/
         anios_restantes_hipoteca.setText(hip.getAniosRestantes() + " años");
-
-
-        /*String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
-        mes_actual_cuota.setText(nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1));*/
         mes_actual_cuota.setText(hip.getNombreMesActual());
+        numero_cuota_actual.setText("Número cuota actual: " + hip.getNumeroCuotaActual() + " / " + hip.getPlazo_anios() * 12);
+
+
 
         if(hip.getTipo_hipoteca().equals("fija")) {
             String cuotaFormateada = formato.format(hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada())) + "€"; // Formatear el número
             cuota_mensual_seguimiento.setText(cuotaFormateada);
+            double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+            String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
+            capital_cuota_mensual.setText(capitalFormateado);
+            String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
+            intereses_cuota_mensual.setText(interesesFormateado);
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //...
         } else {

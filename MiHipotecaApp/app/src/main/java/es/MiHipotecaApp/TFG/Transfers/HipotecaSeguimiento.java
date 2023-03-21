@@ -105,8 +105,23 @@ public class HipotecaSeguimiento implements Serializable {
         return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
     }
 
+    /** Devuelve el numero de cuota por el que va actualmente la hipoteca [1 - plazo_anios * 12 ] **/
+    public int getNumeroCuotaActual(){
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        // Dia actual
+        Calendar actual = Calendar.getInstance();
+        int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
+        // Se le suma 1 porque se asume que el primer pago es el 1 y no el 0
+        return numeroPagoActual + 1;
+    }
 
 
+    //FUNCIONES SOBREESCRITAS
+    public double getCapitalPendienteTotalActual(int numero_pago){
+        return 0;
+    }
 
     //GETTERS Y SETTERS SOBREESCRITOS
     public double getPorcentaje_fijo() {

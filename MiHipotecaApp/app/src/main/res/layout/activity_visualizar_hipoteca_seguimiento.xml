@@ -43,7 +43,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center">
+            android:gravity="center"
+            android:layout_marginTop="15dp">
             <TextView
                 android:id="@+id/tv_tipo_hipoteca_seguimiento"
                 android:layout_width="wrap_content"
@@ -228,6 +229,36 @@
 
 
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:text="Capital"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:textColor="@color/black"
+                    android:text="Intereses"
+                    android:textSize="22sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp">
+
+
+                <TextView
                     android:id="@+id/capital_cuota_mensual_hip"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -235,7 +266,7 @@
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:text="Capital: "
+                    android:text="250€"
                     android:textSize="22sp" />
 
                 <TextView
@@ -246,10 +277,22 @@
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
                     android:textColor="@color/black"
-                    android:text="Intereses: "
+                    android:text="250€"
                     android:textSize="22sp" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/numero_cuota_actual_hip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/allerta"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:text="Número de cuota:  "
+                android:textSize="22sp"
+                android:layout_marginBottom="10dp"/>
+
         </LinearLayout>
 
         <TextView

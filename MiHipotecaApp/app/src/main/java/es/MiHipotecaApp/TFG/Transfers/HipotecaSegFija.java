@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -26,6 +28,17 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada)*(plazo_anios*12 - numPago);
     }
 
+    /** Esta funcion devuelve el capital pendiente total por amortizar**/
+    @Override
+    public double getCapitalPendienteTotalActual(int numero_pago){
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        for (int i = 1; i <= numero_pago; i++){
+            double cantidad_capital   = getCapitalAmortizadoMensual(capital_pendiente, porcentaje_fijo);
+            capital_pendiente = capital_pendiente - cantidad_capital;
+            Log.i("Pago " + i + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital);
+        }
+        return capital_pendiente;
+    }
 
     /** Revisar esta funcion, creo que esta mal*/
     @Override
