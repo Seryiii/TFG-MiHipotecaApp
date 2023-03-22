@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -19,18 +21,54 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         this.revision_anual = revision_anual;
     }
 
+
+    /** Esta funcion devuelve el capital pendiente total por amortizar**/
+    @Override
+    public double getCapitalPendienteTotalActual(int numero_pago){
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        double cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazo_anios * 12);
+        double cantidad_capital;
+        int aux = numero_pago > duracion_primer_porcentaje_variable ? duracion_primer_porcentaje_variable : numero_pago;
+        for (int i = 1; i <= aux; i++){
+            cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, primer_porcentaje_variable);
+            capital_pendiente = capital_pendiente - cantidad_capital;
+            Log.i("Pago " + i + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
+        }
+
+        int j = aux;
+        int revision = 6;
+        while(j < getNumeroCuotaActual()){
+            if(isRevision_anual()) revision = 12;
+            double euribor = getEuriborPasado(j);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            for(int h = 0; h < revision && j < getNumeroCuotaActual(); h++){
+                cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_variable + euribor);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+                Log.i("Pago " + Integer.toString(j + 1) + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
+                j++;
+            }
+        }
+
+        return capital_pendiente;
+    }
+
+    /** Getters y Setters*/
+    @Override
     public int getDuracion_primer_porcentaje_variable() {
         return duracion_primer_porcentaje_variable;
     }
 
+    @Override
     public double getPrimer_porcentaje_variable() {
         return primer_porcentaje_variable;
     }
 
+    @Override
     public double getPorcentaje_diferencial_variable() {
         return porcentaje_diferencial_variable;
     }
 
+    @Override
     public boolean isRevision_anual() {
         return revision_anual;
     }

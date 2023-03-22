@@ -50,8 +50,8 @@ public class HipotecaSeguimiento implements Serializable {
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
-    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente){
-        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), plazo_anios * 12);
+    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes){
+        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes);
         double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
         return Math.round(cuotaMensual * 100.0) / 100.0;
     }
@@ -78,12 +78,12 @@ public class HipotecaSeguimiento implements Serializable {
 
     /** Esta funcion devuelve los intereses en un plazo pasandole el capital pendiente, el numero de cuotas, y el
      *  porcentaje aplicado**/
-    public double getInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado){
+    public double getInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado, double couta_mensual){
         double interesesTotales = 0;
 
         for(int i = 0; i < numeroCuotas; i++){
             interesesTotales += getInteresMensual(capital_pendiente, porcentaje_aplicado);
-            capital_pendiente -= (getCuotaMensual(porcentaje_aplicado, capital_pendiente) - getInteresMensual(capital_pendiente, porcentaje_aplicado));
+            capital_pendiente -= couta_mensual - getInteresMensual(capital_pendiente, porcentaje_aplicado);
         }
         return interesesTotales;
     }
@@ -117,8 +117,9 @@ public class HipotecaSeguimiento implements Serializable {
         Calendar actual = Calendar.getInstance();
         int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
         int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
-        // Se le suma 1 porque se asume que el primer pago es el 1 y no el 0
-        return numeroPagoActual + 1;
+
+        if(actual.get(Calendar.DAY_OF_MONTH) < inicio.get(Calendar.DAY_OF_MONTH)) return numeroPagoActual;
+        else return numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
     }
 
 
@@ -131,6 +132,14 @@ public class HipotecaSeguimiento implements Serializable {
     public double getPorcentaje_fijo() {
         return 0;
     }
+
+    public int getDuracion_primer_porcentaje_variable(){ return 0; }
+
+    public double getPrimer_porcentaje_variable(){ return 0; }
+
+    public double getPorcentaje_diferencial_variable(){ return 0; }
+
+    public boolean isRevision_anual() { return false; }
 
     //GETTERS
     public String getNombre() {
@@ -243,4 +252,11 @@ public class HipotecaSeguimiento implements Serializable {
     public double getInteresesTotales() { return 0;}
 
     public double getGastosTotalesHipoteca() { return 0;}
+
+
+
+    /** FUNCIONES DE PRUEBA PARA HACER MAS FUNCIONALIDADES, CAMBIAR POR WEB SCRAPING O SIMILARES*/
+    public double getEuriborActual(){ return 3.018; }
+    public double getEuriborPasado(int numPago){ return 3.018; } //Calcula el euribor que hubo correspondiente a un numero de pago
+
 }

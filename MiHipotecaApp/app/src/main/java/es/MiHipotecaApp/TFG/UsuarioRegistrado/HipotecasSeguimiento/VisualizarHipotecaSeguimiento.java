@@ -99,7 +99,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private void rellenarUI(){
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
-        String numeroFormateado = formato.format(hip.getDineroRestanteActual(pasarDateANumPago(hip.getFecha_inicio())))  + "€"; // Formatear el número
+        String numeroFormateado = formato.format(hip.getDineroRestanteActual(hip.getNumeroCuotaActual()))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
@@ -110,23 +110,47 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
 
         if(hip.getTipo_hipoteca().equals("fija")) {
-            double cuota_mensual = hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada());
+            double cuota_mensual = hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada(), hip.getPlazo_anios() * 12);
             String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
             cuota_mensual_seguimiento.setText(cuotaFormateada);
+
             double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
             String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, hip.getPorcentaje_fijo())) + "€";
             capital_cuota_mensual.setText(capitalFormateado);
+
             String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
             intereses_cuota_mensual.setText(interesesFormateado);
         } else if(hip.getTipo_hipoteca().equals("variable")) {
-            //...
+            if(hip.getNumeroCuotaActual() <= hip.getDuracion_primer_porcentaje_variable()){ //Caso en el que se aplica el porcentaje fijo
+                double cuota_mensual = hip.getCuotaMensual(hip.getPrimer_porcentaje_variable(), hip.getPrecio_vivienda() - hip.getCantidad_abonada(), hip.getPlazo_anios() * 12);
+                String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
+                cuota_mensual_seguimiento.setText(cuotaFormateada);
+
+                double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+                String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, hip.getPorcentaje_fijo())) + "€";
+                capital_cuota_mensual.setText(capitalFormateado);
+
+                String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
+                intereses_cuota_mensual.setText(interesesFormateado);
+            } else { //Caso en el que se aplica el diferencial + euribor
+                double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+
+                double cuota_mensual = hip.getCuotaMensual(hip.getEuriborActual() + hip.getPorcentaje_diferencial_variable(), capitalPendiente , (hip.getPlazo_anios() * 12) - hip.getNumeroCuotaActual());
+                String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
+                cuota_mensual_seguimiento.setText(cuotaFormateada);
+
+                //Primero calculamos el capital que lleva pagado en las primera parte "fija" de la hipoteca
+
+
+            }
+
         } else {
             //...
         }
     }
     private void eventos(){
-        pieChartAportadoVsFinanciarValor(); //Se visualiza por defecto el grafico de valor
-        btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
+        //pieChartAportadoVsFinanciarValor(); //Se visualiza por defecto el grafico de valor
+        /*btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 pieChartAportadoVsFinanciarValor();
@@ -139,7 +163,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
-        pieChartGastosTotalesValor(); //Se visualiza por defecto el grafico de valor
+        //pieChartGastosTotalesValor(); //Se visualiza por defecto el grafico de valor
         btn_gastos_totales_valor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,16 +187,16 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
         goPieChart.setOnClickListener(v -> startActivity(new Intent(this, GraficosHipotecaFija.class)));
 
-        goRadarChart.setOnClickListener(v -> startActivity(new Intent(this, RadarChartActivity.class)));
+        goRadarChart.setOnClickListener(v -> startActivity(new Intent(this, RadarChartActivity.class)));*/
     }
-
+/*
     public void pieChartAportadoVsFinanciarValor(){
 
         ArrayList<PieEntry> list = new ArrayList();
 
-        int aux = pasarDateANumPago(hip.getFecha_inicio());
+        int aux = hip.getNumeroCuotaActual();
         list.add(new PieEntry((float) hip.getDineroAportadoActual(aux), "DINERO APORTADO"));
-        list.add(new PieEntry((float) hip.getDineroRestanteActual(pasarDateANumPago(hip.getFecha_inicio())), "DINERO RESTANTE"));
+        list.add(new PieEntry((float) hip.getDineroRestanteActual(hip.getNumeroCuotaActual()), "DINERO RESTANTE"));
 
 
         PieDataSet pieDataSet = new PieDataSet(list, "List");
@@ -201,8 +225,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     public void pieChartAportadoVsFinanciarPorcentaje(){
 
         ArrayList<PieEntry> list = new ArrayList();
-        double auxAportado = hip.getDineroAportadoActual(pasarDateANumPago(hip.getFecha_inicio()));
-        double auxRestante = hip.getDineroRestanteActual(pasarDateANumPago(hip.getFecha_inicio()));
+        double auxAportado = hip.getDineroAportadoActual(hip.getNumeroCuotaActual());
+        double auxRestante = hip.getDineroRestanteActual(hip.getNumeroCuotaActual());
         double auxTotal = auxAportado + auxRestante;
         auxAportado = pasarEnteroAPorcentaje(auxAportado, auxTotal);
         auxRestante = pasarEnteroAPorcentaje(auxRestante, auxTotal);
@@ -233,10 +257,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     }
 
-    public void pieChartGastosTotalesValor(){
+    public void pieChartGastosTotalesValor(double cuota_mensual){
         ArrayList<PieEntry> list = new ArrayList();
-        double aux = hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada());
-        list.add(new PieEntry((float) ((aux * hip.getPlazo_anios() * 12) - hip.getInteresesTotales()), "CAPITAL TOTAL"));
+        list.add(new PieEntry((float) ((cuota_mensual * hip.getPlazo_anios() * 12) - hip.getInteresesTotales()), "CAPITAL TOTAL"));
         list.add(new PieEntry((float) hip.getInteresesTotales(), "INTERESES TOTALES"));
         list.add(new PieEntry((float) hip.getTotalGastos(), "OTROS GASTOS"));
         list.add(new PieEntry((float) hip.getTotalVinculacionesAnual() * hip.getPlazo_anios(), "VINCULACIONES"));
@@ -298,14 +321,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     public double pasarEnteroAPorcentaje(double entero, double total){
         return (entero * 100) / total;
     }
-
-    public int pasarDateANumPago(Date fecha_inicio){
-        Calendar calendar = Calendar.getInstance(); // Obtenemos un objeto Calendar con la fecha actual
-        long diffInMillis = calendar.getTimeInMillis() - fecha_inicio.getTime(); // Calculamos la diferencia en milisegundos entre la fecha actual y la fecha de inicio
-        int diffInMonths = (int) (diffInMillis / (30L * 24L * 60L * 60L * 1000L)); // Convertimos la diferencia en milisegundos a meses
-
-        return diffInMonths;
-    }
-
+*/
 }
 
