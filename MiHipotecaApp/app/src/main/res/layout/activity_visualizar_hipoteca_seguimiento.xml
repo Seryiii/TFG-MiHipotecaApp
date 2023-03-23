@@ -200,18 +200,18 @@
                 android:layout_marginEnd="8dp">
                 <TextView
                     android:id="@+id/cuota_mensual_seguimiento_hip"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:fontFamily="@font/allerta"
                     android:textColor="@color/black"
                     android:gravity="center"
-                    android:text="Cuota: "
+                    android:text="Total: "
                     android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/cuota_mensual_seguimiento"
-                    android:layout_width="100dp"
-                    android:layout_height="35dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:text="500€"
                     android:fontFamily="@font/allerta"
                     android:textColor="@color/black"
@@ -289,7 +289,7 @@
                 android:fontFamily="@font/allerta"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:text="Número de cuota:  "
+                android:text="Cuotas pagadas:  "
                 android:textSize="22sp"
                 android:layout_marginBottom="10dp"/>
 
@@ -412,30 +412,6 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="300dp">
         </com.github.mikephil.charting.charts.LineChart>
-
-        <Button
-            android:id="@+id/go_bar_chart"
-            android:text="BAR CHART"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-        </Button>
-
-        <Button
-            android:id="@+id/go_pie_chart"
-            android:text="PIE CHART"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-        </Button>
-
-        <Button
-            android:id="@+id/go_radar_chart"
-            android:text="RADAR CHART"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp">
-        </Button>
 
     </LinearLayout>
 

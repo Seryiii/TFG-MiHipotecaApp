@@ -37,11 +37,11 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
         int j = aux;
         int revision = 6;
-        while(j < getNumeroCuotaActual()){
+        while(j < numero_pago){
             if(isRevision_anual()) revision = 12;
             double euribor = getEuriborPasado(j);
             cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente, (plazo_anios * 12) - j);
-            for(int h = 0; h < revision && j < getNumeroCuotaActual(); h++){
+            for(int h = 0; h < revision && j < numero_pago; h++){
                 cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_variable + euribor);
                 capital_pendiente = capital_pendiente - cantidad_capital;
                 Log.i("Pago " + Integer.toString(j + 1) + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
@@ -51,6 +51,31 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
         return capital_pendiente;
     }
+
+    /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
+     *  durante los años restantes. (Se utiliza el euribor del mes actual) **/
+    @Override
+    public double getDineroRestanteActual(int numPago){
+
+        // Si estas en primer porcentaje, tienes que acabar la fase fija y luego estimar con el euribor actual
+        // Si estas en la fase variable, simular lo que queda en funcion del euribor actual
+
+        double capital_pendiente = getCapitalPendienteTotalActual(numPago);
+        double porcentaje_aplicado  = numPago <= duracion_primer_porcentaje_variable ? primer_porcentaje_variable : getEuriborActual() + porcentaje_diferencial_variable;
+        double cuota_mensual = getCuotaMensual(porcentaje_aplicado, capital_pendiente, plazo_anios * 12 - getNumeroCuotaActual());
+        if(numPago <= duracion_primer_porcentaje_variable){
+            int aux = duracion_primer_porcentaje_variable - numPago;
+            // se inicializa el dinero restante con lo que queda por pagar del primer porcentaje
+            double dinero_restante = cuota_mensual * aux;
+            double capital_pendiente_restante = getCapitalPendienteTotalActual(duracion_primer_porcentaje_variable);
+            // Sumar lo que queda con el euribor actual + diferencial
+            cuota_mensual = getCuotaMensual(getEuriborActual() + porcentaje_diferencial_variable, capital_pendiente_restante, plazo_anios * 12 - duracion_primer_porcentaje_variable);
+            dinero_restante = dinero_restante + (cuota_mensual * (plazo_anios * 12 - duracion_primer_porcentaje_variable));
+            return dinero_restante;
+        }
+        else return cuota_mensual * (plazo_anios * 12 - numPago);
+    }
+
 
     /** Getters y Setters*/
     @Override

@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -18,6 +20,61 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         this.porcentaje_diferencial_mixta = porcentaje_diferencial_mixta;
         this.revision_anual = revision_anual;
     }
+
+    /** Esta funcion devuelve el capital pendiente total por amortizar**/
+    @Override
+    public double getCapitalPendienteTotalActual(int numero_pago){
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        double cuota_mensual = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, plazo_anios * 12);
+        double cantidad_capital;
+        int aux = numero_pago > anios_fija_mixta * 12 ? anios_fija_mixta * 12 : numero_pago;
+        for (int i = 1; i <= aux; i++){
+            cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo_mixta);
+            capital_pendiente = capital_pendiente - cantidad_capital;
+            Log.i("Pago " + i + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
+        }
+
+        int j = aux;
+        int revision = 6;
+        while(j < numero_pago){
+            if(isRevision_anual()) revision = 12;
+            double euribor = getEuriborPasado(j);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_mixta + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            for(int h = 0; h < revision && j < numero_pago; h++){
+                cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_mixta + euribor);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+                Log.i("Pago " + Integer.toString(j + 1) + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
+                j++;
+            }
+        }
+
+        return capital_pendiente;
+    }
+
+    /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
+     *  durante los años restantes. (Se utiliza el euribor del mes actual) **/
+    @Override
+    public double getDineroRestanteActual(int numPago){
+
+        // Si estas en la fase fija, tienes que acabar la fase fija y luego estimar con el euribor actual
+        // Si estas en la fase variable, simular lo que queda en funcion del euribor actual
+
+        double capital_pendiente = getCapitalPendienteTotalActual(numPago);
+        double porcentaje_aplicado  = numPago <= (anios_fija_mixta * 12) ? porcentaje_fijo_mixta : getEuriborActual() + porcentaje_diferencial_mixta;
+        double cuota_mensual = getCuotaMensual(porcentaje_aplicado, capital_pendiente, plazo_anios * 12 - getNumeroCuotaActual());
+        if(numPago <= anios_fija_mixta * 12){
+            int aux = (anios_fija_mixta * 12) - numPago;
+            // se inicializa el dinero restante con lo que queda por pagar del primer porcentaje
+            double dinero_restante = cuota_mensual * aux;
+            double capital_pendiente_restante = getCapitalPendienteTotalActual(anios_fija_mixta * 12);
+            // Sumar lo que queda con el euribor actual + diferencial
+            cuota_mensual = getCuotaMensual(getEuriborActual() + porcentaje_diferencial_mixta, capital_pendiente_restante, (plazo_anios * 12) - (anios_fija_mixta * 12));
+            dinero_restante = dinero_restante + (cuota_mensual * ((plazo_anios * 12) -(anios_fija_mixta * 12)));
+            return dinero_restante;
+        }
+        else return cuota_mensual * (plazo_anios * 12 - numPago);
+    }
+
 
     public int getAnios_fija_mixta() {
         return anios_fija_mixta;

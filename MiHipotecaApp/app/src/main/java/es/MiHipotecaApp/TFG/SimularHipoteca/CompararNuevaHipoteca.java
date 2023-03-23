@@ -82,21 +82,22 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         btn_comparar_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(comprobarCampos()) Log.e("CompararNuevaHipoteca", "Pasar a la actividad que aparecen las ofertas de hipotecas");
+                comprobarCampos();
 
             }
         });
     }
 
-    public boolean comprobarCampos(){
+    public void comprobarCampos(){
+        boolean camposCorrectos = true;
 
         if(TextUtils.isEmpty(precioVivienda.getText())){
             precioVivienda.setError(getString(R.string.precio_vacio));
-            return false;
+            camposCorrectos = false;
         }
         if(TextUtils.isEmpty(cantidadAbonada.getText())){
             cantidadAbonada.setError(getString(R.string.cantidad_abonada_vacio));
-            return false;
+            camposCorrectos = false;
         }
         //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
         double precio_viv = Double.parseDouble(precioVivienda.getText().toString());
@@ -104,12 +105,15 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         double dinero_aport_banco = precio_viv - ahorro_aport;
         if(dinero_aport_banco > precio_viv * 0.8){
             cantidadAbonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
-            return false;
+            camposCorrectos = false;
         }
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
-            return false;
+            camposCorrectos = false;
         }
-        return true;
+
+        if(camposCorrectos){
+            Log.e("CompararNuevaHipoteca", "Pasar a la actividad que aparecen las ofertas de hipotecas");
+        }
     }
 }

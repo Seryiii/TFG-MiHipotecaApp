@@ -34,10 +34,6 @@ import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.Rada
 
 public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
-    private Button goBarChart;
-    private Button goPieChart;
-    private Button goRadarChart;
-
     private TextView nombre_hipoteca;
     private TextView tipo_hipoteca_seg;
     private TextView dinero_restante_a_pagar;
@@ -74,9 +70,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     }
 
     private void initUI(){
-        goBarChart                = findViewById(R.id.go_bar_chart);
-        goPieChart                = findViewById(R.id.go_pie_chart);
-        goRadarChart              = findViewById(R.id.go_radar_chart);
         dinero_restante_a_pagar   = findViewById(R.id.label_cantidad_pendiente_seguimiento_hip);
         nombre_hipoteca           = findViewById(R.id.nombre_seguimiento_hipoteca);
         tipo_hipoteca_seg         = findViewById(R.id.tipo_hipoteca_seguimiento);
@@ -105,48 +98,39 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
         anios_restantes_hipoteca.setText(hip.getAniosRestantes() + " años");
         mes_actual_cuota.setText(hip.getNombreMesActual());
-        numero_cuota_actual.setText("Número cuota actual: " + hip.getNumeroCuotaActual() + " / " + hip.getPlazo_anios() * 12);
+        numero_cuota_actual.setText("Cuotas pagadas: " + hip.getNumeroCuotaActual() + " / " + hip.getPlazo_anios() * 12);
 
-
+        double porcentaje_aplicado;
+        double cantidad_pendiente;
+        int numero_cuotas_restantes;
 
         if(hip.getTipo_hipoteca().equals("fija")) {
-            double cuota_mensual = hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada(), hip.getPlazo_anios() * 12);
-            String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
-            cuota_mensual_seguimiento.setText(cuotaFormateada);
+            porcentaje_aplicado  = hip.getPorcentaje_fijo();
+            cantidad_pendiente   = hip.getPrecio_vivienda() - hip.getCantidad_abonada() ;
+            numero_cuotas_restantes = hip.getPlazo_anios() * 12 ;
 
-            double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-            String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, hip.getPorcentaje_fijo())) + "€";
-            capital_cuota_mensual.setText(capitalFormateado);
-
-            String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
-            intereses_cuota_mensual.setText(interesesFormateado);
         } else if(hip.getTipo_hipoteca().equals("variable")) {
-            if(hip.getNumeroCuotaActual() <= hip.getDuracion_primer_porcentaje_variable()){ //Caso en el que se aplica el porcentaje fijo
-                double cuota_mensual = hip.getCuotaMensual(hip.getPrimer_porcentaje_variable(), hip.getPrecio_vivienda() - hip.getCantidad_abonada(), hip.getPlazo_anios() * 12);
-                String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
-                cuota_mensual_seguimiento.setText(cuotaFormateada);
-
-                double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-                String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, hip.getPorcentaje_fijo())) + "€";
-                capital_cuota_mensual.setText(capitalFormateado);
-
-                String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, hip.getPorcentaje_fijo())) + "€";
-                intereses_cuota_mensual.setText(interesesFormateado);
-            } else { //Caso en el que se aplica el diferencial + euribor
-                double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-
-                double cuota_mensual = hip.getCuotaMensual(hip.getEuriborActual() + hip.getPorcentaje_diferencial_variable(), capitalPendiente , (hip.getPlazo_anios() * 12) - hip.getNumeroCuotaActual());
-                String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
-                cuota_mensual_seguimiento.setText(cuotaFormateada);
-
-                //Primero calculamos el capital que lleva pagado en las primera parte "fija" de la hipoteca
-
-
-            }
-
+            //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
+            porcentaje_aplicado  = hip.getNumeroCuotaActual() <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrimer_porcentaje_variable() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_variable();
+            cantidad_pendiente   = hip.getNumeroCuotaActual() <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+            numero_cuotas_restantes = hip.getNumeroCuotaActual() <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual();
         } else {
-            //...
+            //Si cumple la condicion, esta en la fase fija, en otro en la variable
+            porcentaje_aplicado  = hip.getNumeroCuotaActual() <= hip.getAnios_fija_mixta() * 12 ? hip.getPorcentaje_fijo_mixta() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_mixta();
+            cantidad_pendiente   = hip.getNumeroCuotaActual() <= hip.getAnios_fija_mixta() * 12 ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+            numero_cuotas_restantes = hip.getNumeroCuotaActual() <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual();
         }
+
+        double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
+        String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
+        cuota_mensual_seguimiento.setText(cuotaFormateada);
+
+        double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+        String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, porcentaje_aplicado)) + "€";
+        capital_cuota_mensual.setText(capitalFormateado);
+
+        String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, porcentaje_aplicado)) + "€";
+        intereses_cuota_mensual.setText(interesesFormateado);
     }
     private void eventos(){
         //pieChartAportadoVsFinanciarValor(); //Se visualiza por defecto el grafico de valor

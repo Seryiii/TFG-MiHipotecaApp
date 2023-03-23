@@ -96,7 +96,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     private FirebaseFirestore db;
 
-    private FirebaseAuth currentUser;
+    private FirebaseAuth auth;
+    private FirebaseUser user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,8 +108,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
         sp_comunidad.setAdapter(adapter);
         initUI();
         Eventos();
-        db = FirebaseFirestore.getInstance();
-        currentUser= FirebaseAuth.getInstance();
+        db   = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
     }
 
     private void initUI() {
@@ -263,7 +265,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         btn_anadir_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(comprobarCampos()) registrarNuevaHipoteca();
+                comprobarCampos();
             }
         });
 
@@ -325,29 +327,30 @@ public class NuevoSeguimiento extends AppCompatActivity {
         check_un_anio.setVisibility(view);
 
     }
-    private boolean comprobarCampos(){
+    private void comprobarCampos(){
 
+        boolean camposCorrectos = true;
         //PRIMERO COMPROBAR CAMPOS COMUNES
         if(TextUtils.isEmpty(precio_vivienda.getText())){
             precio_vivienda.setError(getString(R.string.precio_vacio));
-            return false;
+            camposCorrectos = false;
         }
         if(TextUtils.isEmpty(cantidad_abonada.getText())){
             cantidad_abonada.setError(getString(R.string.cantidad_abonada_vacio));
-            return false;
+            camposCorrectos = false;
         }
-
         //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
         double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
         double ahorro_aport = Double.parseDouble(cantidad_abonada.getText().toString());
         double dinero_aport_banco = precio_viv - ahorro_aport;
         if(dinero_aport_banco > precio_viv * 0.8){
             cantidad_abonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
-            return false;
+            camposCorrectos = false;
         }
+
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
-            return false;
+            camposCorrectos = false;
         }
 
         Calendar calendar = Calendar.getInstance();
@@ -360,66 +363,62 @@ public class NuevoSeguimiento extends AppCompatActivity {
         int selectedDayOfMonth = inicio_hipoteca.getDayOfMonth();
 
         // Comprobar si la fecha seleccionada es mayor que la fecha actual
-        if (selectedYear > year ||
-                (selectedYear == year && selectedMonth > month) ||
-                (selectedYear == year && selectedMonth == month && selectedDayOfMonth > dayOfMonth)) {
+        if (selectedYear > year || (selectedYear == year && selectedMonth > month) || (selectedYear == year && selectedMonth == month && selectedDayOfMonth > dayOfMonth)) {
             Toast.makeText(this, "La fecha seleccionada no puede ser mayor o igual que la fecha actual", Toast.LENGTH_SHORT).show();
-            return false;
-        }
-
-        if(TextUtils.isEmpty(nombre_hipoteca.getText())){
-            nombre_hipoteca.setError(getString(R.string.nombre_hipoteca_vacio));
-            return false;
-        }
-        else
-        {
-            Query hipotecas_usuario =  db.collection("hipotecas_seguimiento").whereEqualTo("idUsuario",currentUser.getUid()).whereEqualTo("nombre",nombre_hipoteca.getText());
-
-            QuerySnapshot querySnapshot=hipotecas_usuario.get().getResult();
-            if(!querySnapshot.getDocuments().isEmpty()){
-                nombre_hipoteca.setError("Una de sus hipotecas ya tiene este nombre");
-                return false;
-            }
-
+            camposCorrectos = false;
         }
 
         //CAMPOS FIJO
         if(check_fija.isChecked()){
             if(TextUtils.isEmpty(edit_porcentaje_fijo.getText())){
                 edit_porcentaje_fijo.setError(getString(R.string.porcentaje_vacio));
-                return false;
+                camposCorrectos = false;
             }
         }else if(check_variable.isChecked()){
             if(TextUtils.isEmpty(edit_duracion_primer_porcentaje.getText())){
                 edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_vacio));
-                return false;
+                camposCorrectos = false;
             }
             if(TextUtils.isEmpty(edit_diferencial_variable.getText())){
                 edit_diferencial_variable.setError(getString(R.string.porcentaje_vacio));
-                return false;
+                camposCorrectos = false;
             }
         }else{
             if(TextUtils.isEmpty(edit_anios_fija.getText())){
                 edit_anios_fija.setError(getString(R.string.duracion_vacio));
-                return false;
+                camposCorrectos = false;
             }
             if(TextUtils.isEmpty(edit_porcentaje_fijo_mix.getText())){
                 edit_porcentaje_fijo_mix.setError(getString(R.string.porcentaje_vacio));
-                return false;
+                camposCorrectos = false;
             }
             if(TextUtils.isEmpty(edit_diferencial_mixto.getText())){
                 edit_diferencial_mixto.setError(getString(R.string.porcentaje_vacio));
-                return false;
+                camposCorrectos = false;
             }
         }
-        return true;
+        if(TextUtils.isEmpty(nombre_hipoteca.getText())){
+            nombre_hipoteca.setError(getString(R.string.nombre_hipoteca_vacio));
+            camposCorrectos = false;
+        }
+        else {
+            String uid = auth.getCurrentUser().getUid();
+            Query hipotecas_usuario =  db.collection("hipotecas_seguimiento").whereEqualTo("idUsuario",auth.getCurrentUser().getUid()).whereEqualTo("nombre",nombre_hipoteca.getText().toString());
+
+            QuerySnapshot querySnapshot=hipotecas_usuario.get().getResult();
+            if(!querySnapshot.getDocuments().isEmpty()){
+                camposCorrectos = false;
+                nombre_hipoteca.setError("Una de sus hipotecas ya tiene este nombre");
+            }
+            else{
+                if(camposCorrectos) registrarNuevaHipoteca();
+                else return;
+            }
+        }
+
     }
 
     private void registrarNuevaHipoteca(){
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        FirebaseUser user = auth.getCurrentUser();
 
         String nombre = nombre_hipoteca.getText().toString();
         String comunidad = sp_comunidad.getSelectedItem().toString();

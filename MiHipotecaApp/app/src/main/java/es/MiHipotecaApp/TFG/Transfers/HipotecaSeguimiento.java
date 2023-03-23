@@ -105,6 +105,10 @@ public class HipotecaSeguimiento implements Serializable {
 
     public String getNombreMesActual(){
         Calendar fechaActual = Calendar.getInstance();
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        //Comprobar si ya se ha pagado
+        if (fechaActual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
         String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
         return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
     }
@@ -117,7 +121,7 @@ public class HipotecaSeguimiento implements Serializable {
         Calendar actual = Calendar.getInstance();
         int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
         int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
-
+        // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(actual.get(Calendar.DAY_OF_MONTH) < inicio.get(Calendar.DAY_OF_MONTH)) return numeroPagoActual;
         else return numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
     }
@@ -140,6 +144,18 @@ public class HipotecaSeguimiento implements Serializable {
     public double getPorcentaje_diferencial_variable(){ return 0; }
 
     public boolean isRevision_anual() { return false; }
+
+    public int getAnios_fija_mixta() {
+        return 0;
+    }
+
+    public double getPorcentaje_fijo_mixta() {
+        return 0;
+    }
+
+    public double getPorcentaje_diferencial_mixta() {
+        return 0;
+    }
 
     //GETTERS
     public String getNombre() {
