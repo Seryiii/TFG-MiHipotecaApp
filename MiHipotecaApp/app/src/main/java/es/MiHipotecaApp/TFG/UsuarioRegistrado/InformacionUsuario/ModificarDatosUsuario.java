@@ -170,6 +170,7 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
 
+
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -178,6 +179,9 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
                     DocumentSnapshot document = querySnapshot.getDocuments().get(0);
                     imgPerfil = document.getLong("avatar");
                     setImagenPerfil(imgPerfil.intValue());
+
+                    //Pone el nombre del usuario en el campod el formulario
+                    et_nombre.setText(document.getString("nombre"));
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
