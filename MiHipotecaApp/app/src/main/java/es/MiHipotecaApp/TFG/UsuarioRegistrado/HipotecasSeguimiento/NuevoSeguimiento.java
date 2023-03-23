@@ -22,8 +22,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -88,6 +92,11 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private Button btn_anadir_hipoteca;
     private Spinner sp_bancos;
 
+    //Bases de datos
+
+    private FirebaseFirestore db;
+
+    private FirebaseAuth currentUser;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +107,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
         sp_comunidad.setAdapter(adapter);
         initUI();
         Eventos();
-
+        db = FirebaseFirestore.getInstance();
+        currentUser= FirebaseAuth.getInstance();
     }
 
     private void initUI() {
@@ -360,6 +370,17 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(TextUtils.isEmpty(nombre_hipoteca.getText())){
             nombre_hipoteca.setError(getString(R.string.nombre_hipoteca_vacio));
             return false;
+        }
+        else
+        {
+            Query hipotecas_usuario =  db.collection("hipotecas_seguimiento").whereEqualTo("idUsuario",currentUser.getUid()).whereEqualTo("nombre",nombre_hipoteca.getText());
+
+            QuerySnapshot querySnapshot=hipotecas_usuario.get().getResult();
+            if(!querySnapshot.getDocuments().isEmpty()){
+                nombre_hipoteca.setError("Una de sus hipotecas ya tiene este nombre");
+                return false;
+            }
+
         }
 
         //CAMPOS FIJO
