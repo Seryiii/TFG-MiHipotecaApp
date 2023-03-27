@@ -1,6 +1,6 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario;
 
-import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,19 +29,19 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import es.MiHipotecaApp.TFG.MainActivity;
 import es.MiHipotecaApp.TFG.R;
 
 public class ModificarDatosUsuario extends AppCompatActivity implements custom_dialog_avatares.customDialogInterface {
-    private final String TAG = "OBTENCION AVATAR";
+    private final String TAG = "OBTENCION USUARIO";
     private EditText et_nombre, et_pass, et_confPass;
     private ImageView iv_cambio_avatar;
     private ImageView imagenPerfil;
-
     private Button btn_aplicar_cambios;
-    Context context;
+    private Button btn_pasar_a_premium;
     private FirebaseFirestore db;
     private FirebaseAuth currentUser;
-
+    private TextView correo_usuario;
     private StorageReference storageRefer;
     private Long imgPerfil;
     @Override
@@ -49,15 +50,17 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
         db = FirebaseFirestore.getInstance();
         currentUser = FirebaseAuth.getInstance();
         setContentView(R.layout.activity_modificar_datos_usuario);
-        et_nombre = findViewById(R.id.edit_nuevo_nombre_registro);
-        et_pass = findViewById(R.id.edit_contra_registro);
-        et_confPass = findViewById(R.id.edit_repetir_contra_registro);
-        iv_cambio_avatar = findViewById(R.id.btn_mod_image);
-        imagenPerfil = findViewById(R.id.imagenPerfil);
-        btn_aplicar_cambios = findViewById(R.id.btn_aplicar_cambios);
-        context = this;
-        getAvatar();
 
+        et_nombre           = findViewById(R.id.edit_nuevo_nombre_registro);
+        et_pass             = findViewById(R.id.edit_contra_registro);
+        et_confPass         = findViewById(R.id.edit_repetir_contra_registro);
+        iv_cambio_avatar    = findViewById(R.id.btn_mod_image);
+        imagenPerfil        = findViewById(R.id.imagenPerfil);
+        btn_aplicar_cambios = findViewById(R.id.btn_aplicar_cambios);
+        btn_pasar_a_premium = findViewById(R.id.btn_pasar_a_premium);
+        correo_usuario      = findViewById(R.id.correo_electronico_usuario);
+
+        getInfoUsuario();
         eventos();
     }
     public void eventos(){
@@ -72,6 +75,14 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
             @Override
             public void onClick(View view) {
                 modificarUsuarioBD();
+            }
+        });
+
+        btn_pasar_a_premium.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(ModificarDatosUsuario.this, PasarPremium.class);
+                startActivity(i);
             }
         });
     }
@@ -165,7 +176,7 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
         String confirm = et_confPass.getText().toString();
         return contra == confirm;
     }
-    public void getAvatar(){
+    public void getInfoUsuario(){
         String userMail = currentUser.getCurrentUser().getEmail();
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
@@ -180,8 +191,16 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
                     imgPerfil = document.getLong("avatar");
                     setImagenPerfil(imgPerfil.intValue());
 
-                    //Pone el nombre del usuario en el campod el formulario
+                    //Pone el correo electronico del usuario
+                    correo_usuario.setText(document.getString("correo"));
+
+                    //Pone el nombre del usuario en el campo del formulario
                     et_nombre.setText(document.getString("nombre"));
+
+                    //Cambia el texto del boton de "pasar a premium" a "ver planes" en funcion de si el usuario es premium o no
+                    if(document.getBoolean("premium"))
+                        btn_pasar_a_premium.setText("VER TU PLAN ACTUAL");
+
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
                 }
