@@ -18,8 +18,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -353,21 +355,6 @@ public class NuevoSeguimiento extends AppCompatActivity {
             camposCorrectos = false;
         }
 
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-        int selectedYear = inicio_hipoteca.getYear();
-        int selectedMonth = inicio_hipoteca.getMonth();
-        int selectedDayOfMonth = inicio_hipoteca.getDayOfMonth();
-
-        // Comprobar si la fecha seleccionada es mayor que la fecha actual
-        if (selectedYear > year || (selectedYear == year && selectedMonth > month) || (selectedYear == year && selectedMonth == month && selectedDayOfMonth > dayOfMonth)) {
-            Toast.makeText(this, "La fecha seleccionada no puede ser mayor o igual que la fecha actual", Toast.LENGTH_SHORT).show();
-            camposCorrectos = false;
-        }
-
         //CAMPOS FIJO
         if(check_fija.isChecked()){
             if(TextUtils.isEmpty(edit_porcentaje_fijo.getText())){
@@ -402,20 +389,20 @@ public class NuevoSeguimiento extends AppCompatActivity {
             camposCorrectos = false;
         }
         else {
-            String uid = auth.getCurrentUser().getUid();
-            Query hipotecas_usuario =  db.collection("hipotecas_seguimiento").whereEqualTo("idUsuario",auth.getCurrentUser().getUid()).whereEqualTo("nombre",nombre_hipoteca.getText().toString());
-
-            QuerySnapshot querySnapshot=hipotecas_usuario.get().getResult();
-            if(!querySnapshot.getDocuments().isEmpty()){
-                camposCorrectos = false;
-                nombre_hipoteca.setError("Una de sus hipotecas ya tiene este nombre");
-            }
-            else{
-                if(camposCorrectos) registrarNuevaHipoteca();
-                else return;
-            }
+            if(camposCorrectos){
+                Query hipotecas_usuario =  db.collection("hipotecas_seguimiento").whereEqualTo("idUsuario",auth.getCurrentUser().getUid()).whereEqualTo("nombre",nombre_hipoteca.getText().toString());
+                //COMPROBACION DE QUE NO INTRODUCE UNA HIPOTECA CON EL MISMO NOMBRE EL MISMO USUARIO
+                hipotecas_usuario.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            if(!task.getResult().isEmpty() && task.getResult() != null)nombre_hipoteca.setError("Una de sus hipotecas ya tiene este nombre");
+                            else registrarNuevaHipoteca();
+                        }else Log.d(TAG, "Error en query hipotecas seg por nombre", task.getException());
+                    }
+                });
+            }else return;
         }
-
     }
 
     private void registrarNuevaHipoteca(){

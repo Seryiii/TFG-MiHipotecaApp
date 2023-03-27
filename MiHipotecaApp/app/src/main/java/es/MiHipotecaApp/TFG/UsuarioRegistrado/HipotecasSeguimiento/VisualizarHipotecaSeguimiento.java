@@ -121,6 +121,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             numero_cuotas_restantes = hip.getNumeroCuotaActual() <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual();
         }
 
+
+        if(hip.getAniosRestantes() <= 0) numero_cuotas_restantes = 0;
         double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
         String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);

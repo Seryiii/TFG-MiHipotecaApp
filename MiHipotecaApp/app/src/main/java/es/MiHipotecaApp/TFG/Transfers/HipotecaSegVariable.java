@@ -44,7 +44,6 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
             for(int h = 0; h < revision && j < numero_pago; h++){
                 cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_variable + euribor);
                 capital_pendiente = capital_pendiente - cantidad_capital;
-                Log.i("Pago " + Integer.toString(j + 1) + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
                 j++;
             }
         }

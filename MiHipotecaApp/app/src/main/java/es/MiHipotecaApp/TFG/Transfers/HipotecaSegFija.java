@@ -33,10 +33,9 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     public double getCapitalPendienteTotalActual(int numero_pago){
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         double cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazo_anios * 12);
-        for (int i = 1; i < numero_pago; i++){
+        for (int i = 1; i <= numero_pago; i++){
             double cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo);
             capital_pendiente = capital_pendiente - cantidad_capital;
-            Log.i("Pago " + i + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital);
         }
         return capital_pendiente;
     }

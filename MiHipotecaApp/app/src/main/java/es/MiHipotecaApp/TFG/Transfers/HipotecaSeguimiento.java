@@ -51,6 +51,7 @@ public class HipotecaSeguimiento implements Serializable {
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
     public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes){
+        if (num_cuotas_restantes <= 0) return 0;
         double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes);
         double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
         return Math.round(cuotaMensual * 100.0) / 100.0;
@@ -88,6 +89,7 @@ public class HipotecaSeguimiento implements Serializable {
         return interesesTotales;
     }
 
+
     public int getAniosRestantes(){
         Calendar inicio = Calendar.getInstance();
         inicio.setTime(fecha_inicio);
@@ -98,7 +100,7 @@ public class HipotecaSeguimiento implements Serializable {
         // Si la diferencia de años es 0, no hay que restar nada
         // Si el año del dia de la fecha que yo paso es mayor que la actual, resto uno
         if (diferencia != 0 && (inicio.get(Calendar.DAY_OF_YEAR) > actual.get(Calendar.DAY_OF_YEAR))) diferencia--;
-
+        if(plazo_anios - diferencia <= 0) return 0;
         return plazo_anios - diferencia;
     }
 
@@ -119,11 +121,18 @@ public class HipotecaSeguimiento implements Serializable {
         inicio.setTime(fecha_inicio);
         // Dia actual
         Calendar actual = Calendar.getInstance();
+        // En caso de que todavia no haya empezado el seguimiento de la hipoteca
+        if(actual.compareTo(inicio) < 0) return 0;
         int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
         int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
+
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
-        if(actual.get(Calendar.DAY_OF_MONTH) < inicio.get(Calendar.DAY_OF_MONTH)) return numeroPagoActual;
-        else return numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
+        if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
+        //else return numeroPagoActual + 1;
+        // Fin de hipoteca
+        if (numeroPagoActual >= plazo_anios * 12) numeroPagoActual = plazo_anios * 12;
+        return numeroPagoActual;
+
     }
 
 

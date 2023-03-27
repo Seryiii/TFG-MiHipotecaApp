@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Cuadro_amortizacion"
+    android:background="@color/background_aplicacion">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        
+        <TextView
+            android:layout_width="297dp"
+            android:layout_height="101dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:text="Cuadro de amortización"
+            android:textSize="40sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/btn_bordes_redondos">
+
+            <TableLayout
+                android:id="@+id/tabla_cuadro_amortizacion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:stretchColumns="*"
+                android:background="@color/white"
+
+                android:shrinkColumns="1">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.8"
+                        android:text="Nº Cuota"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/allerta"/>
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/allerta"
+                        android:text="Mes" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/allerta"
+                        android:text="Cuota" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/allerta"
+                        android:text="Capital" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/allerta"
+                        android:text="Intereses" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:textAlignment="center"
+                        android:fontFamily="@font/allerta"
+                        android:text="Capital pdte" />
+
+                </TableRow>
+
+            </TableLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+
+</ScrollView>

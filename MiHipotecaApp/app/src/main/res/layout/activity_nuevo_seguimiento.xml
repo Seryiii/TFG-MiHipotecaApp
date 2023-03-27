@@ -628,6 +628,7 @@
             android:fontFamily="@font/allerta"
             android:layout_marginStart="16dp"
             android:inputType="text"
+            android:maxLength="20"
             android:text="" />
 
 
