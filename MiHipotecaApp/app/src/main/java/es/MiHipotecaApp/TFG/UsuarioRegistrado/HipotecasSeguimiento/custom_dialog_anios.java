@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import java.util.Calendar;
@@ -27,8 +28,8 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
     private SeekBar seekBar_elegir_anio;
     private TextView value_seek_bar;
     private customDialogInterface dialogoInterface;
-
     private HipotecaSeguimiento hip;
+    private View view;
 
     public custom_dialog_anios(HipotecaSeguimiento hip){
         this.hip = hip;
@@ -40,7 +41,7 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.custom_dialog_anios,null);
+        view = inflater.inflate(R.layout.custom_dialog_anios,null);
 
         seekBar_elegir_anio  = view.findViewById(R.id.seekBar_elegir_anio);
         value_seek_bar = view.findViewById(R.id.value_seek_bar);
@@ -52,13 +53,30 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
 
         actual.setTime(hip.getFecha_inicio());
         int year = actual.get(Calendar.YEAR);
-        if(inicio.compareTo(actual) > 0) {
-            seekBar_elegir_anio.setProgress(year);
-        }
-        else {
-            seekBar_elegir_anio.setProgress(actual.get(Calendar.YEAR));
-        }
+        //Si el año de inicio de la hipoteca es futuro, se pone ese valor por defecto en la seek bar, si no se pone el año actual
+        if(inicio.compareTo(actual) > 0) seekBar_elegir_anio.setProgress(year);
+        else seekBar_elegir_anio.setProgress(actual.get(Calendar.YEAR));
+        //Da valor al textView donde aparece el valor de la seekbar
+        value_seek_bar.setText(Integer.toString(year));
 
+        eventos(builder, year);
+
+        return builder.create(); //Aquí se llama al método show() para mostrar el diálogo
+    }
+
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        dialogoInterface = (custom_dialog_anios.customDialogInterface) context;
+
+    }
+
+    public interface customDialogInterface {
+        void setAnio(int setAnio);
+    }
+
+    public void eventos(AlertDialog.Builder builder, int year){
         seekBar_elegir_anio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -83,14 +101,10 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
                 .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-
-                        if (seekBar_elegir_anio.getProgress() < finalYear || seekBar_elegir_anio.getProgress() > finalYear + hip.getPlazo_anios()) {
-                            value_seek_bar.setError("La fecha introducida no es correcta");
-
-                        } else {
+                        //Comprueba que la fecha establecida esta dentro del rango posible
+                        if (seekBar_elegir_anio.getProgress() >= finalYear && seekBar_elegir_anio.getProgress() <= finalYear + hip.getPlazo_anios())
                             dialogoInterface.setAnio(seekBar_elegir_anio.getProgress());
-
-                        }
+                        else Toast.makeText(getContext(), "Fecha introducida incorrecta", Toast.LENGTH_LONG).show();
 
                     }
                 })
@@ -101,19 +115,6 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
                     }
                 });
 
-        return builder.create(); //Aquí se llama al método show() para mostrar el diálogo
-    }
-
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        dialogoInterface = (custom_dialog_anios.customDialogInterface) context;
-
-    }
-
-    public interface customDialogInterface {
-        void setAnio(int setAnio);
     }
 
 }
