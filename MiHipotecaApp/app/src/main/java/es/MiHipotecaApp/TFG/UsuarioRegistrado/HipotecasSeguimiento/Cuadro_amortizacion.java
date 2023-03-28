@@ -9,6 +9,8 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.Calendar;
+
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -32,6 +34,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         setContentView(R.layout.activity_cuadro_amortizacion);
 
         year_of_calendar = findViewById(R.id.year_of_calendar);
+        year_of_calendar.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
+
         before_year = findViewById(R.id.before_year);
         next_year = findViewById(R.id.next_year);
         choose_year = findViewById(R.id.choose_year);
@@ -42,7 +46,6 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
 
         setTablaMeses();
-
         eventos();
 
     }
@@ -96,14 +99,35 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         choose_year.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                custom_dialog_anios custom = new custom_dialog_anios();
+                custom_dialog_anios custom = new custom_dialog_anios(hip);
                 custom.show(getSupportFragmentManager(),"Custom Dialog");
+            }
+        });
+
+        before_year.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(hip.getFecha_inicio());
+                if(Integer.parseInt(String.valueOf(year_of_calendar.getText())) - 1 >= calendar.get(Calendar.YEAR))
+                    year_of_calendar.setText(Integer.toString(Integer.parseInt(String.valueOf(year_of_calendar.getText())) - 1));
+            }
+        });
+
+        next_year.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(hip.getFecha_inicio());
+                if(Integer.parseInt(String.valueOf(year_of_calendar.getText())) + 1 <= calendar.get(Calendar.YEAR) + hip.getPlazo_anios())
+                    year_of_calendar.setText(Integer.toString(Integer.parseInt(String.valueOf(year_of_calendar.getText())) + 1));
             }
         });
     }
 
     @Override
     public void setAnio(int anio) {
+        year_of_calendar.setText(Integer.toString(anio));
 
     }
 }

@@ -9,9 +9,9 @@
     <SeekBar
         android:id="@+id/seekBar_elegir_anio"
         android:layout_width="363dp"
+        android:min="1950"
+        android:max="2050"
         android:layout_height="48dp"
-        android:max="50"
-        android:progress="25"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

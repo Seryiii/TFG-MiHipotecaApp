@@ -16,13 +16,23 @@ import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+
+import java.util.Calendar;
+
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 
 public class custom_dialog_anios extends AppCompatDialogFragment {
 
     private SeekBar seekBar_elegir_anio;
     private TextView value_seek_bar;
     private customDialogInterface dialogoInterface;
+
+    private HipotecaSeguimiento hip;
+
+    public custom_dialog_anios(HipotecaSeguimiento hip){
+        this.hip = hip;
+    }
 
     @NonNull
     @Override
@@ -34,6 +44,20 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
 
         seekBar_elegir_anio  = view.findViewById(R.id.seekBar_elegir_anio);
         value_seek_bar = view.findViewById(R.id.value_seek_bar);
+
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(hip.getFecha_inicio());
+        // Dia actual
+        Calendar actual = Calendar.getInstance();
+
+        actual.setTime(hip.getFecha_inicio());
+        int year = actual.get(Calendar.YEAR);
+        if(inicio.compareTo(actual) > 0) {
+            seekBar_elegir_anio.setProgress(year);
+        }
+        else {
+            seekBar_elegir_anio.setProgress(actual.get(Calendar.YEAR));
+        }
 
         seekBar_elegir_anio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -53,12 +77,21 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
             }
         });
 
+        int finalYear = year;
         builder.setView(view) //Aquí se añade la vista del layout personalizado
                 .setTitle("Selecciona un año") //Añadir un título si quieres
                 .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogoInterface.setAnio(seekBar_elegir_anio.getProgress());
+
+                        if (seekBar_elegir_anio.getProgress() < finalYear || seekBar_elegir_anio.getProgress() > finalYear + hip.getPlazo_anios()) {
+                            value_seek_bar.setError("La fecha introducida no es correcta");
+
+                        } else {
+                            dialogoInterface.setAnio(seekBar_elegir_anio.getProgress());
+
+                        }
+
                     }
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
