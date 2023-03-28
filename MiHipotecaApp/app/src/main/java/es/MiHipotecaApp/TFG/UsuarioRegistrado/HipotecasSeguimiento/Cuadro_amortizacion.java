@@ -14,8 +14,9 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.custom_dialog_avatares;
 
-public class Cuadro_amortizacion extends AppCompatActivity {
+public class Cuadro_amortizacion extends AppCompatActivity implements custom_dialog_anios.customDialogInterface{
 
     private TextView year_of_calendar;
     private ImageButton before_year;
@@ -42,68 +43,7 @@ public class Cuadro_amortizacion extends AppCompatActivity {
 
         setTablaMeses();
 
-
-/*
-// Crear una nueva fila y agregarla al TableLayout
-        TableRow tableRow = new TableRow(this);
-        tabla_cuadro_amortizacion.addView(tableRow);
-
-// Crear tres TextViews para las celdas y agregarlos a la fila
-        TextView textView1 = new TextView(this);
-        textView1.setText("1");
-        tableRow.addView(textView1);
-
-        TextView textView2 = new TextView(this);
-        textView2.setText("Enero");
-        tableRow.addView(textView2);
-
-        TextView textView3 = new TextView(this);
-        textView3.setText("599€");
-        tableRow.addView(textView3);
-
-        TextView textView4 = new TextView(this);
-        textView3.setText("199€");
-        tableRow.addView(textView4);
-
-        TextView textView5 = new TextView(this);
-        textView3.setText("400€");
-        tableRow.addView(textView5);
-
-        TextView textView6 = new TextView(this);
-        textView3.setText("55151€");
-        tableRow.addView(textView6);
-
-// Crear otra fila y agregarla al TableLayout
-        TableRow tableRow2 = new TableRow(this);
-        tabla_cuadro_amortizacion.addView(tableRow2);
-
-// Agregar más TextViews a la segunda fila
-        TextView textView7 = new TextView(this);
-        textView4.setText("2");
-        tableRow2.addView(textView7);
-
-        TextView textView8 = new TextView(this);
-        textView5.setText("Febrero");
-        tableRow2.addView(textView8);
-
-        TextView textView9 = new TextView(this);
-        textView6.setText("599€");
-        tableRow2.addView(textView9);
-
-        TextView textView10 = new TextView(this);
-        textView4.setText("205€");
-        tableRow2.addView(textView10);
-
-        TextView textView11 = new TextView(this);
-        textView5.setText("394€");
-        tableRow2.addView(textView11);
-
-        TextView textView12 = new TextView(this);
-        textView6.setText("54948€");
-        tableRow2.addView(textView12);
-
-
- */
+        eventos();
 
     }
 
@@ -149,6 +89,21 @@ public class Cuadro_amortizacion extends AppCompatActivity {
         }
 
 
+
+    }
+
+    public void eventos(){
+        choose_year.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                custom_dialog_anios custom = new custom_dialog_anios();
+                custom.show(getSupportFragmentManager(),"Custom Dialog");
+            }
+        });
+    }
+
+    @Override
+    public void setAnio(int anio) {
 
     }
 }
