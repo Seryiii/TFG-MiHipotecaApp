@@ -1,13 +1,20 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.TooltipCompat;
+import androidx.core.content.ContextCompat;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -15,6 +22,11 @@ import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.ArrowPositionRules;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -57,6 +69,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private Button btn_gastos_totales_porcentaje;
 
+    private ImageButton info_dinero_restante;
+    private ImageView info_cuota;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,10 +104,15 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         btn_gastos_totales_valor             = findViewById(R.id.btn_valor_gastos_totales);
         btn_gastos_totales_porcentaje        = findViewById(R.id.btn_porcentaje_gastos_totales);
         gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
-        btn_cuadro_amortizacion                  = findViewById(R.id.btn_cuadro_amortizacion);
+        btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
+        info_dinero_restante                 = findViewById(R.id.btn_info_dinero_por_pagar);
+        info_cuota                           = findViewById(R.id.btn_info_cuota);
     }
 
     private void rellenarUI(){
+
+        info_cuota.setVisibility(View.GONE);
+
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
         String numeroFormateado = formato.format(hip.getDineroRestanteActual(hip.getNumeroCuotaActual()))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
@@ -110,6 +130,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             porcentaje_aplicado  = hip.getPorcentaje_fijo();
             cantidad_pendiente   = hip.getPrecio_vivienda() - hip.getCantidad_abonada() ;
             numero_cuotas_restantes = hip.getPlazo_anios() * 12 ;
+            info_dinero_restante.setVisibility(View.GONE);
+            info_cuota.setVisibility(View.GONE);
 
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
@@ -145,6 +167,58 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                 i.putExtra("hipoteca", hip);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 startActivity(i);
+            }
+        });
+
+        info_dinero_restante.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("El dinero restante está estimado con el Euribor actual manteniéndolo fijo el resto de años. Puede tener alguna modificación")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
+
+                balloon.showAlignTop(info_dinero_restante);
+            }
+        });
+
+        // toDo FALTA PONERLO VISIBLE CUANDO LA SIGUIENTE CUOTA HAYA QUE ACTUALIZARLA CON EL EURIBOR
+        info_cuota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("La cuota mostrada está en función del euribor aplicado actualmente. Los datos van a variar ya que la siguiente cuota hay que actualizarla con el nuevo Euribor")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
+
+                balloon.showAlignTop(info_dinero_restante);
             }
         });
 
