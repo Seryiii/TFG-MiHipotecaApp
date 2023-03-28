@@ -53,6 +53,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private Button btn_aportado_vs_financiar_valor;
     private Button btn_aportado_vs_financiar_porcentaje;
     private Button btn_gastos_totales_valor;
+    private Button btn_cuadro_amortizacion;
 
     private Button btn_gastos_totales_porcentaje;
 
@@ -88,6 +89,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         btn_gastos_totales_valor             = findViewById(R.id.btn_valor_gastos_totales);
         btn_gastos_totales_porcentaje        = findViewById(R.id.btn_porcentaje_gastos_totales);
         gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
+        btn_cuadro_amortizacion                  = findViewById(R.id.btn_cuadro_amortizacion);
     }
 
     private void rellenarUI(){
@@ -135,6 +137,17 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         intereses_cuota_mensual.setText(interesesFormateado);
     }
     private void eventos(){
+
+        btn_cuadro_amortizacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, Cuadro_amortizacion.class);
+                i.putExtra("hipoteca", hip);
+                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                startActivity(i);
+            }
+        });
+
         //pieChartAportadoVsFinanciarValor(); //Se visualiza por defecto el grafico de valor
         /*btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
             @Override

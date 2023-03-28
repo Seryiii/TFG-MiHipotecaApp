@@ -14,7 +14,7 @@
         android:theme="@style/Theme.MiHipotecaApp"
         tools:targetApi="31">
         <activity
-            android:name=".Cuadro_amortizacion"
+            android:name=".UsuarioRegistrado.HipotecasSeguimiento.Cuadro_amortizacion"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.RadarChartActivity"
