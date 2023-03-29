@@ -28,6 +28,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private ImageButton next_year;
     private ImageButton choose_year;
     private TableLayout tabla_cuadro_amortizacion;
+    private TableLayout tabla_cuadro_amortizacion_anual;
     private HipotecaSeguimiento hip;
     private String[] meses;
 
@@ -45,6 +46,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         next_year = findViewById(R.id.next_year);
         choose_year = findViewById(R.id.choose_year);
         tabla_cuadro_amortizacion = findViewById(R.id.tabla_cuadro_amortizacion);
+        tabla_cuadro_amortizacion_anual = findViewById(R.id.tabla_cuadro_amortizacion_anual);
 
         //Obtenemos la hipoteca de la que vamos a sacar el cuadro de amortización
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
@@ -61,6 +63,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
 
         actualizarTablaMeses(Integer.parseInt((String) year_of_calendar.getText()));
+        actualizarTablaAnios();
         eventos();
 
     }
@@ -121,6 +124,53 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
 
 
+    }
+
+    public void actualizarTablaAnios(){
+        for (int i = 1; i <= hip.getPlazo_anios(); i++) {
+
+            // Crear una nueva fila y agregarla al TableLayout
+            TableRow tableRow = new TableRow(this);
+            tabla_cuadro_amortizacion_anual.addView(tableRow);
+
+            TextView numAnio = new TextView(this);
+            numAnio.setText(Integer.toString(i));
+            numAnio.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(numAnio);
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(hip.getFecha_inicio());
+            TextView anio = new TextView(this);
+            anio.setText(Integer.toString(calendar.get(Calendar.YEAR) + i - 1));
+            anio.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(anio);
+
+
+            // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1);
+
+            TextView totalAnual = new TextView(this);
+            totalAnual.setText(Double.toString(valores.get(0)));
+            totalAnual.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(totalAnual);
+
+            TextView capitalAnual = new TextView(this);
+            capitalAnual.setText(Double.toString(valores.get(1)));
+            capitalAnual.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(capitalAnual);
+
+            TextView interesAnual = new TextView(this);
+            interesAnual.setText(Double.toString(valores.get(2)));
+            interesAnual.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(interesAnual);
+
+            TextView pendiente = new TextView(this);
+            pendiente.setText(Double.toString(valores.get(3)));
+            pendiente.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(pendiente);
+
+
+        }
     }
 
     public void eventos(){

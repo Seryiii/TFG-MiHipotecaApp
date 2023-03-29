@@ -102,11 +102,11 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
         double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
 
-        double capitalPdte = getCapitalPendienteTotalActual(numCuota);
-        double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota);
+        double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota + 1);
         valores.add(cuota);
         valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado));
         valores.add(getInteresMensual(capPdte, porcentaje_aplicado));
+        double capitalPdte = getCapitalPendienteTotalActual(numCuota);
         valores.add(capitalPdte);
         return valores;
     }
