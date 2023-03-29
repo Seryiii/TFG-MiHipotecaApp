@@ -131,7 +131,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             cantidad_pendiente   = hip.getPrecio_vivienda() - hip.getCantidad_abonada() ;
             numero_cuotas_restantes = hip.getPlazo_anios() * 12 ;
             info_dinero_restante.setVisibility(View.GONE);
-            info_cuota.setVisibility(View.GONE);
 
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
@@ -145,8 +144,12 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             numero_cuotas_restantes = hip.getNumeroCuotaActual() <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual();
         }
 
+        if (hip.siguienteCuotaRevision()) info_cuota.setVisibility(View.VISIBLE);
 
-        if(hip.getAniosRestantes() <= 0) numero_cuotas_restantes = 0;
+        if(hip.getAniosRestantes() <= 0){
+            numero_cuotas_restantes = 0;
+            info_cuota.setVisibility(View.GONE);
+        }
         double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
         String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);
@@ -218,7 +221,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                         .setBalloonAnimation(BalloonAnimation.FADE)
                         .build();
 
-                balloon.showAlignTop(info_dinero_restante);
+                balloon.showAlignTop(info_cuota);
             }
         });
 

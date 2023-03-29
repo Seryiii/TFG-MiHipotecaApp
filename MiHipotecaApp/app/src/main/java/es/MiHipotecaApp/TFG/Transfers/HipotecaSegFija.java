@@ -2,7 +2,10 @@ package es.MiHipotecaApp.TFG.Transfers;
 
 import android.util.Log;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable {
@@ -37,7 +40,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
             double cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo);
             capital_pendiente = capital_pendiente - cantidad_capital;
         }
-        return capital_pendiente;
+        return Math.round(capital_pendiente * 100.0) / 100.0;
     }
 
     /** Revisar esta funcion, creo que esta mal*/
@@ -51,7 +54,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
             capPendiente -= (getCuotaMensual(getPorcentaje_fijo(), precio_vivienda - cantidad_abonada, plazo_anios * 12) - getInteresMensual(capPendiente, getPorcentaje_fijo()));
         }
 
-        return interesesTotales;
+        return Math.round(interesesTotales * 100.0) / 100.0;
     }
 
     /** Cuotas mensuales + Gastos asociados + Vinculaciones **/
@@ -60,6 +63,24 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12) * plazo_anios*12 + totalVinculacionesAnual*plazo_anios + totalGastos;
     }
 
+    /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/
+    @Override
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){
+        ArrayList<Double> valores = new ArrayList<>();
+        double cuota   = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
+        double capPdteCuota = getCapitalPendienteTotalActual(numCuota);
+
+        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
+        valores.add(cuota);
+        valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo));
+        valores.add(getInteresMensual(capPdte, porcentaje_fijo));
+        valores.add(capPdteCuota);
+        return valores;
+    }
+
+    /** Esta funcion devuelve el porcentaje que se aplica para un determinado numero de cuota**/
+    @Override
+    public double getPorcentajePorCuota(int numCuota){ return porcentaje_fijo; }
 
     /** Getters y Setters*/
     @Override

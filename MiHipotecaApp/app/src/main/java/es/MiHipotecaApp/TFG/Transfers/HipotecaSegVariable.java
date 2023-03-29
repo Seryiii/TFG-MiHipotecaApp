@@ -3,6 +3,7 @@ package es.MiHipotecaApp.TFG.Transfers;
 import android.util.Log;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializable {
@@ -48,7 +49,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
             }
         }
 
-        return capital_pendiente;
+        return Math.round(capital_pendiente * 100.0) / 100.0;
     }
 
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
@@ -75,6 +76,40 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         else return cuota_mensual * (plazo_anios * 12 - numPago);
     }
 
+    /** Esta funcion devuelve si en el siguiente pago toca revision **/
+    @Override
+    public boolean siguienteCuotaRevision(){
+
+        int numCuotasPagadas = getNumeroCuotaActual();
+        if (numCuotasPagadas < duracion_primer_porcentaje_variable) return false;
+        if (numCuotasPagadas == duracion_primer_porcentaje_variable) return true;
+        if ((revision_anual  && (numCuotasPagadas % 12 == 0)) || (!revision_anual && (numCuotasPagadas % 6  == 0))) return true;
+        return false;
+    }
+
+    /** Esta funcion devuelve el porcentaje que se aplica para un determinado numero de cuota**/
+    @Override
+    public double getPorcentajePorCuota(int numCuota){
+        if (numCuota <= duracion_primer_porcentaje_variable) return primer_porcentaje_variable;
+        return getEuriborPasado(numCuota) + porcentaje_diferencial_variable;
+    }
+
+    /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/
+    @Override
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){
+        ArrayList<Double> valores = new ArrayList<>();
+        double porcentaje_aplicado = getPorcentajePorCuota(numCuota);
+
+        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
+
+        double capitalPdte = getCapitalPendienteTotalActual(numCuota);
+        double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota);
+        valores.add(cuota);
+        valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado));
+        valores.add(getInteresMensual(capPdte, porcentaje_aplicado));
+        valores.add(capitalPdte);
+        return valores;
+    }
 
     /** Getters y Setters*/
     @Override

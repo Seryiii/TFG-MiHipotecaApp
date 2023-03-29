@@ -11,5 +11,6 @@
     <color name="background_bottom_bar">#abd3f5</color>
     <color name="color_btn">#6096B4</color>
     <color name="color_intermedio">#EEE9DA</color>
+    <color name="gris_oscuro">#4F4F4F</color>
 
 </resources>

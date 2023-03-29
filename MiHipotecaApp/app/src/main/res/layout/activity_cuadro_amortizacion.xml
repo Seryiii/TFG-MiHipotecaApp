@@ -13,7 +13,6 @@
         android:orientation="vertical">
 
 
-        
         <TextView
             android:layout_width="297dp"
             android:layout_height="101dp"
@@ -90,73 +89,79 @@
                 </LinearLayout>
 
             </LinearLayout>
-            <TableLayout
-                android:id="@+id/tabla_cuadro_amortizacion"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:scrollbarThumbHorizontal="@color/gris_oscuro">
 
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
-                android:stretchColumns="0,1,2,3,4,5"
-                android:background="@color/white">
-
-                <TableRow
-                    android:layout_width="match_parent"
+                <TableLayout
+                    android:id="@+id/tabla_cuadro_amortizacion"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAlignment="center">
+                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:stretchColumns="*"
+                    android:background="@color/white">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0.8"
-                        android:text="Nº Cuota"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/allerta"/>
+                    <TableRow
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textAlignment="center">
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/allerta"
-                        android:text="Mes" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/allerta"
+                            android:padding="10dp"
+                            android:text="Nº Cuota"
+                            android:textAlignment="center" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/allerta"
-                        android:text="Cuota" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/allerta"
+                            android:padding="10dp"
+                            android:text="Mes"
+                            android:textAlignment="center" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/allerta"
-                        android:text="Capital" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/allerta"
+                            android:padding="10dp"
+                            android:text="Cuota"
+                            android:textAlignment="center" />
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/allerta"
-                        android:text="Intereses" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/allerta"
+                            android:text="Capital"
+                            android:textAlignment="center"
+                            android:padding="10dp"/>
 
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:textAlignment="center"
-                        android:fontFamily="@font/allerta"
-                        android:text="Capital pdte" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/allerta"
+                            android:text="Intereses"
+                            android:textAlignment="center"
+                            android:padding="10dp"/>
 
-                </TableRow>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:fontFamily="@font/allerta"
+                            android:text="Capital pdte"
+                            android:textAlignment="center"
+                            android:padding="10dp"/>
 
-            </TableLayout>
+                    </TableRow>
+
+                </TableLayout>
+            </HorizontalScrollView>
+
         </LinearLayout>
 
 

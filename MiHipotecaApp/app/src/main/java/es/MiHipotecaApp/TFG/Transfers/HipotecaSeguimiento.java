@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -163,6 +164,12 @@ public class HipotecaSeguimiento implements Serializable {
         return 0;
     }
 
+    public boolean siguienteCuotaRevision(){ return false; }
+
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){ return null; }
+
+    public double getPorcentajePorCuota(int numCuota){ return 0; }
+
     //GETTERS Y SETTERS SOBREESCRITOS
     public double getPorcentaje_fijo() {
         return 0;
@@ -187,6 +194,8 @@ public class HipotecaSeguimiento implements Serializable {
     public double getPorcentaje_diferencial_mixta() {
         return 0;
     }
+
+
 
     //GETTERS
     public String getNombre() {
@@ -304,6 +313,12 @@ public class HipotecaSeguimiento implements Serializable {
 
     /** FUNCIONES DE PRUEBA PARA HACER MAS FUNCIONALIDADES, CAMBIAR POR WEB SCRAPING O SIMILARES*/
     public double getEuriborActual(){ return 3.018; }
-    public double getEuriborPasado(int numPago){ return 3.018; } //Calcula el euribor que hubo correspondiente a un numero de pago
 
+    //Calcula el euribor que hubo correspondiente a un numero de pago
+
+    public double getEuriborPasado(int numPago){
+
+        //Si el numero de pago no se ha hecho devolver euribor actual
+        return 3.018;
+    }
 }

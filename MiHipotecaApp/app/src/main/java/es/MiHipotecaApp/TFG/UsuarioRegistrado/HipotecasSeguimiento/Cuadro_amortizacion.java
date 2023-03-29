@@ -3,8 +3,10 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
@@ -35,7 +37,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuadro_amortizacion);
 
-        meses = new String[]{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+        meses = new String[]{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
 
         year_of_calendar = findViewById(R.id.year_of_calendar);
 
@@ -67,7 +69,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         por alguno de los botones laterales o por el uso de la seekBar **/
     public void actualizarTablaMeses(int anio){
         //Obtiene el numero de cuota de enero del año mostrado en el textView
-        int diferenciaEnMeses = hip.getNumeroCuotaEnEnero(anio);
+        int numCuotaEnero = hip.getNumeroCuotaEnEnero(anio);
         //Elimina las filas de la tabla a excepcion de la primera
         tabla_cuadro_amortizacion.removeViews(1, tabla_cuadro_amortizacion.getChildCount() - 1);
         for (int i = 0; i < 12; i++) {
@@ -77,9 +79,11 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            if(diferenciaEnMeses + i > 0 && diferenciaEnMeses + i <= hip.getPlazo_anios() * 12) {
+            if(numCuotaEnero + i > 0 && numCuotaEnero + i <= hip.getPlazo_anios() * 12) {
+
+
                 TextView numCuota = new TextView(this);
-                numCuota.setText(Integer.toString(diferenciaEnMeses + i));
+                numCuota.setText(Integer.toString(numCuotaEnero + i));
                 numCuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(numCuota);
 
@@ -88,23 +92,27 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 nombreMes.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(nombreMes);
 
+
+                // CUOTA, CAPITAL, INTERESES, CAPITAL PDTE
+                ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i);
+
                 TextView cuota = new TextView(this);
-                cuota.setText(Double.toString(hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getCapitalPendienteTotalActual(diferenciaEnMeses), hip.getPlazo_anios() * 12 - diferenciaEnMeses)));
+                cuota.setText(Double.toString(valores.get(0)));
                 cuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(cuota);
 
                 TextView capital = new TextView(this);
-                capital.setText("Fila " + i);
+                capital.setText(Double.toString(valores.get(1)));
                 capital.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(capital);
 
                 TextView interes = new TextView(this);
-                interes.setText("Fila " + i);
+                interes.setText(Double.toString(valores.get(2)));
                 interes.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(interes);
 
                 TextView pendiente = new TextView(this);
-                pendiente.setText("Fila " + i);
+                pendiente.setText(Double.toString(valores.get(3)));
                 pendiente.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(pendiente);
             }
