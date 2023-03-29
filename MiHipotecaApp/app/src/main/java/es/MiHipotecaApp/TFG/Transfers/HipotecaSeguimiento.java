@@ -135,6 +135,28 @@ public class HipotecaSeguimiento implements Serializable {
 
     }
 
+    /** Funcion que devuelve el numero de cuota de la hipoteca en enero del anio pasado por parametros **/
+    public int getNumeroCuotaEnEnero(int anio){
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        // 1 de Enero del anio dado por parametros
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.YEAR, anio);
+        cal.set(Calendar.MONTH, 1);
+        cal.set(Calendar.DAY_OF_MONTH, 1);
+
+        // En caso de que todavia no haya empezado el seguimiento de la hipoteca
+        int difA = cal.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        int numeroPagoActual = difA * 12 + cal.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
+
+        // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
+        if(cal.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
+        // Fin de hipoteca
+        //if (numeroPagoActual > plazo_anios * 12) numeroPagoActual = plazo_anios * 12;
+
+        return numeroPagoActual;
+    }
+
 
     //FUNCIONES SOBREESCRITAS
     public double getCapitalPendienteTotalActual(int numero_pago){

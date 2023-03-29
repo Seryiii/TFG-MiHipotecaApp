@@ -50,12 +50,13 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
         inicio.setTime(hip.getFecha_inicio());
         // Dia actual
         Calendar actual = Calendar.getInstance();
-
-        actual.setTime(hip.getFecha_inicio());
         int year = actual.get(Calendar.YEAR);
-        //Si el año de inicio de la hipoteca es futuro, se pone ese valor por defecto en la seek bar, si no se pone el año actual
+
+        /**Si el año de inicio de la hipoteca es futuro, se pone ese valor por defecto en la seekBar,
+           si no se pone el año actual */
         if(inicio.compareTo(actual) > 0) seekBar_elegir_anio.setProgress(year);
         else seekBar_elegir_anio.setProgress(actual.get(Calendar.YEAR));
+
         //Da valor al textView donde aparece el valor de la seekbar
         value_seek_bar.setText(Integer.toString(year));
 
@@ -77,6 +78,7 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
     }
 
     public void eventos(AlertDialog.Builder builder, int year){
+        //Se encarga de actualizar el valor del textView del dialogo en funcion del uso de la seekBar
         seekBar_elegir_anio.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -97,7 +99,7 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
 
         int finalYear = year;
         builder.setView(view) //Aquí se añade la vista del layout personalizado
-                .setTitle("Selecciona un año") //Añadir un título si quieres
+                .setTitle("Selecciona un año")
                 .setPositiveButton("Actualizar", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
@@ -110,9 +112,7 @@ public class custom_dialog_anios extends AppCompatDialogFragment {
                 })
                 .setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //Lógica del botón "Cancelar" si lo necesitas
-                    }
+                    public void onClick(DialogInterface dialogInterface, int i) {}
                 });
 
     }
