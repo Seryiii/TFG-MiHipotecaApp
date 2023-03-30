@@ -59,6 +59,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private PieChart aportado_vs_a_financiar;
     private PieChart gastos_totales;
+
     private LineChart intereses_vs_capital_mensual;
 
     private HipotecaSeguimiento hip;
@@ -107,6 +108,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
         info_dinero_restante                 = findViewById(R.id.btn_info_dinero_por_pagar);
         info_cuota                           = findViewById(R.id.btn_info_cuota);
+
+        //GRÁFICOS
+        aportado_vs_a_financiar              = findViewById(R.id.pie_chart_aportado_vs_a_financiar);
+
     }
 
     private void rellenarUI(){
@@ -199,7 +204,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
-        // toDo FALTA PONERLO VISIBLE CUANDO LA SIGUIENTE CUOTA HAYA QUE ACTUALIZARLA CON EL EURIBOR
         info_cuota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

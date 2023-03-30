@@ -147,7 +147,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
 
             // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1);
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i);
 
             TextView totalAnual = new TextView(this);
             totalAnual.setText(Double.toString(valores.get(0)));

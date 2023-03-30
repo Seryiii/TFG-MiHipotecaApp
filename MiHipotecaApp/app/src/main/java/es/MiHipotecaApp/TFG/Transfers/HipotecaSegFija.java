@@ -80,18 +80,20 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
     @Override
-    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio){
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){
         ArrayList<Double> valores = new ArrayList<>();
         int cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
-        int cuotasPagadas = anio > 1 ? (anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
+        int cuotasPagadas = num_anio > 1 ? (num_anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
         // Capital pendiente para diciembre de este año
         double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);
         // Capital pendiente para diciembre del año anterior
-        double capPdteAnterior = cuotasPagadas < 12 ? 0 : getCapitalPendienteTotalActual(cuotasPagadas - 12);
+
+        //El numero pasado por param esta mal
+        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
         double cuotaMensual = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
 
         valores.add(Math.round(cuotaMensual * cuotasAnuales * 100.0) / 100.0);
-        valores.add(capPdteAnterior - capPdteUltimo);
+        valores.add(Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0);
         valores.add(getInteresesPlazo(capPdteAnterior, cuotasAnuales, porcentaje_fijo, cuotaMensual));
         valores.add(capPdteUltimo);
 

@@ -168,7 +168,7 @@ public class HipotecaSeguimiento implements Serializable {
 
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){ return null; }
 
-    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio){ return null; }
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){ return null; }
 
     public double getPorcentajePorCuota(int numCuota){ return 0; }
 
