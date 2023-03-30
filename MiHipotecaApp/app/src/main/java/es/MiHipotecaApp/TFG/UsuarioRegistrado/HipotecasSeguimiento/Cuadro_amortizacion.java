@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TableLayout;
@@ -31,6 +34,12 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private TableLayout tabla_cuadro_amortizacion_anual;
     private HipotecaSeguimiento hip;
     private String[] meses;
+    private ImageButton btn_fade_out_1;
+    private ImageButton btn_fade_out_2;
+    private View primeraColumna1;
+    private View primeraColumna2;
+    private boolean primeraTablaVisible;
+
 
 
     @Override
@@ -47,7 +56,12 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         choose_year = findViewById(R.id.choose_year);
         tabla_cuadro_amortizacion = findViewById(R.id.tabla_cuadro_amortizacion);
         tabla_cuadro_amortizacion_anual = findViewById(R.id.tabla_cuadro_amortizacion_anual);
-
+        btn_fade_out_1 = findViewById(R.id.btn_fade_out_1);
+        btn_fade_out_1.setImageResource(R.drawable.drop_up);
+        btn_fade_out_2 = findViewById(R.id.btn_fade_out_2);
+        primeraColumna1 = null;
+        primeraColumna2 = null;
+        primeraTablaVisible = true;
         //Obtenemos la hipoteca de la que vamos a sacar el cuadro de amortización
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
@@ -66,6 +80,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         actualizarTablaAnios();
         eventos();
 
+        contraeTabla2();
     }
 
     /** Funcion a la que se llama cuando el textView que marca el año mostrado en el calendario cambia, ya sea
@@ -74,7 +89,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         //Obtiene el numero de cuota de enero del año mostrado en el textView
         int numCuotaEnero = hip.getNumeroCuotaEnEnero(anio);
         //Elimina las filas de la tabla a excepcion de la primera
-        tabla_cuadro_amortizacion.removeViews(1, tabla_cuadro_amortizacion.getChildCount() - 1);
+        if(tabla_cuadro_amortizacion.getChildCount() > 0) tabla_cuadro_amortizacion.removeViews(1, tabla_cuadro_amortizacion.getChildCount() - 1);
+        else tabla_cuadro_amortizacion.addView(primeraColumna1);
         for (int i = 0; i < 12; i++) {
 
             // Crear una nueva fila y agregarla al TableLayout
@@ -127,6 +143,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     }
 
     public void actualizarTablaAnios(){
+        if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
         for (int i = 1; i <= hip.getPlazo_anios(); i++) {
 
             // Crear una nueva fila y agregarla al TableLayout
@@ -205,7 +222,61 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 }
             }
         });
+
+        btn_fade_out_1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!primeraTablaVisible) {
+                    // Agregar filas al TableLayout
+                    actualizarTablaMeses(Integer.parseInt((String) year_of_calendar.getText()));
+                    contraeTabla2();
+                    primeraTablaVisible = true;
+                    btn_fade_out_1.setImageResource(R.drawable.drop_up);
+                    btn_fade_out_2.setImageResource(R.drawable.drop_down);
+                    next_year.setEnabled(true);
+                    before_year.setEnabled(true);
+                    choose_year.setEnabled(true);
+
+                    // Animar el TableLayout
+                    Animation animation = AnimationUtils.loadAnimation(Cuadro_amortizacion.this, android.R.anim.fade_in);
+                    tabla_cuadro_amortizacion.startAnimation(animation);
+                }
+            }
+        });
+
+        btn_fade_out_2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (primeraTablaVisible) {
+                    // Agregar filas al TableLayout
+                    actualizarTablaAnios();
+                    contraeTabla1();
+                    primeraTablaVisible = false;
+                    btn_fade_out_2.setImageResource(R.drawable.drop_up);
+                    btn_fade_out_1.setImageResource(R.drawable.drop_down);
+                    next_year.setEnabled(false);
+                    before_year.setEnabled(false);
+                    choose_year.setEnabled(false);
+
+                    // Animar el TableLayout
+                    Animation animation = AnimationUtils.loadAnimation(Cuadro_amortizacion.this, android.R.anim.fade_in);
+                    tabla_cuadro_amortizacion_anual.startAnimation(animation);
+                }
+            }
+        });
     }
+
+    public void contraeTabla1(){
+        // Eliminar todas las filas del TableLayout
+        primeraColumna1 = tabla_cuadro_amortizacion.getChildAt(0);
+        tabla_cuadro_amortizacion.removeAllViews();
+    }
+    public void contraeTabla2(){
+        // Eliminar todas las filas del TableLayout
+        primeraColumna2 = tabla_cuadro_amortizacion_anual.getChildAt(0);
+        tabla_cuadro_amortizacion_anual.removeAllViews();
+    }
+
 
     @Override
     public void setAnio(int anio) {

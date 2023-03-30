@@ -6,6 +6,7 @@ import org.checkerframework.checker.units.qual.A;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable {
@@ -82,7 +83,13 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){
         ArrayList<Double> valores = new ArrayList<>();
-        int cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha_inicio);
+        int cuotasAnuales;
+        //si es el primer año de hipoteca
+        if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
+        else if(calendar.get(Calendar.YEAR) + plazo_anios == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
+        else cuotasAnuales = 12;
         int cuotasPagadas = num_anio > 1 ? (num_anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
         // Capital pendiente para diciembre de este año
         double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);

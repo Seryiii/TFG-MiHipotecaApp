@@ -87,7 +87,8 @@ public class HipotecaSeguimiento implements Serializable {
             interesesTotales += getInteresMensual(capital_pendiente, porcentaje_aplicado);
             capital_pendiente -= couta_mensual - getInteresMensual(capital_pendiente, porcentaje_aplicado);
         }
-        return interesesTotales;
+
+        return Math.round(interesesTotales * 100.0) / 100.0;
     }
 
 
