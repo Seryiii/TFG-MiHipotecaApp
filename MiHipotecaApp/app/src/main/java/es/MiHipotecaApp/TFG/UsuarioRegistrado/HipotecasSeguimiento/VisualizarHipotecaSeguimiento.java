@@ -123,7 +123,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         dinero_restante_a_pagar.setText(numeroFormateado);
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
-        anios_restantes_hipoteca.setText(hip.getAniosRestantes() + " años");
+
+        ArrayList<Integer> anios_meses = hip.getAniosMesesRestantes();
+        if(anios_meses.get(0) > 0) anios_restantes_hipoteca.setText(anios_meses.get(0) + " años " + anios_meses.get(1) + " meses");
+        else anios_restantes_hipoteca.setText(anios_meses.get(1) + " meses");
         mes_actual_cuota.setText(hip.getNombreMesActual());
         numero_cuota_actual.setText("Cuotas pagadas: " + hip.getNumeroCuotaActual() + " / " + hip.getPlazo_anios() * 12);
 
@@ -151,7 +154,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
         if (hip.siguienteCuotaRevision()) info_cuota.setVisibility(View.VISIBLE);
 
-        if(hip.getAniosRestantes() <= 0){
+        if(anios_meses.get(0) <= 0 && anios_meses.get(1) <= 0){
             numero_cuotas_restantes = 0;
             info_cuota.setVisibility(View.GONE);
         }

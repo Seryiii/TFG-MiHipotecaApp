@@ -94,9 +94,8 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         // Capital pendiente para diciembre de este año
         double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);
         // Capital pendiente para diciembre del año anterior
-
-        //El numero pasado por param esta mal
         double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
+        //double capPdteAnterior = getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
         double cuotaMensual = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
 
         valores.add(Math.round(cuotaMensual * cuotasAnuales * 100.0) / 100.0);

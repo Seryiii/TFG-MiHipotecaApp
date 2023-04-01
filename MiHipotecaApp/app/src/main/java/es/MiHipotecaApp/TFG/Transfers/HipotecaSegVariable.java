@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializable {
@@ -110,6 +111,58 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         valores.add(capitalPdte);
         return valores;
     }
+
+    /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
+   // @Override
+    /*public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){
+        ArrayList<Double> valores = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha_inicio);
+        int cuotasAnuales;
+        //si es el primer año de hipoteca
+        if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
+        else if(calendar.get(Calendar.YEAR) + plazo_anios == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
+        else cuotasAnuales = 12;
+        int cuotasPagadas = num_anio > 1 ? (num_anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
+        // Capital pendiente para diciembre de este año
+        double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);
+        // Capital pendiente para diciembre del año anterior
+        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
+
+        double cuotaMensual = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
+
+        double intereses = 0;
+        int j = cuotasAnuales;
+        int siguienteRevision = mesesParaSiguienteRevision(cuotasPagadas);
+
+
+
+
+
+
+
+
+        while (j > 0){
+
+            intereses = intereses + getInteresesPlazo()
+        }
+
+        valores.add(Math.round(cuotaMensual * cuotasAnuales * 100.0) / 100.0);
+        valores.add(Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0);
+
+        valores.add(getInteresesPlazo(capPdteAnterior, cuotasAnuales, porcentaje_fijo, cuotaMensual));
+        valores.add(capPdteUltimo);
+
+        return valores;
+    }*/
+
+    /** Esta funcion devuelve cuantos meses quedan para la siguiente revision **/
+    @Override
+    public int mesesParaSiguienteRevision(int numPago){
+        if (revision_anual) return numPago % 12;
+        else                return numPago % 6;
+    }
+
 
     /** Getters y Setters*/
     @Override

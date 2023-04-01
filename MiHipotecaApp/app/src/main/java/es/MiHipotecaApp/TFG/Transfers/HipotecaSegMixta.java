@@ -109,6 +109,15 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         valores.add(capitalPdte);
         return valores;
     }
+
+
+    /** Esta funcion devuelve cuantos meses quedan para la siguiente revision **/
+    @Override
+    public int mesesParaSiguienteRevision(int numPago){
+        if (revision_anual) return numPago % 12;
+        else                return numPago % 6;
+    }
+
     public int getAnios_fija_mixta() {
         return anios_fija_mixta;
     }

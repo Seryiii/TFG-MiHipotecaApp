@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
+import org.checkerframework.checker.units.qual.A;
+
 import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -91,28 +93,24 @@ public class HipotecaSeguimiento implements Serializable {
         return Math.round(interesesTotales * 100.0) / 100.0;
     }
 
+    /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
+    public ArrayList<Integer> getAniosMesesRestantes(){
 
-    public int getAniosRestantes(){
-        Calendar inicio = Calendar.getInstance();
-        inicio.setTime(fecha_inicio);
-        // Dia actual
-        Calendar actual = Calendar.getInstance();
-        // Calcula la diferencia de años
-        int diferencia = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
-        // Si la diferencia de años es 0, no hay que restar nada
-        // Si el año del dia de la fecha que yo paso es mayor que la actual, resto uno
-        if (diferencia != 0 && (inicio.get(Calendar.DAY_OF_YEAR) > actual.get(Calendar.DAY_OF_YEAR))) diferencia--;
-        if(plazo_anios - diferencia <= 0) return 0;
-        return plazo_anios - diferencia;
+        ArrayList<Integer> anios_meses = new ArrayList<>();
+        int cuotasRestantes = (plazo_anios * 12) - getNumeroCuotaActual();
+        int anios = cuotasRestantes / 12;
+        int meses = cuotasRestantes % 12;
+        anios_meses.add(anios);
+        anios_meses.add(meses);
+        return anios_meses;
     }
-
 
     public String getNombreMesActual(){
         Calendar fechaActual = Calendar.getInstance();
         Calendar inicio = Calendar.getInstance();
         inicio.setTime(fecha_inicio);
         //Comprobar si ya se ha pagado
-        if (fechaActual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
+        if (fechaActual.get(Calendar.DAY_OF_MONTH) > inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
         String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
         return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
     }
@@ -197,6 +195,8 @@ public class HipotecaSeguimiento implements Serializable {
     public double getPorcentaje_diferencial_mixta() {
         return 0;
     }
+
+    public int mesesParaSiguienteRevision(int numPago){ return 0; }
 
 
 
