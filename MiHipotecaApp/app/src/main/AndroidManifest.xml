@@ -53,6 +53,9 @@
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento"
             android:exported="false" />
         <activity
+            android:name=".UsuarioRegistrado.HipotecasSeguimiento.EditarHipotecaSeguimiento"
+            android:exported="false" />
+        <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.ModificarDatosUsuario"
             android:exported="false" />
         <activity

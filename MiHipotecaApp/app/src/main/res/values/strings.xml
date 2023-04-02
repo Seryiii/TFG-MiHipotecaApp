@@ -10,6 +10,7 @@
     <string name="txt_btn_aplicar_cambios">APLICAR CAMBIOS</string>
     <string name="txt_btn_pasar_a_premium">PASAR A PREMIUM</string>
     <string name="txt_btn_añadir_hipoteca">AÑADIR HIPOTECA</string>
+    <string name="txt_btn_editar_hipoteca">EDITAR HIPOTECA</string>
     <string name="txt_btn_enviar_problema">ENVIAR</string>
     <string name="txt_aplicar_filtro">Aplicar filtros</string>
     <string name="txt_btn_recuperar_contrasenia">RECUPERAR CONTRASEÑA</string>
@@ -104,6 +105,7 @@
     <string name="label_gastos">GASTOS</string>
     <string name="label_explicacion_gastos">Indica los gastos que tienes que pagar, en caso de no tener que pagar nada introduce 0.</string>
     <string name="label_notaria">Gastos notaría</string>
+    <string name="label_gastos_totales">Gastos totales</string>
     <string name="label_gastos_registro">Gastos registro</string>
     <string name="label_gestoria">Gastos gestoría</string>
     <string name="label_tasacion">Gastos tasación</string>
@@ -150,6 +152,7 @@
     <string name="sesion_cerrada">Sesión cerrada</string>
     <string name="mensaje_enviado_recuperar_contra">Se ha enviado un correo electrónico para restablecer su contraseña</string>
     <string name="hipoteca_seguimiento_exito">Hipoteca creada con éxito!</string>
+    <string name="hipoteca_seguimiento_editada_exito">Hipoteca editada con éxito!</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>

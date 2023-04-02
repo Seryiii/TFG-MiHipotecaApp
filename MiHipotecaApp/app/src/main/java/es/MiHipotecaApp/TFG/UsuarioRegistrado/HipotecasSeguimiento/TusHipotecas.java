@@ -154,8 +154,11 @@ public class TusHipotecas extends Fragment {
                                             return true;
                                         case R.id.editar_hipoteca:
                                             //Redirigir a la vista de editar hipoteca seguimiento
+                                            hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
 
-                                            Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
+                                            Intent i = new Intent(getActivity().getApplicationContext(), EditarHipotecaSeguimiento.class);
+                                            i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                                            i.putExtra("hipoteca", hip);
                                             startActivity(i);
                                             return true;
                                         case R.id.eliminar_hipoteca:
