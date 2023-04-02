@@ -28,13 +28,16 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.WriteBatch;
 
 
 import java.util.ArrayList;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -44,11 +47,11 @@ public class TusHipotecas extends Fragment {
 
     private RecyclerView recyclerHipotecas;
     private ArrayList<HipotecaSeguimiento> listaHipotecasSeg;
-
     private AdaptadorHipotecasSeguimiento adapter;
     private CircleImageView imagen_perfil;
     private Long imgPerfil;
     private FirebaseAuth firebaseAuth;
+    private HipotecaSeguimiento hip;
 
     private final String TAG = "Tus Hipotecas";
 
@@ -140,7 +143,7 @@ public class TusHipotecas extends Fragment {
                                     switch (item.getItemId()) {
                                         case R.id.ver_hipoteca:
                                             //Redirigir a la vista de la hipoteca de seguimiento
-                                            HipotecaSeguimiento hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
+                                            hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
                                             Intent j = new Intent(getActivity().getApplicationContext(), VisualizarHipotecaSeguimiento.class);
                                             j.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                                             j.putExtra("hipoteca", hip);
@@ -156,29 +159,49 @@ public class TusHipotecas extends Fragment {
                                             startActivity(i);
                                             return true;
                                         case R.id.eliminar_hipoteca:
+                                            hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
+
                                             AlertDialog dialogo = new AlertDialog.Builder(getActivity())
                                                     .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             //Eliminar hipoteca de la base de datos
-                                                            HipotecaSeguimiento hip = adapter.getItem(recyclerHipotecas.getChildAdapterPosition(v));
+                                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-                                                            hipotecasRef.document(hip.toString()).delete().
 
-                                                                    addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void unused) {
-                                                                            Log.d(TAG, "Hipoteca eliminada con exito");
+                                                            CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+
+                                                            Query query = hipotecasRef.whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid())
+                                                                    .whereEqualTo("nombre", hip.getNombre());
+
+                                                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                                @Override
+                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                                    if (task.isSuccessful()) {
+                                                                        QuerySnapshot querySnapshot = task.getResult();
+                                                                        if (!querySnapshot.isEmpty()) {
+                                                                            DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                                                            documentSnapshot.getReference().delete()
+                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                        @Override
+                                                                                        public void onSuccess(Void aVoid) {
+                                                                                            // Documento eliminado correctamente
+                                                                                            Intent i = new Intent(getActivity(), PaginaPrincipal.class);
+                                                                                            startActivity(i);
+                                                                                        }
+                                                                                    })
+                                                                                    .addOnFailureListener(new OnFailureListener() {
+                                                                                        @Override
+                                                                                        public void onFailure(@NonNull Exception e) {
+                                                                                            // Error al eliminar el documento
+                                                                                        }
+                                                                                    });
                                                                         }
-                                                                    })
-                                                                   .addOnFailureListener(new OnFailureListener() {
-                                                                       @Override
-                                                                       public void onFailure(@NonNull Exception e) {
-                                                                           Log.w(TAG, "Error eliminando Hipoteca", e);
-                                                                       }
-                                                                   });
-
-
+                                                                    } else {
+                                                                        // Error al obtener la referencia al documento
+                                                                    }
+                                                                }
+                                                            });
                                                         }
                                                     })
                                                     .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
