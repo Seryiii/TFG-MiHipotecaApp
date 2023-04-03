@@ -31,6 +31,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -57,7 +59,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private EditText precio_vivienda;
     private EditText cantidad_abonada;
     private EditText plazo;
-    private DatePicker inicio_hipoteca;
+    //private DatePicker inicio_hipoteca;
+    private EditText inicio_hipoteca;
+
     private CheckBox check_fija;
     private CheckBox check_variable;
     private CheckBox check_mixta;
@@ -284,6 +288,13 @@ public class NuevoSeguimiento extends AppCompatActivity {
             }
         });
 
+        inicio_hipoteca.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
+
         btn_anadir_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -293,6 +304,29 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
 
     }
+
+    private void showDatePickerDialog() {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
+            // +1 because January is zero
+            final String selectedDate =  twoDigits(day) + "/" + twoDigits(month+1) + "/" + fourDigits(year);
+            inicio_hipoteca.setText(selectedDate);
+        });
+
+        newFragment.show(getSupportFragmentManager(), "datePicker");
+    }
+
+    private String twoDigits(int n) {
+        return (n<=9) ? ("0"+n) : String.valueOf(n);
+    }
+
+    private String fourDigits(int n) {
+        if (n<=9)          return ("000" + n);
+        else if (n <= 99)  return ("00" + n);
+        else if (n <= 999) return ("0"  + n);
+        else return String.valueOf(n);
+    }
+
+
     private void ActivarCampos(String hipoteca){
 
         switch (hipoteca){
@@ -367,6 +401,11 @@ public class NuevoSeguimiento extends AppCompatActivity {
             camposCorrectos = false;
         }
 
+        if (TextUtils.isEmpty(inicio_hipoteca.getText())) {
+            inicio_hipoteca.setError("Debe seleccionar una fecha de inicio para la hipoteca");
+            camposCorrectos = false;
+        }
+
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
             camposCorrectos = false;
@@ -436,12 +475,22 @@ public class NuevoSeguimiento extends AppCompatActivity {
         double cant_abonada = Double.parseDouble(cantidad_abonada.getText().toString());
         int plazo_hip = Integer.parseInt(plazo.getText().toString());
 
+        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
+        Date fecha_inicio;
+        try {
+            fecha_inicio = formato.parse(inicio_hipoteca.getText().toString());
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+
+        /*
         int year = inicio_hipoteca.getYear();
         int month = inicio_hipoteca.getMonth();
         int dayOfMonth = inicio_hipoteca.getDayOfMonth();
         Calendar calendar = Calendar.getInstance();
         calendar.set(year, month, dayOfMonth);
-        Date fecha_inicio = calendar.getTime();
+        Date fecha_inicio = calendar.getTime();*/
+
 
         double gastos_gest, gastos_not, gastos_reg, gastos_tas, gastos_vin, gastos_com;
         if(TextUtils.isEmpty(gastos_gestoria.getText())) gastos_gest = 0;
