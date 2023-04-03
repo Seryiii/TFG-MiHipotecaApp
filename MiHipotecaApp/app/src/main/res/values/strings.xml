@@ -68,6 +68,7 @@
     <string name="label_hipoteca_fija">Hipoteca fija</string>
     <string name="label_hipoteca_variable">Hipoteca variable</string>
     <string name="label_hipoteca_mixta">Hipoteca mixta</string>
+    <string name="label_check_parte_fija_variab">Hipoteca mixta</string>
     <string name="label_tipo_hipoteca">Tipo de hipoteca</string>
     <string name="label_vinculaciones">Vinculaciones</string>
     <string name="label_seguro_vida">Seguro de vida</string>
@@ -96,6 +97,7 @@
     <string name="label_cierre_sesion">Cerrar sesión</string>
     <string name="label_porcentaje_fijo">Porcentaje fijo (TIN)</string>
     <string name="label_duracion_primer_porcentaje">Duración del primer porcentaje aplicado (en meses)</string>
+    <string name="label_check_parte_fija_mixta">¿Su hipoteca tiene una primera parte fija?</string>
     <string name="label_porcentaje_variable_diferencial">Diferencial</string>
     <string name="label_cada_cuanto_revision">¿Cuando se realiza la revisión para actualizar con el euribor?</string>
     <string name="label_primer_porcentaje_variable">Primer porcentaje aplicado</string>

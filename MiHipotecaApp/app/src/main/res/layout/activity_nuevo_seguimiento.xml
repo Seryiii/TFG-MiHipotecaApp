@@ -274,6 +274,13 @@
 
         <!-- CAMPOS PARA HIPOTECA VARIABLE -->
 
+        <CheckBox
+            android:id="@+id/checkBox_parte_fija_mixta"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_check_parte_fija_mixta"
+            android:checked="false"/>
+
         <TextView
             android:id="@+id/label_duracion_primer_porcentaje_variable"
             android:layout_width="match_parent"

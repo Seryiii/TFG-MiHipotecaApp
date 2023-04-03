@@ -53,6 +53,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private CheckBox check_vivienda_poficial;
     private CheckBox check_vivienda_nueva;
     private CheckBox check_vivienda_smano;
+    private CheckBox check_parte_fija_mixta;
     private EditText precio_vivienda;
     private EditText cantidad_abonada;
     private EditText plazo;
@@ -129,6 +130,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         check_fija=findViewById(R.id.checkBoxFijaNuevoSeg);
         check_variable=findViewById(R.id.checkBoxVariableNuevoSeg);
         check_mixta=findViewById(R.id.checkBoxMixtaNuevoSeg);
+        check_parte_fija_mixta=findViewById(R.id.checkBox_parte_fija_mixta);
         gastos_notaria=findViewById(R.id.edit_gastos_notaria);
         gastos_registro=findViewById(R.id.edit_gastos_registro);
         gastos_gestoria=findViewById(R.id.edit_gastos_gestoria);
@@ -264,6 +266,24 @@ public class NuevoSeguimiento extends AppCompatActivity {
             }
         });
 
+
+        check_parte_fija_mixta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    edit_duracion_primer_porcentaje.setVisibility(View.VISIBLE);
+                    label_duracion_primer_porcentaje.setVisibility(View.VISIBLE);
+                    edit_primer_porcentaje.setVisibility(View.VISIBLE);
+                    label_primer_porcentaje.setVisibility(View.VISIBLE);
+                } else{
+                    edit_duracion_primer_porcentaje.setVisibility(View.GONE);
+                    label_duracion_primer_porcentaje.setVisibility(View.GONE);
+                    edit_primer_porcentaje.setVisibility(View.GONE);
+                    label_primer_porcentaje.setVisibility(View.GONE);
+                }
+            }
+        });
+
         btn_anadir_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -306,10 +326,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     }
     private void ModificarCamposVariable(int view) {
-        label_duracion_primer_porcentaje.setVisibility(view);
-        edit_duracion_primer_porcentaje.setVisibility(view);
-        label_primer_porcentaje.setVisibility(view);
-        edit_primer_porcentaje.setVisibility(view);
+        check_parte_fija_mixta.setVisibility(view);
         label_diferencial_variable.setVisibility(view);
         edit_diferencial_variable.setVisibility(view);
 
@@ -362,13 +379,15 @@ public class NuevoSeguimiento extends AppCompatActivity {
                 camposCorrectos = false;
             }
         }else if(check_variable.isChecked()){
-            if(TextUtils.isEmpty(edit_duracion_primer_porcentaje.getText())){
-                edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_vacio));
-                camposCorrectos = false;
-            }
-            if(TextUtils.isEmpty(edit_diferencial_variable.getText())){
-                edit_diferencial_variable.setError(getString(R.string.porcentaje_vacio));
-                camposCorrectos = false;
+            if(check_parte_fija_mixta.isChecked()) {
+                if (TextUtils.isEmpty(edit_duracion_primer_porcentaje.getText())) {
+                    edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_vacio));
+                    camposCorrectos = false;
+                }
+                if (TextUtils.isEmpty(edit_diferencial_variable.getText())) {
+                    edit_diferencial_variable.setError(getString(R.string.porcentaje_vacio));
+                    camposCorrectos = false;
+                }
             }
         }else{
             if(TextUtils.isEmpty(edit_anios_fija.getText())){
@@ -451,8 +470,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
             nuevaHip.setIdUsuario(user.getUid());
         }else if (check_variable.isChecked()){
             tipo_hipoteca = "variable";
-            int duracion_primer_porcentaje = Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString());
-            double primer_porc_variable = Double.parseDouble(edit_primer_porcentaje.getText().toString());
+            int duracion_primer_porcentaje = check_parte_fija_mixta.isChecked() ? Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) : 0;
+            double primer_porc_variable = check_parte_fija_mixta.isChecked() ? Double.parseDouble(edit_primer_porcentaje.getText().toString()) : 0;
+
             double diferencial_variable = Double.parseDouble(edit_diferencial_variable.getText().toString());
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;

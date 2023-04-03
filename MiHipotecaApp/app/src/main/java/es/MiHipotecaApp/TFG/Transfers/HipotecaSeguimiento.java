@@ -142,7 +142,7 @@ public class HipotecaSeguimiento implements Serializable {
         // 1 de Enero del anio dado por parametros
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.YEAR, anio);
-        cal.set(Calendar.MONTH, 1);
+        cal.set(Calendar.MONTH, 0);
         cal.set(Calendar.DAY_OF_MONTH, 1);
 
         // En caso de que todavia no haya empezado el seguimiento de la hipoteca
