@@ -4,6 +4,7 @@ import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializable {
@@ -49,6 +50,37 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
             }
         }
         return Math.round(capital_pendiente * 100.0) / 100.0;
+    }
+
+    /** Esta funcion devuelve el capital pendiente total por amortizar**/
+    @Override
+    public double getInteresesTotales(int numero_pago){
+        double intereses_totales = 0;
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        double cuota_mensual = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, plazo_anios * 12);
+        double cantidad_capital;
+        int aux = numero_pago > anios_fija_mixta * 12 ? anios_fija_mixta * 12 : numero_pago;
+        for (int i = 1; i <= aux; i++){
+            intereses_totales += getInteresMensual(capital_pendiente, porcentaje_fijo_mixta);
+            cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo_mixta);
+            capital_pendiente = capital_pendiente - cantidad_capital;
+        }
+
+        int j = aux;
+        int revision = 6;
+        while(j < numero_pago){
+            if(isRevision_anual()) revision = 12;
+            double euribor = getEuriborPasado(j);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_mixta + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            for(int h = 0; h < revision && j < numero_pago; h++){
+                intereses_totales += getInteresMensual(capital_pendiente, porcentaje_diferencial_mixta + euribor);
+                cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_mixta + euribor);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+                j++;
+            }
+        }
+
+        return Math.round(intereses_totales * 100.0) / 100.0;
     }
 
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
@@ -110,6 +142,36 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         return valores;
     }
 
+    /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
+    @Override
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){
+        ArrayList<Double> valores = new ArrayList<>();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fecha_inicio);
+        int cuotasAnuales;
+        //si es el primer año de hipoteca
+        if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
+        else if(calendar.get(Calendar.YEAR) + plazo_anios == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
+        else cuotasAnuales = 12;
+        int cuotasPagadas = num_anio > 1 ? (num_anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
+        // Capital pendiente para diciembre de este año
+        double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);
+        // Capital pendiente para diciembre del año anterior
+        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
+
+        double interesesTotalesUltimo = getInteresesTotales(cuotasPagadas);
+        // Capital pendiente para diciembre del año anterior
+        double interesesTotalesAnterior = cuotasPagadas < 12 ? 0 : getInteresesTotales(cuotasPagadas - cuotasAnuales);
+
+        double capitalTotal     = Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0;
+        double interesesTotales = Math.round((interesesTotalesUltimo - interesesTotalesAnterior) * 100.0) / 100.0;
+        valores.add(Math.round((capitalTotal + interesesTotales) * 100.0) / 100.0);
+        valores.add(capitalTotal);
+        valores.add(interesesTotales);
+        valores.add(capPdteUltimo);
+
+        return valores;
+    }
 
     /** Esta funcion devuelve cuantos meses quedan para la siguiente revision **/
     @Override

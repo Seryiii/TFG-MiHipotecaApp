@@ -163,6 +163,7 @@ public class HipotecaSeguimiento implements Serializable {
         return 0;
     }
 
+    public double getInteresesTotales(int numero_pago){ return 0; }
     public boolean siguienteCuotaRevision(){ return false; }
 
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){ return null; }
