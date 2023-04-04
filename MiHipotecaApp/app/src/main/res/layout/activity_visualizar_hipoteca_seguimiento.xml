@@ -328,6 +328,17 @@
             android:text="Aportado vs cantidad a financiar"
             android:textSize="22sp" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:text="Capital)"
+            android:textSize="22sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -356,14 +367,21 @@
             </Button>
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.PieChart
+        <!--<com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart_aportado_vs_a_financiar"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginTop="20dp">
-        </com.github.mikephil.charting.charts.PieChart>
+        </com.github.mikephil.charting.charts.PieChart>-->
+
+        <com.anychart.AnyChartView
+            android:id="@+id/pie_chart_aportado_vs_a_financiar"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="500dp"/>
 
         <TextView
             android:layout_width="match_parent"
@@ -404,7 +422,7 @@
             </Button>
         </LinearLayout>
 
-        <com.github.mikephil.charting.charts.PieChart
+        <!--<com.github.mikephil.charting.charts.PieChart
             android:id="@+id/pie_chart_gastos_totales"
             android:layout_width="match_parent"
             android:layout_height="300dp"
@@ -412,7 +430,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="300dp">
-        </com.github.mikephil.charting.charts.PieChart>
+        </com.github.mikephil.charting.charts.PieChart>-->
 
         <TextView
             android:layout_width="match_parent"
@@ -425,7 +443,7 @@
             android:text="Intereses mensuales vs capital menusal"
             android:textSize="22sp" />
 
-        <com.github.mikephil.charting.charts.LineChart
+        <!--<com.github.mikephil.charting.charts.LineChart
             android:id="@+id/line_chart_intereses_vs_capital"
             android:layout_width="match_parent"
             android:layout_height="300dp"
@@ -433,7 +451,7 @@
             android:layout_marginEnd="8dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="300dp">
-        </com.github.mikephil.charting.charts.LineChart>
+        </com.github.mikephil.charting.charts.LineChart>-->
 
     </LinearLayout>
 

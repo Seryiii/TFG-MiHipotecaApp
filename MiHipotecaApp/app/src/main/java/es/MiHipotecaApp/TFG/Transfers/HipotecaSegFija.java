@@ -46,11 +46,11 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
     /** Revisar esta funcion, creo que esta mal*/
     @Override
-    public double getInteresesTotales() {
+    public double getInteresesHastaNumPago(int num_pago) {
         double interesesTotales = 0;
         double capPendiente = precio_vivienda - cantidad_abonada;
 
-        for (int i = 0; i < plazo_anios * 12; i++) {
+        for (int i = 1; i <= num_pago; i++) {
             interesesTotales += getInteresMensual(capPendiente, porcentaje_fijo);
             capPendiente -= (getCuotaMensual(getPorcentaje_fijo(), precio_vivienda - cantidad_abonada, plazo_anios * 12) - getInteresMensual(capPendiente, getPorcentaje_fijo()));
         }

@@ -16,12 +16,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
+import com.anychart.AnyChart;
+import com.anychart.AnyChartView;
+import com.anychart.chart.common.dataentry.DataEntry;
+import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Pie;
 import com.skydoves.balloon.ArrowOrientation;
 import com.skydoves.balloon.ArrowPositionRules;
 import com.skydoves.balloon.Balloon;
@@ -40,9 +39,6 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.BarChartActivity;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.GraficosHipotecaFija;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.RadarChartActivity;
 
 public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
@@ -57,10 +53,12 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private TextView numero_cuota_actual;
     private TextView cuota_mensual_seguimiento;
 
-    private PieChart aportado_vs_a_financiar;
-    private PieChart gastos_totales;
+    //private PieChart aportado_vs_a_financiar;
 
-    private LineChart intereses_vs_capital_mensual;
+    AnyChartView aportado_vs_a_financiar;
+    //private PieChart gastos_totales;
+
+    //private LineChart intereses_vs_capital_mensual;
 
     private HipotecaSeguimiento hip;
     private Button btn_aportado_vs_financiar_valor;
@@ -73,6 +71,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private ImageButton info_dinero_restante;
     private ImageView info_cuota;
 
+    private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +84,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         initUI();
         rellenarUI();
         eventos();
+        graficos();
     }
 
     private void initUI(){
@@ -104,7 +105,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
         btn_gastos_totales_valor             = findViewById(R.id.btn_valor_gastos_totales);
         btn_gastos_totales_porcentaje        = findViewById(R.id.btn_porcentaje_gastos_totales);
-        gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
+        //gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
         info_dinero_restante                 = findViewById(R.id.btn_info_dinero_por_pagar);
         info_cuota                           = findViewById(R.id.btn_info_cuota);
@@ -232,20 +233,21 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
-        //pieChartAportadoVsFinanciarValor(); //Se visualiza por defecto el grafico de valor
-        /*btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
+
+        btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pieChartAportadoVsFinanciarValor();
+                //aportado_vs_a_financiar.setUsePercentValues(false);
             }
         });
         btn_aportado_vs_financiar_porcentaje.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                pieChartAportadoVsFinanciarPorcentaje();
+                //aportado_vs_a_financiar.setUsePercentValues(true);
             }
         });
 
+        /*
         //pieChartGastosTotalesValor(); //Se visualiza por defecto el grafico de valor
         btn_gastos_totales_valor.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -272,74 +274,66 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
         goRadarChart.setOnClickListener(v -> startActivity(new Intent(this, RadarChartActivity.class)));*/
     }
+
+    public void graficos(){
+        construirGraficoAportadoVsAFinanciar();
+    }
+
+    /*
+    public void construirGraficoAportadoVsAFinanciar(){
+
+        ArrayList<PieEntry> list = new ArrayList();
+        double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+        double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
+
+        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazo_anios() * 12);
+        double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual());
+        double interesesPendientes = interesesTotales - interesesPagados;
+
+        list.add(new PieEntry((float) capitalAmortizado, "CAPITAL AMORTIZADO"));
+        list.add(new PieEntry((float) capitalPendiente, "CAPITAL PENDIENTE"));
+        list.add(new PieEntry((float) interesesPendientes, "INTERESES PENDIENTES"));
+        list.add(new PieEntry((float) interesesPagados, "INTERESES PAGADOS"));
+
+        PieDataSet pieDataSet = new PieDataSet(list, "");
+        pieDataSet.setColors(colorClassArray);
+        pieDataSet.setValueTextColor(Color.WHITE);
+        pieDataSet.setValueLineColor(Color.BLACK);
+        pieDataSet.setValueTextSize(25);
+        PieData pieData = new PieData(pieDataSet);
+        aportado_vs_a_financiar.setData(pieData);
+        aportado_vs_a_financiar.setEntryLabelColor(Color.BLACK);
+        //aportado_vs_a_financiar.setUsePercentValues(false);
+        //aportado_vs_a_financiar.invalidate();
+        Description d = new Description();
+        d.setText("Gráfico aportado vs a financiar");
+        aportado_vs_a_financiar.setDescription(d);
+        aportado_vs_a_financiar.animateY(2000);
+
+    }*/
+
+    public void construirGraficoAportadoVsAFinanciar(){
+
+        double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+        double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
+
+        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazo_anios() * 12);
+        double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual());
+        double interesesPendientes = interesesTotales - interesesPagados;
+
+        Pie pie = AnyChart.pie();
+        List<DataEntry> data = new ArrayList<>();
+        data.add(new ValueDataEntry("CAPITAL AMORTIZADO", capitalAmortizado));
+        data.add(new ValueDataEntry("CAPITAL PENDIENTE", capitalPendiente));
+        data.add(new ValueDataEntry("INTERESES PENDIENTES", interesesPendientes));
+        data.add(new ValueDataEntry("INTERESES PAGADOS", interesesPagados));
+        pie.data(data);
+        aportado_vs_a_financiar.setChart(pie);
+        aportado_vs_a_financiar.setBackgroundColor(R.color.background_aplicacion);
+
+    }
+
 /*
-    public void pieChartAportadoVsFinanciarValor(){
-
-        ArrayList<PieEntry> list = new ArrayList();
-
-        int aux = hip.getNumeroCuotaActual();
-        list.add(new PieEntry((float) hip.getDineroAportadoActual(aux), "DINERO APORTADO"));
-        list.add(new PieEntry((float) hip.getDineroRestanteActual(hip.getNumeroCuotaActual()), "DINERO RESTANTE"));
-
-
-        PieDataSet pieDataSet = new PieDataSet(list, "List");
-
-        List<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.YELLOW);
-        pieDataSet.setColors(colors);
-
-        pieDataSet.setValueTextColor(Color.BLACK);
-        pieDataSet.setValueLineColor(Color.BLACK);
-        pieDataSet.setValueTextSize(25);
-
-        PieData pieData = new PieData(pieDataSet);
-
-        aportado_vs_a_financiar.setData(pieData);
-        Description d = new Description();
-        d.setText("Pie Chart");
-        aportado_vs_a_financiar.setDescription(d);
-        aportado_vs_a_financiar.animateY(2000);
-
-    }
-
-    public void pieChartAportadoVsFinanciarPorcentaje(){
-
-        ArrayList<PieEntry> list = new ArrayList();
-        double auxAportado = hip.getDineroAportadoActual(hip.getNumeroCuotaActual());
-        double auxRestante = hip.getDineroRestanteActual(hip.getNumeroCuotaActual());
-        double auxTotal = auxAportado + auxRestante;
-        auxAportado = pasarEnteroAPorcentaje(auxAportado, auxTotal);
-        auxRestante = pasarEnteroAPorcentaje(auxRestante, auxTotal);
-        list.add(new PieEntry((float) auxAportado, "DINERO APORTADO"));
-        list.add(new PieEntry((float) auxRestante, "DINERO RESTANTE"));
-
-
-        PieDataSet pieDataSet = new PieDataSet(list, "List");
-
-        List<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.YELLOW);
-        pieDataSet.setColors(colors);
-
-        pieDataSet.setValueTextColor(Color.BLACK);
-        pieDataSet.setValueLineColor(Color.BLACK);
-        pieDataSet.setValueTextSize(25);
-
-        PieData pieData = new PieData(pieDataSet);
-
-        aportado_vs_a_financiar.setData(pieData);
-        Description d = new Description();
-        d.setText("Pie Chart");
-        aportado_vs_a_financiar.setDescription(d);
-        aportado_vs_a_financiar.animateY(2000);
-
-    }
-
     public void pieChartGastosTotalesValor(double cuota_mensual){
         ArrayList<PieEntry> list = new ArrayList();
         list.add(new PieEntry((float) ((cuota_mensual * hip.getPlazo_anios() * 12) - hip.getInteresesTotales()), "CAPITAL TOTAL"));

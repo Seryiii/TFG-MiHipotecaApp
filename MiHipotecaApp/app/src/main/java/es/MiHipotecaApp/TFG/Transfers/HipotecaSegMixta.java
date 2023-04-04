@@ -52,9 +52,9 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         return Math.round(capital_pendiente * 100.0) / 100.0;
     }
 
-    /** Esta funcion devuelve el capital pendiente total por amortizar**/
+    /** Esta funcion devuelve la cantidad de intereses hasta el numero de pago pasado**/
     @Override
-    public double getInteresesTotales(int numero_pago){
+    public double getInteresesHastaNumPago(int numero_pago){
         double intereses_totales = 0;
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         double cuota_mensual = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, plazo_anios * 12);
@@ -159,9 +159,9 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         // Capital pendiente para diciembre del año anterior
         double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
 
-        double interesesTotalesUltimo = getInteresesTotales(cuotasPagadas);
+        double interesesTotalesUltimo = getInteresesHastaNumPago(cuotasPagadas);
         // Capital pendiente para diciembre del año anterior
-        double interesesTotalesAnterior = cuotasPagadas < 12 ? 0 : getInteresesTotales(cuotasPagadas - cuotasAnuales);
+        double interesesTotalesAnterior = cuotasPagadas < 12 ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales);
 
         double capitalTotal     = Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0;
         double interesesTotales = Math.round((interesesTotalesUltimo - interesesTotalesAnterior) * 100.0) / 100.0;

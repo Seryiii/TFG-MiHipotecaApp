@@ -1,13 +1,6 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.Serializable;
-import java.text.DecimalFormat;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -163,7 +156,7 @@ public class HipotecaSeguimiento implements Serializable {
         return 0;
     }
 
-    public double getInteresesTotales(int numero_pago){ return 0; }
+    public double getInteresesHastaNumPago(int numero_pago){ return 0; }
     public boolean siguienteCuotaRevision(){ return false; }
 
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){ return null; }
@@ -308,8 +301,6 @@ public class HipotecaSeguimiento implements Serializable {
     public double getDineroAportadoActual(int i) { return 0;}
 
     public double getDineroRestanteActual(int i) { return 0;}
-
-    public double getInteresesTotales() { return 0;}
 
     public double getGastosTotalesHipoteca() { return 0;}
 
