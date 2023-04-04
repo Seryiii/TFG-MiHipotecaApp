@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -55,7 +57,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private CheckBox check_vivienda_poficial;
     private CheckBox check_vivienda_nueva;
     private CheckBox check_vivienda_smano;
-    private CheckBox check_parte_fija_mixta;
+    private CheckBox check_parte_fija_variable;
     private EditText precio_vivienda;
     private EditText cantidad_abonada;
     private EditText plazo;
@@ -134,7 +136,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         check_fija=findViewById(R.id.checkBoxFijaNuevoSeg);
         check_variable=findViewById(R.id.checkBoxVariableNuevoSeg);
         check_mixta=findViewById(R.id.checkBoxMixtaNuevoSeg);
-        check_parte_fija_mixta=findViewById(R.id.checkBox_parte_fija_mixta);
+        check_parte_fija_variable=findViewById(R.id.check_parte_fija_variable);
         gastos_notaria=findViewById(R.id.edit_gastos_notaria);
         gastos_registro=findViewById(R.id.edit_gastos_registro);
         gastos_gestoria=findViewById(R.id.edit_gastos_gestoria);
@@ -150,8 +152,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
         //Hipoteca Variable
         label_duracion_primer_porcentaje=findViewById(R.id.label_duracion_primer_porcentaje_variable);
         edit_duracion_primer_porcentaje=findViewById(R.id.edit_duracion_primer_porcentaje_variable);
-        label_primer_porcentaje=findViewById(R.id.label_duracion_primer_porcentaje_variable);
-        edit_primer_porcentaje=findViewById(R.id.edit_duracion_primer_porcentaje_variable);
+        label_primer_porcentaje=findViewById(R.id.label_primer_porcentaje_variable);
+        edit_primer_porcentaje=findViewById(R.id.edit_primer_porcentaje_variable);
         label_diferencial_variable=findViewById(R.id.label_diferencial_variable);
         edit_diferencial_variable=findViewById(R.id.edit_porcentaje_diferencial_variable);
         //Hipoteca mixta
@@ -174,11 +176,45 @@ public class NuevoSeguimiento extends AppCompatActivity {
         sp_bancos.setAdapter(adapter);
 
     }
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog dialogo = new AlertDialog.Builder(this)
+                .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                    }
+                })
+                .setTitle("CANCELAR NUEVO SEGUIMIENTO").setMessage("¿Desea dejar de crear nuevo seguimeinto? Perderá todo su progreso").create();
+        dialogo.show();
+    }
+
     private void Eventos() {
         closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+                AlertDialog dialogo = new AlertDialog.Builder(NuevoSeguimiento.this)
+                        .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setTitle("CANCELAR NUEVO SEGUIMIENTO").setMessage("¿Desea dejar de crear nuevo seguimeinto? Perderá todo su progreso").create();
+                dialogo.show();
             }
         });
         check_vivienda_general.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -271,7 +307,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         });
 
 
-        check_parte_fija_mixta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        check_parte_fija_variable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -360,7 +396,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     }
     private void ModificarCamposVariable(int view) {
-        check_parte_fija_mixta.setVisibility(view);
+        check_parte_fija_variable.setVisibility(view);
         label_diferencial_variable.setVisibility(view);
         edit_diferencial_variable.setVisibility(view);
 
@@ -387,19 +423,32 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(TextUtils.isEmpty(precio_vivienda.getText())){
             precio_vivienda.setError(getString(R.string.precio_vacio));
             camposCorrectos = false;
+        } else{
+
+            //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
+            double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
+            if(precio_viv <= 0){
+                precio_vivienda.setError(getString(R.string.cantidad_mayor_igual_cero));
+                camposCorrectos = false;
+            }
+
+            if(TextUtils.isEmpty(cantidad_abonada.getText())){
+                cantidad_abonada.setError(getString(R.string.cantidad_abonada_vacio));
+                camposCorrectos = false;
+            } else {
+                double ahorro_aport = Double.parseDouble(cantidad_abonada.getText().toString());
+                if (ahorro_aport <= 0) {
+                    cantidad_abonada.setError(getString(R.string.cantidad_mayor_igual_cero));
+                    camposCorrectos = false;
+                }
+                double dinero_aport_banco = precio_viv - ahorro_aport;
+                if (dinero_aport_banco > precio_viv * 0.8) {
+                    cantidad_abonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
+                    camposCorrectos = false;
+                }
+            }
         }
-        if(TextUtils.isEmpty(cantidad_abonada.getText())){
-            cantidad_abonada.setError(getString(R.string.cantidad_abonada_vacio));
-            camposCorrectos = false;
-        }
-        //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
-        double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
-        double ahorro_aport = Double.parseDouble(cantidad_abonada.getText().toString());
-        double dinero_aport_banco = precio_viv - ahorro_aport;
-        if(dinero_aport_banco > precio_viv * 0.8){
-            cantidad_abonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
-            camposCorrectos = false;
-        }
+
 
         if (TextUtils.isEmpty(inicio_hipoteca.getText())) {
             inicio_hipoteca.setError("Debe seleccionar una fecha de inicio para la hipoteca");
@@ -409,37 +458,89 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
             camposCorrectos = false;
+        } else {
+            if (Integer.parseInt(plazo.getText().toString()) <= 0 || Integer.parseInt(plazo.getText().toString()) > 40) {
+                plazo.setError(getString(R.string.plazo_vacio));
+                camposCorrectos = false;
+            }
         }
 
-        //CAMPOS FIJO
+        //CAMPOS FIJOS
         if(check_fija.isChecked()){
             if(TextUtils.isEmpty(edit_porcentaje_fijo.getText())){
                 edit_porcentaje_fijo.setError(getString(R.string.porcentaje_vacio));
                 camposCorrectos = false;
+            } else {
+                if (Double.parseDouble(edit_porcentaje_fijo.getText().toString()) <= 0) {
+                    edit_porcentaje_fijo.setError(getString(R.string.porcentaje_mayor_igual_cero));
+                    camposCorrectos = false;
+                }
             }
-        }else if(check_variable.isChecked()){
-            if(check_parte_fija_mixta.isChecked()) {
+        } //CAMPOS VARIABLES
+        else if(check_variable.isChecked()){
+            if(check_parte_fija_variable.isChecked()) {
                 if (TextUtils.isEmpty(edit_duracion_primer_porcentaje.getText())) {
                     edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_vacio));
                     camposCorrectos = false;
+                } else {
+                    if (Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) <= 0) {
+                        edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_mayor_igual_cero));
+                        camposCorrectos = false;
+                    } else if(Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) > (Integer.parseInt(plazo.getText().toString()) - 1) * 12){
+                        edit_duracion_primer_porcentaje.setError(getString(R.string.meses_menor_plazo));
+                        camposCorrectos = false;
+                    }
                 }
-                if (TextUtils.isEmpty(edit_diferencial_variable.getText())) {
-                    edit_diferencial_variable.setError(getString(R.string.porcentaje_vacio));
+                if (TextUtils.isEmpty(edit_primer_porcentaje.getText())) {
+                    edit_primer_porcentaje.setError(getString(R.string.porcentaje_vacio));
+                    camposCorrectos = false;
+                } else {
+                    if (Double.parseDouble(edit_primer_porcentaje.getText().toString()) <= 0) {
+                        edit_primer_porcentaje.setError(getString(R.string.porcentaje_mayor_igual_cero));
+                        camposCorrectos = false;
+                    }
+                }
+            }
+            if (TextUtils.isEmpty(edit_diferencial_variable.getText())) {
+                edit_diferencial_variable.setError(getString(R.string.porcentaje_vacio));
+                camposCorrectos = false;
+            } else {
+                if (Double.parseDouble(edit_diferencial_variable.getText().toString()) <= 0) {
+                    edit_diferencial_variable.setError(getString(R.string.porcentaje_mayor_igual_cero));
                     camposCorrectos = false;
                 }
             }
-        }else{
+        } //CAMPOS MIXTOS
+        else{
             if(TextUtils.isEmpty(edit_anios_fija.getText())){
                 edit_anios_fija.setError(getString(R.string.duracion_vacio));
                 camposCorrectos = false;
+            } else {
+                if (Integer.parseInt(edit_anios_fija.getText().toString()) <= 0) {
+                    edit_anios_fija.setError(getString(R.string.anios_mayor_cero));
+                    camposCorrectos = false;
+                } else if(Integer.parseInt(edit_anios_fija.getText().toString()) > Integer.parseInt(plazo.getText().toString()) - 1){
+                    edit_anios_fija.setError(getString(R.string.anios_menor_plazo));
+                    camposCorrectos = false;
+                }
             }
             if(TextUtils.isEmpty(edit_porcentaje_fijo_mix.getText())){
                 edit_porcentaje_fijo_mix.setError(getString(R.string.porcentaje_vacio));
                 camposCorrectos = false;
+            } else {
+                if (Double.parseDouble(edit_porcentaje_fijo_mix.getText().toString()) <= 0) {
+                    edit_porcentaje_fijo_mix.setError(getString(R.string.porcentaje_mayor_igual_cero));
+                    camposCorrectos = false;
+                }
             }
             if(TextUtils.isEmpty(edit_diferencial_mixto.getText())){
                 edit_diferencial_mixto.setError(getString(R.string.porcentaje_vacio));
                 camposCorrectos = false;
+            } else {
+                if (Double.parseDouble(edit_diferencial_mixto.getText().toString()) <= 0) {
+                    edit_diferencial_mixto.setError(getString(R.string.porcentaje_mayor_igual_cero));
+                    camposCorrectos = false;
+                }
             }
         }
         if(TextUtils.isEmpty(nombre_hipoteca.getText())){
@@ -519,8 +620,8 @@ public class NuevoSeguimiento extends AppCompatActivity {
             nuevaHip.setIdUsuario(user.getUid());
         }else if (check_variable.isChecked()){
             tipo_hipoteca = "variable";
-            int duracion_primer_porcentaje = check_parte_fija_mixta.isChecked() ? Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) : 0;
-            double primer_porc_variable = check_parte_fija_mixta.isChecked() ? Double.parseDouble(edit_primer_porcentaje.getText().toString()) : 0;
+            int duracion_primer_porcentaje = check_parte_fija_variable.isChecked() ? Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) : 0;
+            double primer_porc_variable = check_parte_fija_variable.isChecked() ? Double.parseDouble(edit_primer_porcentaje.getText().toString()) : 0;
 
             double diferencial_variable = Double.parseDouble(edit_diferencial_variable.getText().toString());
             boolean revision_anual = true;

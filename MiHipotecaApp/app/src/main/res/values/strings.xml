@@ -142,11 +142,18 @@
     <string name="precio_vacio">El campo precio vivienda no puede estar vacío</string>
     <string name="cantidad_abonada_vacio">El campo cantidad abonada no puede estar vacío</string>
     <string name="plazo_vacio">El campo plazo no puede estar vacío</string>
+    <string name="cantidad_mayor_igual_cero">La cantidad debe ser mayor que 0</string>
+    <string name="porcentaje_mayor_igual_cero">El porcentaje debe ser mayor que 0</string>
+    <string name="duracion_mayor_igual_cero">La duracion debe ser mayor que 0</string>
+    <string name="plazo_menor_mayor">El campo plazo debe estar entre 1 y 40</string>
     <string name="anio_actual_vacio">El campo año actual no puede estar vacío</string>
     <string name="nombre_hipoteca_vacio">El campo nombre hipoteca no puede estar vacío</string>
     <string name="porcentaje_vacio">Los porcentajes no pueden estar vacíos</string>
     <string name="duracion_vacio">El campo duración no puede estar vacío</string>
+    <string name="anios_mayor_cero">El campo duración no puede ser menor o igual a 0</string>
     <string name="ahorro_mayor_80_por_ciento">La cantidad financiada por el banco no puede ser mayor al 80% del precio de la vivienda.</string>
+    <string name="anios_menor_plazo">El campo duración no puede ser mayor o igual que el plazo de la hipoteca</string>
+    <string name="meses_menor_plazo">Los meses de este campo pueden ser como maximo el numero de cuotas menos el ultimo año</string>
 
 
     <!-- MENSAJES DE EXITO -->
