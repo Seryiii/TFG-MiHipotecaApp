@@ -317,19 +317,46 @@
 
         </LinearLayout>
 
-        <TextView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/allerta"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="Aportado vs cantidad a financiar"
-            android:textSize="22sp" />
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp">
+
+            <ImageButton
+                android:id="@+id/before_grafico"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/navigate_before"
+                android:layout_marginLeft="10dp"/>
+
+            <TextView
+                android:id="@+id/titulo_grafico"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="5"
+                android:layout_gravity="center"
+                android:fontFamily="@font/allerta"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textAlignment="center"
+                android:text="Aportado vs a financiar"
+                android:textSize="22sp" />
+
+            <ImageButton
+                android:id="@+id/next_grafico"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/navigate_next"/>
+
+        </LinearLayout>
+
 
         <com.anychart.AnyChartView
-            android:id="@+id/pie_chart_aportado_vs_a_financiar"
+            android:id="@+id/grafico_seguimiento"
             android:layout_marginTop="10dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
@@ -337,12 +364,14 @@
             android:layout_height="450dp"/>
 
         <LinearLayout
+            android:id="@+id/capital_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
@@ -366,6 +395,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/capital_layout_valor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -399,6 +429,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/intereses_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -429,6 +460,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/intereses_layout_valor"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -472,13 +504,7 @@
             android:text="Gastos totales"
             android:textSize="22sp" />
 
-        <com.anychart.AnyChartView
-            android:id="@+id/pie_chart_gastos_totales"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="15dp"
-            android:layout_marginEnd="15dp"
-            android:layout_width="match_parent"
-            android:layout_height="450dp"/>
+
 
         <TextView
             android:layout_width="match_parent"

@@ -1,23 +1,21 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.TooltipCompat;
 import androidx.core.content.ContextCompat;
 
+import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
@@ -28,7 +26,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.protobuf.Any;
 import com.skydoves.balloon.ArrowOrientation;
 import com.skydoves.balloon.ArrowPositionRules;
 import com.skydoves.balloon.Balloon;
@@ -37,10 +34,7 @@ import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
@@ -61,13 +55,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private TextView numero_cuota_actual;
     private TextView cuota_mensual_seguimiento;
 
-    //private PieChart aportado_vs_a_financiar;
-
-    private AnyChartView aportado_vs_a_financiar;
-
-    private AnyChartView gastos_totales;
-
-    //private LineChart intereses_vs_capital_mensual;
+    private TextView titulo_grafico;
+    private AnyChartView grafico;
     private TextView capital_amortizado;
     private TextView capital_pendiente;
     private TextView intereses_pagados;
@@ -77,14 +66,20 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private HipotecaSeguimiento hip;
     private Button btn_cuadro_amortizacion;
-
     private ImageButton info_dinero_restante;
     private ImageView info_cuota;
+    private ImageButton before_grafico;
+    private ImageButton next_grafico;
 
+    private LinearLayout capital_layout;
+    private LinearLayout capital_layout_valor;
+    private LinearLayout intereses_layout;
+    private LinearLayout intereses_layout_valor;
     private final String TAG = "VisHipotecaSeg";
 
     private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
 
+    private static int numGrafico = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,7 +91,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         initUI();
         rellenarUI();
         eventos();
-        graficos();
+        construirGraficoAportadoVsAFinanciar();
     }
 
     private void initUI(){
@@ -115,13 +110,19 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         info_cuota                           = findViewById(R.id.btn_info_cuota);
 
         //GRÁFICOS
-        aportado_vs_a_financiar              = findViewById(R.id.pie_chart_aportado_vs_a_financiar);
+        titulo_grafico                       = findViewById(R.id.titulo_grafico);
+        grafico                              = findViewById(R.id.grafico_seguimiento);
+        next_grafico                         = findViewById(R.id.next_grafico);
+        before_grafico                       = findViewById(R.id.before_grafico);
         capital_amortizado                   = findViewById(R.id.capital_amortizado_seguimiento_val);
         capital_pendiente                    = findViewById(R.id.capital_pendiente_seguimiento_val);
         intereses_pagados                    = findViewById(R.id.intereses_pagados_seguimiento_val);
         intereses_pendientes                 = findViewById(R.id.intereses_pendientes_seguimiento_val);
+        capital_layout                       = findViewById(R.id.capital_layout);
+        capital_layout_valor                 = findViewById(R.id.capital_layout_valor);
+        intereses_layout                     = findViewById(R.id.intereses_layout);
+        intereses_layout_valor               = findViewById(R.id.intereses_layout_valor);
 
-        gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
     }
 
     private void rellenarUI(){
@@ -242,89 +243,48 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
-
-        /*btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //aportado_vs_a_financiar.setUsePercentValues(false);
-            }
-        });
-        btn_aportado_vs_financiar_porcentaje.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //aportado_vs_a_financiar.setUsePercentValues(true);
-            }
-        });*/
-
-        /*
-        //pieChartGastosTotalesValor(); //Se visualiza por defecto el grafico de valor
-        btn_gastos_totales_valor.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pieChartGastosTotalesValor();
-            }
-        });
-        btn_gastos_totales_porcentaje.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pieChartGastosTotalesPorcentaje();
-            }
-        });
-
-        goBarChart.setOnClickListener(new View.OnClickListener() {
+        next_grafico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, BarChartActivity.class);
-                startActivity(i);
+                if(numGrafico == 0) camposGraficoAportarVsFinanciar(View.GONE);
+                numGrafico++;
+                if(numGrafico == 1) construirGraficoGastosTotales();
+                else if(numGrafico == 2); //construirGraficoLineas();
+                else{
+                    numGrafico = 0;
+                    camposGraficoAportarVsFinanciar(View.VISIBLE);
+                    construirGraficoAportadoVsAFinanciar();
+                }
+
             }
         });
 
-        goPieChart.setOnClickListener(v -> startActivity(new Intent(this, GraficosHipotecaFija.class)));
+        before_grafico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(numGrafico == 0) camposGraficoAportarVsFinanciar(View.GONE);
+                numGrafico--;
+                if(numGrafico == -1){
+                    numGrafico = 2;
+                    //construirGraficoLineas();
+                }
+                else if(numGrafico == 1) construirGraficoGastosTotales();
+                else {
+                    camposGraficoAportarVsFinanciar(View.VISIBLE);
+                    construirGraficoAportadoVsAFinanciar();
+                }
 
-        goRadarChart.setOnClickListener(v -> startActivity(new Intent(this, RadarChartActivity.class)));*/
-    }
 
-    public void graficos(){
+            }
+        });
 
-        construirGraficoAportadoVsAFinanciar();
-        //construirGraficoGastosTotales();
-    }
+     }
 
-    /*
-    public void construirGraficoAportadoVsAFinanciar(){
-
-        ArrayList<PieEntry> list = new ArrayList();
-        double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-        double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
-
-        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazo_anios() * 12);
-        double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual());
-        double interesesPendientes = interesesTotales - interesesPagados;
-
-        list.add(new PieEntry((float) capitalAmortizado, "CAPITAL AMORTIZADO"));
-        list.add(new PieEntry((float) capitalPendiente, "CAPITAL PENDIENTE"));
-        list.add(new PieEntry((float) interesesPendientes, "INTERESES PENDIENTES"));
-        list.add(new PieEntry((float) interesesPagados, "INTERESES PAGADOS"));
-
-        PieDataSet pieDataSet = new PieDataSet(list, "");
-        pieDataSet.setColors(colorClassArray);
-        pieDataSet.setValueTextColor(Color.WHITE);
-        pieDataSet.setValueLineColor(Color.BLACK);
-        pieDataSet.setValueTextSize(25);
-        PieData pieData = new PieData(pieDataSet);
-        aportado_vs_a_financiar.setData(pieData);
-        aportado_vs_a_financiar.setEntryLabelColor(Color.BLACK);
-        //aportado_vs_a_financiar.setUsePercentValues(false);
-        //aportado_vs_a_financiar.invalidate();
-        Description d = new Description();
-        d.setText("Gráfico aportado vs a financiar");
-        aportado_vs_a_financiar.setDescription(d);
-        aportado_vs_a_financiar.animateY(2000);
-
-    }*/
 
     public void construirGraficoAportadoVsAFinanciar(){
-
+        grafico.clear();
+        grafico.destroyDrawingCache();
+        titulo_grafico.setText("Aportado vs a financiar");
         double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
         double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
 
@@ -342,18 +302,27 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         pie.labels().fontSize(22);
         pie.labels().position("outside");
         pie.connectorLength(30);
-        aportado_vs_a_financiar.setChart(pie);
+        grafico.setChart(pie);
 
         capital_amortizado.setText("" + Math.round(capitalAmortizado * 100.0) / 100.0 + "€");
         capital_pendiente.setText("" + capitalPendiente + "€");
         intereses_pagados.setText("" + interesesPagados + "€");
         intereses_pendientes.setText("" + interesesPendientes + "€");
-
     }
 
+    private void camposGraficoAportarVsFinanciar(int view) {
+        capital_layout.setVisibility(view);
+        capital_layout_valor.setVisibility(view);
+        intereses_layout.setVisibility(view);
+        intereses_layout_valor.setVisibility(view);
+    }
+
+
+
     public void construirGraficoGastosTotales(){
-
-
+        grafico.clear();
+        grafico.destroyDrawingCache();
+        titulo_grafico.setText("Gastos Totales");
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
         data.add(new ValueDataEntry("VINCULACIONES", hip.getTotalVinculacionesAnual()));
@@ -390,7 +359,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                         pie.labels().fontSize(22);
                         pie.labels().position("outside");
                         pie.connectorLength(30);
-                        gastos_totales.setChart(pie);
+                        grafico.setChart(pie);
 
                     } else {
                         Log.e(TAG,"El documento no existe");
@@ -405,6 +374,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         });
 
     }
+
 
 
 /*
