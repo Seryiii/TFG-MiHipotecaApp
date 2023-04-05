@@ -5,12 +5,14 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.TooltipCompat;
@@ -21,6 +23,12 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.protobuf.Any;
 import com.skydoves.balloon.ArrowOrientation;
 import com.skydoves.balloon.ArrowPositionRules;
 import com.skydoves.balloon.Balloon;
@@ -55,21 +63,25 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     //private PieChart aportado_vs_a_financiar;
 
-    AnyChartView aportado_vs_a_financiar;
-    //private PieChart gastos_totales;
+    private AnyChartView aportado_vs_a_financiar;
+
+    private AnyChartView gastos_totales;
 
     //private LineChart intereses_vs_capital_mensual;
+    private TextView capital_amortizado;
+    private TextView capital_pendiente;
+    private TextView intereses_pagados;
+    private TextView intereses_pendientes;
+
+
 
     private HipotecaSeguimiento hip;
-    private Button btn_aportado_vs_financiar_valor;
-    private Button btn_aportado_vs_financiar_porcentaje;
-    private Button btn_gastos_totales_valor;
     private Button btn_cuadro_amortizacion;
-
-    private Button btn_gastos_totales_porcentaje;
 
     private ImageButton info_dinero_restante;
     private ImageView info_cuota;
+
+    private final String TAG = "VisHipotecaSeg";
 
     private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
 
@@ -98,21 +110,18 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         intereses_cuota_mensual   = findViewById(R.id.intereses_cuota_mensual_hip);
         numero_cuota_actual       = findViewById(R.id.numero_cuota_actual_hip);
 
-        //BOTONES
-        btn_aportado_vs_financiar_valor      = findViewById(R.id.btn_valor_aportado_vs_a_financiar);
-        btn_aportado_vs_financiar_porcentaje = findViewById(R.id.btn_porcentaje_aportado_vs_a_financiar);
-        aportado_vs_a_financiar              = findViewById(R.id.pie_chart_aportado_vs_a_financiar);
-
-        btn_gastos_totales_valor             = findViewById(R.id.btn_valor_gastos_totales);
-        btn_gastos_totales_porcentaje        = findViewById(R.id.btn_porcentaje_gastos_totales);
-        //gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
         info_dinero_restante                 = findViewById(R.id.btn_info_dinero_por_pagar);
         info_cuota                           = findViewById(R.id.btn_info_cuota);
 
         //GRÁFICOS
         aportado_vs_a_financiar              = findViewById(R.id.pie_chart_aportado_vs_a_financiar);
+        capital_amortizado                   = findViewById(R.id.capital_amortizado_seguimiento_val);
+        capital_pendiente                    = findViewById(R.id.capital_pendiente_seguimiento_val);
+        intereses_pagados                    = findViewById(R.id.intereses_pagados_seguimiento_val);
+        intereses_pendientes                 = findViewById(R.id.intereses_pendientes_seguimiento_val);
 
+        gastos_totales                       = findViewById(R.id.pie_chart_gastos_totales);
     }
 
     private void rellenarUI(){
@@ -234,7 +243,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         });
 
 
-        btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
+        /*btn_aportado_vs_financiar_valor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //aportado_vs_a_financiar.setUsePercentValues(false);
@@ -245,7 +254,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             public void onClick(View view) {
                 //aportado_vs_a_financiar.setUsePercentValues(true);
             }
-        });
+        });*/
 
         /*
         //pieChartGastosTotalesValor(); //Se visualiza por defecto el grafico de valor
@@ -276,7 +285,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     }
 
     public void graficos(){
+
         construirGraficoAportadoVsAFinanciar();
+        //construirGraficoGastosTotales();
     }
 
     /*
@@ -328,10 +339,73 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         data.add(new ValueDataEntry("INTERESES PENDIENTES", interesesPendientes));
         data.add(new ValueDataEntry("INTERESES PAGADOS", interesesPagados));
         pie.data(data);
+        pie.labels().fontSize(22);
+        pie.labels().position("outside");
+        pie.connectorLength(30);
         aportado_vs_a_financiar.setChart(pie);
-        aportado_vs_a_financiar.setBackgroundColor(R.color.background_aplicacion);
+
+        capital_amortizado.setText("" + Math.round(capitalAmortizado * 100.0) / 100.0 + "€");
+        capital_pendiente.setText("" + capitalPendiente + "€");
+        intereses_pagados.setText("" + interesesPagados + "€");
+        intereses_pendientes.setText("" + interesesPendientes + "€");
 
     }
+
+    public void construirGraficoGastosTotales(){
+
+
+        Pie pie = AnyChart.pie();
+        List<DataEntry> data = new ArrayList<>();
+        data.add(new ValueDataEntry("VINCULACIONES", hip.getTotalVinculacionesAnual()));
+        data.add(new ValueDataEntry("OTROS GASTOS (GESTORÍA, COMISIONES, ...)", hip.getTotalGastos()));
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("impuestos").document(hip.getComunidad_autonoma()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()){
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        double iva_itp;
+                        double ajd;
+                        String impuestos = "IVA";
+                        if(hip.getAntiguedad_vivienda().equals("nueva")){
+                            //Calcular IVA
+                            if(hip.getTipo_vivienda().equals("proteccion_oficial")) iva_itp = document.getDouble("IVA");
+                            else iva_itp = document.getDouble("IVA_PO");
+                            ajd = document.getDouble("AJD_OBRA_NUEVA");
+
+                        }else{
+                            //Calcular ITP
+                            iva_itp = document.getDouble("ITP");
+                            ajd = document.getDouble("AJD_HIPOTECA");
+                            impuestos = "ITP";
+                        }
+
+                        iva_itp = hip.getPrecio_vivienda() * (iva_itp / 100);
+                        ajd     = hip.getPrecio_vivienda() * (ajd / 100);
+
+                        data.add(new ValueDataEntry(impuestos, iva_itp));
+                        data.add(new ValueDataEntry("AJD", ajd));
+                        pie.data(data);
+                        pie.labels().fontSize(22);
+                        pie.labels().position("outside");
+                        pie.connectorLength(30);
+                        gastos_totales.setChart(pie);
+
+                    } else {
+                        Log.e(TAG,"El documento no existe");
+                    }
+                }else Log.e(TAG,"Error al obtener datos del documento");
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.e(TAG,"Error al traer impuestos de bd");
+            }
+        });
+
+    }
+
 
 /*
     public void pieChartGastosTotalesValor(double cuota_mensual){
