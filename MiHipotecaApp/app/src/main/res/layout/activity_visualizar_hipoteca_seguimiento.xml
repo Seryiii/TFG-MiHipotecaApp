@@ -11,19 +11,14 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginBottom="20dp"
         android:orientation="vertical"
         android:gravity="center">
 
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="35dp"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
             android:text="@string/label_seguimiento"
@@ -31,10 +26,8 @@
 
         <TextView
         android:id="@+id/nombre_seguimiento_hipoteca"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="50dp"
-        android:layout_marginEnd="50dp"
         android:fontFamily="@font/allerta"
         android:gravity="center"
         android:text="Titulo"
@@ -68,6 +61,66 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_marginTop="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:text="Banco"
+                android:textAlignment="center"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/logo_banco_seg"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_weight="1"
+                android:src="@drawable/logo_ing"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:text="Comunidad Autónoma"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/comunidad_autonoma_seg"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="10dp"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:text="Madrid"
+                android:textAlignment="center"
+                android:textColor="@color/black"
+                android:textSize="18sp" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -85,9 +138,10 @@
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="10dp"
                     android:textColor="@color/black"
                     android:text="@string/label_dinero_que_falta_por_pagar"
-                    android:textSize="14sp"/>
+                    android:textSize="18sp"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -102,7 +156,9 @@
                         android:gravity="center"
                         android:layout_marginTop="10dp"
                         android:layout_marginStart="8dp"
+                        android:layout_marginBottom="10dp"
                         android:textColor="@color/black"
+
                         android:text="150000"
                         android:textStyle="bold"
                         android:textSize="22sp"/>
@@ -140,9 +196,10 @@
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="20dp"
                     android:textColor="@color/black"
                     android:text="@string/label_tiempo_restante"
-                    android:textSize="14sp"/>
+                    android:textSize="18sp"/>
 
                 <TextView
                     android:id="@+id/label_anios_restantes_seguimiento_hip"
@@ -152,6 +209,7 @@
                     android:gravity="center"
                     android:layout_marginTop="10dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginBottom="10dp"
                     android:textColor="@color/black"
                     android:text="20 años"
                     android:textStyle="bold"
@@ -163,7 +221,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/btn_bordes_redondos"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginTop="20dp"
                     android:text="@string/txt_btn_amortizar_antes"/>
 
 
@@ -493,39 +551,23 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btn_grafico_gastos_totales"
+            android:layout_marginTop="20dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:background="@drawable/btn_bordes_redondos"
+            android:text="Gráfico Gastos Totales"/>
+
+        <Button
+            android:id="@+id/btn_grafico_intereses_capital"
             android:layout_marginTop="20dp"
-            android:fontFamily="@font/allerta"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="Gastos totales"
-            android:textSize="22sp" />
-
-
-
-        <TextView
-            android:layout_width="match_parent"
+            android:layout_marginBottom="20dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:fontFamily="@font/allerta"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textStyle="bold"
-            android:text="Intereses mensuales vs capital menusal"
-            android:textSize="22sp" />
+            android:background="@drawable/btn_bordes_redondos"
+            android:text="Gráfico Intereses vs Capital Amortizado Anual"/>
 
-        <!--<com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/line_chart_intereses_vs_capital"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="300dp">
-        </com.github.mikephil.charting.charts.LineChart>-->
 
     </LinearLayout>
 

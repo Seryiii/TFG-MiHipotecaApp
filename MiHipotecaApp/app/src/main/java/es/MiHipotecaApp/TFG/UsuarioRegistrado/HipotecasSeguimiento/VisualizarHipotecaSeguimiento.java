@@ -44,11 +44,15 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_gastos_totales;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_intereses_capital;
 
 public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private TextView nombre_hipoteca;
     private TextView tipo_hipoteca_seg;
+    private ImageView logo_banco_seg;
+    private TextView comunidad_autonoma_seg;
     private TextView dinero_restante_a_pagar;
     private TextView anios_restantes_hipoteca;
     private TextView mes_actual_cuota;
@@ -66,8 +70,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private TextView intereses_pagados;
     private TextView intereses_pendientes;
 
-
-
     private HipotecaSeguimiento hip;
     private Button btn_cuadro_amortizacion;
     private ImageButton info_dinero_restante;
@@ -79,11 +81,12 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private LinearLayout capital_layout_valor;
     private LinearLayout intereses_layout;
     private LinearLayout intereses_layout_valor;
-    private final String TAG = "VisHipotecaSeg";
+    private Button btn_grafico_gastos_totales;
+    private Button btn_grafico_intereses_capital;
 
-    private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
+    //private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
 
-    private static int numGrafico = 0;
+    //private static int numGrafico = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,13 +98,15 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         initUI();
         rellenarUI();
         eventos();
-        construirGraficoLineas();
+        construirGraficoAportadoVsAFinanciar();
     }
 
     private void initUI(){
         dinero_restante_a_pagar   = findViewById(R.id.label_cantidad_pendiente_seguimiento_hip);
         nombre_hipoteca           = findViewById(R.id.nombre_seguimiento_hipoteca);
         tipo_hipoteca_seg         = findViewById(R.id.tipo_hipoteca_seguimiento);
+        logo_banco_seg            = findViewById(R.id.logo_banco_seg);
+        comunidad_autonoma_seg    = findViewById(R.id.comunidad_autonoma_seg);
         anios_restantes_hipoteca  = findViewById(R.id.label_anios_restantes_seguimiento_hip);
         mes_actual_cuota          = findViewById(R.id.nombre_mes_actual_seguimiento_hip);
         cuota_mensual_seguimiento = findViewById(R.id.cuota_mensual_seguimiento);
@@ -127,7 +132,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         intereses_layout                     = findViewById(R.id.intereses_layout);
         intereses_layout_valor               = findViewById(R.id.intereses_layout_valor);
 
-
+        btn_grafico_gastos_totales           = findViewById(R.id.btn_grafico_gastos_totales);
+        btn_grafico_intereses_capital        = findViewById(R.id.btn_grafico_intereses_capital);
 
     }
 
@@ -140,7 +146,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         dinero_restante_a_pagar.setText(numeroFormateado);
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
-
+        ponerLogoBanco();
+        comunidad_autonoma_seg.setText(hip.getComunidad_autonoma());
         ArrayList<Integer> anios_meses = hip.getAniosMesesRestantes();
         if(anios_meses.get(0) > 0) anios_restantes_hipoteca.setText(anios_meses.get(0) + " años " + anios_meses.get(1) + " meses");
         else anios_restantes_hipoteca.setText(anios_meses.get(1) + " meses");
@@ -185,6 +192,50 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
         String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, porcentaje_aplicado)) + "€";
         intereses_cuota_mensual.setText(interesesFormateado);
+    }
+
+    private void ponerLogoBanco(){
+        switch (hip.getBanco_asociado()){
+            case "ING":
+                logo_banco_seg.setImageResource(R.drawable.logo_ing);
+                break;
+            case "SANTANDER":
+                logo_banco_seg.setImageResource(R.drawable.logo_santander);
+                break;
+            case "BBVA":
+                logo_banco_seg.setImageResource(R.drawable.logo_bbva);
+                break;
+            case "CAIXABANK":
+                logo_banco_seg.setImageResource(R.drawable.logo_caixabank);
+                break;
+            case "BANKINTER":
+                logo_banco_seg.setImageResource(R.drawable.logo_bankinter);
+                break;
+            case "EVO BANCO":
+                logo_banco_seg.setImageResource(R.drawable.logo_evo_banco);
+                break;
+            case "SABADELL":
+                logo_banco_seg.setImageResource(R.drawable.logo_sabadell);
+                break;
+            case "UNICAJA":
+                logo_banco_seg.setImageResource(R.drawable.logo_unicaja);
+                break;
+            case "DEUTSCHE BANK":
+                logo_banco_seg.setImageResource(R.drawable.logo_deutsche_bank);
+                break;
+            case "OPEN BANK":
+                logo_banco_seg.setImageResource(R.drawable.logo_open_bank);
+                break;
+            case "KUTXA BANK":
+                logo_banco_seg.setImageResource(R.drawable.logo_kutxa_bank);
+                break;
+            case "IBERCAJA":
+                logo_banco_seg.setImageResource(R.drawable.logo_ibercaja);
+                break;
+            case "ABANCA":
+                logo_banco_seg.setImageResource(R.drawable.logo_abanca);
+                break;
+        }
     }
     private void eventos(){
 
@@ -249,12 +300,33 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
+        btn_grafico_gastos_totales.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_gastos_totales.class);
+                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                i.putExtra("hipoteca", hip);
+                startActivity(i);
+            }
+        });
+
+        btn_grafico_intereses_capital.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_intereses_capital.class);
+                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                i.putExtra("hipoteca", hip);
+                startActivity(i);
+            }
+        });
+
+        /*
         next_grafico.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(numGrafico == 0) camposGraficoAportarVsFinanciar(View.GONE);
                 numGrafico++;
-                if(numGrafico == 1) construirGraficoGastosTotales();
+                if(numGrafico == 1) construirGraficoLineas();
                 else if(numGrafico == 2) construirGraficoLineas();
                 else{
                     numGrafico = 0;
@@ -263,7 +335,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                 }
 
             }
-        });
+        });*/
+
+        /*
 
         before_grafico.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -274,22 +348,19 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                     numGrafico = 2;
                     construirGraficoLineas();
                 }
-                else if(numGrafico == 1) construirGraficoGastosTotales();
+                else if(numGrafico == 1) construirGraficoLineas();
                 else {
                     camposGraficoAportarVsFinanciar(View.VISIBLE);
                     construirGraficoAportadoVsAFinanciar();
                 }
-
-
             }
-        });
+        });*/
 
      }
 
 
     public void construirGraficoAportadoVsAFinanciar(){
-        //grafico.clear();
-        grafico.destroyDrawingCache();
+
         titulo_grafico.setText("Aportado vs a financiar");
         double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
         double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
@@ -305,9 +376,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         data.add(new ValueDataEntry("INTERESES PENDIENTES", interesesPendientes));
         data.add(new ValueDataEntry("INTERESES PAGADOS", interesesPagados));
         pie.data(data);
-        pie.labels().fontSize(22);
+        pie.labels().fontSize(18);
         pie.labels().position("outside");
-        pie.connectorLength(30);
+        pie.connectorLength(20);
+        //pie.width(400);
         grafico.setChart(pie);
         grafico.invalidate();
 
@@ -317,113 +389,12 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         intereses_pendientes.setText("" + interesesPendientes + "€");
     }
 
+    /*
     private void camposGraficoAportarVsFinanciar(int view) {
         capital_layout.setVisibility(view);
         capital_layout_valor.setVisibility(view);
         intereses_layout.setVisibility(view);
         intereses_layout_valor.setVisibility(view);
-    }
-
-
-
-    public void construirGraficoGastosTotales(){
-        //grafico.clear();
-        grafico.destroyDrawingCache();
-        titulo_grafico.setText("Gastos Totales");
-        Pie pie = AnyChart.pie();
-        List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("VINCULACIONES", hip.getTotalVinculacionesAnual()));
-        data.add(new ValueDataEntry("OTROS GASTOS (GESTORÍA, COMISIONES, ...)", hip.getTotalGastos()));
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("impuestos").document(hip.getComunidad_autonoma()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if(task.isSuccessful()){
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        double iva_itp;
-                        double ajd;
-                        String impuestos = "IVA";
-                        if(hip.getAntiguedad_vivienda().equals("nueva")){
-                            //Calcular IVA
-                            if(hip.getTipo_vivienda().equals("proteccion_oficial")) iva_itp = document.getDouble("IVA");
-                            else iva_itp = document.getDouble("IVA_PO");
-                            ajd = document.getDouble("AJD_OBRA_NUEVA");
-
-                        }else{
-                            //Calcular ITP
-                            iva_itp = document.getDouble("ITP");
-                            ajd = document.getDouble("AJD_HIPOTECA");
-                            impuestos = "ITP";
-                        }
-
-                        iva_itp = hip.getPrecio_vivienda() * (iva_itp / 100);
-                        ajd     = hip.getPrecio_vivienda() * (ajd / 100);
-
-                        data.add(new ValueDataEntry(impuestos, iva_itp));
-                        data.add(new ValueDataEntry("AJD", ajd));
-                        pie.data(data);
-                        pie.labels().fontSize(22);
-                        pie.labels().position("outside");
-                        pie.connectorLength(30);
-                        grafico.setChart(pie);
-                        grafico.invalidate();
-
-                    } else {
-                        Log.e(TAG,"El documento no existe");
-                    }
-                }else Log.e(TAG,"Error al obtener datos del documento");
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG,"Error al traer impuestos de bd");
-            }
-        });
-
-    }
-
-    public void construirGraficoLineas(){
-        //grafico.clear();
-        grafico.destroyDrawingCache();
-        titulo_grafico.setText("Evolucion de los intereses y el capital amortizado anual");
-
-        List<DataEntry> capitalAnual = new ArrayList<>();
-        List<DataEntry> interesesAnuales = new ArrayList<>();
-        List<DataEntry> cuotaAnual = new ArrayList<>();
-        List<DataEntry> vinculacionesAnules = new ArrayList<>();
-
-        Calendar anio = Calendar.getInstance();
-        anio.setTime(hip.getFecha_inicio());
-
-
-        for(int i = 1; i <= hip.getPlazo_anios(); i++){
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i);
-
-            capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(1)));
-            interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(2)));
-            cuotaAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(0)));
-            vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getTotalVinculacionesAnual()));
-
-        }
-
-        Cartesian lineChart = AnyChart.line();
-        lineChart.line(capitalAnual).name("Capital anual");
-        lineChart.line(interesesAnuales).name("Intereses anuales");
-        lineChart.line(cuotaAnual).name("Cuota anual");
-        lineChart.line(vinculacionesAnules).name("Vinculaciones anuales");
-
-        lineChart.legend().enabled(true);
-        lineChart.legend().fontSize(14d);
-        lineChart.legend().padding(10d, 10d, 10d, 10d);
-        lineChart.legend().itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE);
-        lineChart.legend().position("bottom");
-        grafico.setChart(lineChart);
-
-    }
-
-
-
-
+    }*/
 }
 
