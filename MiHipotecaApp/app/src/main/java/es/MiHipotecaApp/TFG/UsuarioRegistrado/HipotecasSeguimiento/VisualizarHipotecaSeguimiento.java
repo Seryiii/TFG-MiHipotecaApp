@@ -20,7 +20,9 @@ import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
+import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
+import com.anychart.enums.LegendLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -34,6 +36,7 @@ import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import es.MiHipotecaApp.TFG.R;
@@ -57,6 +60,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private TextView titulo_grafico;
     private AnyChartView grafico;
+
     private TextView capital_amortizado;
     private TextView capital_pendiente;
     private TextView intereses_pagados;
@@ -91,7 +95,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         initUI();
         rellenarUI();
         eventos();
-        construirGraficoAportadoVsAFinanciar();
+        construirGraficoLineas();
     }
 
     private void initUI(){
@@ -122,6 +126,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         capital_layout_valor                 = findViewById(R.id.capital_layout_valor);
         intereses_layout                     = findViewById(R.id.intereses_layout);
         intereses_layout_valor               = findViewById(R.id.intereses_layout_valor);
+
+
 
     }
 
@@ -249,7 +255,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                 if(numGrafico == 0) camposGraficoAportarVsFinanciar(View.GONE);
                 numGrafico++;
                 if(numGrafico == 1) construirGraficoGastosTotales();
-                else if(numGrafico == 2); //construirGraficoLineas();
+                else if(numGrafico == 2) construirGraficoLineas();
                 else{
                     numGrafico = 0;
                     camposGraficoAportarVsFinanciar(View.VISIBLE);
@@ -266,7 +272,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                 numGrafico--;
                 if(numGrafico == -1){
                     numGrafico = 2;
-                    //construirGraficoLineas();
+                    construirGraficoLineas();
                 }
                 else if(numGrafico == 1) construirGraficoGastosTotales();
                 else {
@@ -282,7 +288,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
 
     public void construirGraficoAportadoVsAFinanciar(){
-        grafico.clear();
+        //grafico.clear();
         grafico.destroyDrawingCache();
         titulo_grafico.setText("Aportado vs a financiar");
         double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
@@ -303,6 +309,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         pie.labels().position("outside");
         pie.connectorLength(30);
         grafico.setChart(pie);
+        grafico.invalidate();
 
         capital_amortizado.setText("" + Math.round(capitalAmortizado * 100.0) / 100.0 + "€");
         capital_pendiente.setText("" + capitalPendiente + "€");
@@ -320,7 +327,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
 
     public void construirGraficoGastosTotales(){
-        grafico.clear();
+        //grafico.clear();
         grafico.destroyDrawingCache();
         titulo_grafico.setText("Gastos Totales");
         Pie pie = AnyChart.pie();
@@ -360,6 +367,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                         pie.labels().position("outside");
                         pie.connectorLength(30);
                         grafico.setChart(pie);
+                        grafico.invalidate();
 
                     } else {
                         Log.e(TAG,"El documento no existe");
@@ -375,73 +383,47 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     }
 
+    public void construirGraficoLineas(){
+        //grafico.clear();
+        grafico.destroyDrawingCache();
+        titulo_grafico.setText("Evolucion de los intereses y el capital amortizado anual");
+
+        List<DataEntry> capitalAnual = new ArrayList<>();
+        List<DataEntry> interesesAnuales = new ArrayList<>();
+        List<DataEntry> cuotaAnual = new ArrayList<>();
+        List<DataEntry> vinculacionesAnules = new ArrayList<>();
+
+        Calendar anio = Calendar.getInstance();
+        anio.setTime(hip.getFecha_inicio());
 
 
-/*
-    public void pieChartGastosTotalesValor(double cuota_mensual){
-        ArrayList<PieEntry> list = new ArrayList();
-        list.add(new PieEntry((float) ((cuota_mensual * hip.getPlazo_anios() * 12) - hip.getInteresesTotales()), "CAPITAL TOTAL"));
-        list.add(new PieEntry((float) hip.getInteresesTotales(), "INTERESES TOTALES"));
-        list.add(new PieEntry((float) hip.getTotalGastos(), "OTROS GASTOS"));
-        list.add(new PieEntry((float) hip.getTotalVinculacionesAnual() * hip.getPlazo_anios(), "VINCULACIONES"));
+        for(int i = 1; i <= hip.getPlazo_anios(); i++){
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i);
 
+            capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(1)));
+            interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(2)));
+            cuotaAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(0)));
+            vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getTotalVinculacionesAnual()));
 
-        PieDataSet pieDataSet = new PieDataSet(list, "List");
+        }
 
-        List<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.YELLOW);
-        pieDataSet.setColors(colors);
+        Cartesian lineChart = AnyChart.line();
+        lineChart.line(capitalAnual).name("Capital anual");
+        lineChart.line(interesesAnuales).name("Intereses anuales");
+        lineChart.line(cuotaAnual).name("Cuota anual");
+        lineChart.line(vinculacionesAnules).name("Vinculaciones anuales");
 
-        pieDataSet.setValueTextColor(Color.BLACK);
-        pieDataSet.setValueLineColor(Color.BLACK);
-        pieDataSet.setValueTextSize(25);
+        lineChart.legend().enabled(true);
+        lineChart.legend().fontSize(14d);
+        lineChart.legend().padding(10d, 10d, 10d, 10d);
+        lineChart.legend().itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE);
+        lineChart.legend().position("bottom");
+        grafico.setChart(lineChart);
 
-        PieData pieData = new PieData(pieDataSet);
-
-        gastos_totales.setData(pieData);
-        Description d = new Description();
-        d.setText("Pie Chart");
-        gastos_totales.setDescription(d);
-        gastos_totales.animateY(2000);
     }
 
-    public void pieChartGastosTotalesPorcentaje(){
-        ArrayList<PieEntry> list = new ArrayList();
-        double total = hip.getGastosTotalesHipoteca();
-        list.add(new PieEntry((float) pasarEnteroAPorcentaje((hip.getCuotaMensual(hip.getPorcentaje_fijo(), hip.getPrecio_vivienda() - hip.getCantidad_abonada()) * hip.getPlazo_anios() * 12) - hip.getInteresesTotales(), total), "CAPITAL TOTAL"));
-        list.add(new PieEntry((float) pasarEnteroAPorcentaje(hip.getInteresesTotales(), total), "INTERESES TOTALES"));
-        list.add(new PieEntry((float) pasarEnteroAPorcentaje(hip.getTotalGastos(), total),"OTROS GASTOS"));
-        list.add(new PieEntry((float) pasarEnteroAPorcentaje(hip.getTotalVinculacionesAnual() * hip.getPlazo_anios(), total), "VINCULACIONES"));
 
 
-        PieDataSet pieDataSet = new PieDataSet(list, "List");
 
-        List<Integer> colors = new ArrayList<>();
-        colors.add(Color.RED);
-        colors.add(Color.BLUE);
-        colors.add(Color.GREEN);
-        colors.add(Color.YELLOW);
-        pieDataSet.setColors(colors);
-
-        pieDataSet.setValueTextColor(Color.BLACK);
-        pieDataSet.setValueLineColor(Color.BLACK);
-        pieDataSet.setValueTextSize(25);
-
-        PieData pieData = new PieData(pieDataSet);
-
-        gastos_totales.setData(pieData);
-        Description d = new Description();
-        d.setText("Pie Chart");
-        gastos_totales.setDescription(d);
-        gastos_totales.animateY(2000);
-    }
-
-    public double pasarEnteroAPorcentaje(double entero, double total){
-        return (entero * 100) / total;
-    }
-*/
 }
 
