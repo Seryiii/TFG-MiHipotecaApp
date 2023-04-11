@@ -63,10 +63,10 @@ public class grafico_intereses_capital extends AppCompatActivity {
         }
 
         Cartesian lineChart = AnyChart.line();
-        lineChart.line(capitalAnual).name("Capital anual");
-        lineChart.line(interesesAnuales).name("Intereses anuales");
-        lineChart.line(cuotaAnual).name("Cuota anual");
-        lineChart.line(vinculacionesAnules).name("Vinculaciones anuales");
+        lineChart.line(capitalAnual).name("Capital anual").stroke("3 #00ff00");
+        lineChart.line(interesesAnuales).name("Intereses anuales").stroke("3 #ff0000");
+        lineChart.line(cuotaAnual).name("Cuota anual").stroke("2 #0000ff");
+        lineChart.line(vinculacionesAnules).name("Vinculaciones anuales").stroke("2 #ffc107");
 
         lineChart.legend().enabled(true);
         lineChart.legend().fontSize(14d);

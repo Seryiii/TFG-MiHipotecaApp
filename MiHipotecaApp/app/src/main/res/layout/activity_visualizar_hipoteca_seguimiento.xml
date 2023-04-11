@@ -94,26 +94,24 @@
             android:orientation="horizontal">
 
             <TextView
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_weight="1"
                 android:fontFamily="@font/allerta"
-                android:text="Comunidad Autónoma"
+                android:text="Comunidad Autónoma:"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/comunidad_autonoma_seg"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="10dp"
-                android:layout_weight="1"
                 android:fontFamily="@font/allerta"
+                android:layout_marginStart="10dp"
                 android:text="Madrid"
-                android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="18sp" />
 
@@ -121,112 +119,112 @@
         </LinearLayout>
 
         <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"                    android:textColor="@color/black"
+                android:text="@string/label_dinero_que_falta_por_pagar"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/black"
+                android:text="@string/label_tiempo_restante"
+                android:textSize="18sp"/>
+        </LinearLayout>
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:gravity="center"
             android:layout_marginTop="20dp">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:gravity="center">
 
                 <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/allerta"
-                    android:gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="@color/black"
-                    android:text="@string/label_dinero_que_falta_por_pagar"
-                    android:textSize="18sp"/>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/label_cantidad_pendiente_seguimiento_hip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:fontFamily="@font/allerta"
-                        android:gravity="center"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginBottom="10dp"
-                        android:textColor="@color/black"
-
-                        android:text="150000"
-                        android:textStyle="bold"
-                        android:textSize="22sp"/>
-
-                    <ImageButton
-                        android:id="@+id/btn_info_dinero_por_pagar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/info"/>
-
-                </LinearLayout>
-
-
-
-                <Button
-                    android:id="@+id/btn_cuadro_amortizacion"
+                    android:id="@+id/label_cantidad_pendiente_seguimiento_hip"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_bordes_redondos"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="10dp"
-                    android:text="@string/txt_btn_cuadro_amortizacion"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:fontFamily="@font/allerta"
-                    android:gravity="center"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="20dp"
                     android:textColor="@color/black"
-                    android:text="@string/label_tiempo_restante"
-                    android:textSize="18sp"/>
-
-                <TextView
-                    android:id="@+id/label_anios_restantes_seguimiento_hip"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/allerta"
-                    android:gravity="center"
-                    android:layout_marginTop="10dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginBottom="10dp"
-                    android:textColor="@color/black"
-                    android:text="20 años"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="30dp"
+                    android:text="150000"
                     android:textStyle="bold"
                     android:textSize="22sp"/>
 
-
-                <Button
+                <ImageButton
+                    android:id="@+id/btn_info_dinero_por_pagar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/btn_bordes_redondos"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="20dp"
-                    android:text="@string/txt_btn_amortizar_antes"/>
-
+                    android:src="@drawable/info"
+                    android:layout_marginLeft="10dp"/>
 
             </LinearLayout>
 
+            <TextView
+                android:id="@+id/label_anios_restantes_seguimiento_hip"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/black"
+                android:text="20 años"
+                android:textStyle="bold"
+                android:textSize="22sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="20dp"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/btn_cuadro_amortizacion"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/btn_bordes_redondos"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:text="@string/txt_btn_cuadro_amortizacion"/>
+
+            <Button
+                android:id="@+id/btn_amortizar_antes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/btn_bordes_redondos"
+                android:text="@string/txt_btn_amortizar_antes"/>
 
         </LinearLayout>
 
@@ -375,45 +373,86 @@
 
         </LinearLayout>
 
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="10dp">
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
+            android:gravity="center"
+            android:background="@drawable/btn_bordes_redondos2">
 
-            <ImageButton
-                android:id="@+id/before_grafico"
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/navigate_before"
-                android:layout_marginLeft="10dp"/>
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp">
 
-            <TextView
-                android:id="@+id/titulo_grafico"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="5"
-                android:layout_gravity="center"
-                android:fontFamily="@font/allerta"
-                android:textColor="@color/black"
-                android:textStyle="bold"
-                android:textAlignment="center"
-                android:text="Aportado vs a financiar"
-                android:textSize="22sp" />
+                <ImageButton
+                    android:id="@+id/btn_grafico_gastos_totales"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/pie_chart"
+                    android:background="@null"/>
 
-            <ImageButton
-                android:id="@+id/next_grafico"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"                    android:textColor="@color/black"
+                    android:text="Gastos Totales"/>
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:src="@drawable/navigate_next"/>
+                android:orientation="vertical"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp">
+
+                <ImageButton
+                    android:id="@+id/btn_grafico_intereses_capital"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/line_graph"
+                    android:background="@null"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"                    android:textColor="@color/black"
+                    android:text="Intereses vs Amortizado"/>
+            </LinearLayout>
+
 
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/titulo_grafico"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/allerta"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/black"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:text="Aportado vs a financiar"
+            android:textSize="22sp" />
 
-        <com.anychart.AnyChartView
+
+          <com.anychart.AnyChartView
             android:id="@+id/grafico_seguimiento"
             android:layout_marginTop="10dp"
             android:layout_marginStart="15dp"
@@ -551,7 +590,8 @@
                 android:textSize="18sp" />
         </LinearLayout>
 
-        <Button
+
+        <!-- <Button
             android:id="@+id/btn_grafico_gastos_totales"
             android:layout_marginTop="20dp"
             android:layout_width="300dp"
@@ -566,7 +606,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/btn_bordes_redondos"
-            android:text="Gráfico Intereses vs Capital Amortizado Anual"/>
+            android:text="Gráfico Intereses vs Capital Amortizado Anual"/> -->
 
 
     </LinearLayout>

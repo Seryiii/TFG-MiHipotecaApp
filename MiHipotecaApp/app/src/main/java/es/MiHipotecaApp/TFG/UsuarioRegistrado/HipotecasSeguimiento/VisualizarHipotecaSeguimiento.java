@@ -74,15 +74,12 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private Button btn_cuadro_amortizacion;
     private ImageButton info_dinero_restante;
     private ImageView info_cuota;
-    private ImageButton before_grafico;
-    private ImageButton next_grafico;
-
     private LinearLayout capital_layout;
     private LinearLayout capital_layout_valor;
     private LinearLayout intereses_layout;
     private LinearLayout intereses_layout_valor;
-    private Button btn_grafico_gastos_totales;
-    private Button btn_grafico_intereses_capital;
+    private ImageButton btn_grafico_gastos_totales;
+    private ImageButton btn_grafico_intereses_capital;
 
     //private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
 
@@ -121,8 +118,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         //GRÁFICOS
         titulo_grafico                       = findViewById(R.id.titulo_grafico);
         grafico                              = findViewById(R.id.grafico_seguimiento);
-        next_grafico                         = findViewById(R.id.next_grafico);
-        before_grafico                       = findViewById(R.id.before_grafico);
         capital_amortizado                   = findViewById(R.id.capital_amortizado_seguimiento_val);
         capital_pendiente                    = findViewById(R.id.capital_pendiente_seguimiento_val);
         intereses_pagados                    = findViewById(R.id.intereses_pagados_seguimiento_val);
