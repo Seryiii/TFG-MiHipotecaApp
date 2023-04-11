@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_aplicacion">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/close_icon_seg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/close_icon"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="50dp"
+            android:layout_marginEnd="50dp"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:text="Amortización anticipada de:"
+            android:textSize="40sp" />
+
+        <TextView
+            android:id="@+id/nombre_amort_anticipada_hip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/allerta"
+            android:gravity="center"
+            android:text="Titulo"
+            android:textSize="35sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/checkBox_comision_anticipada"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:checked="false"
+                android:text="¿Comisión por amortización anticipada?" />
+
+            <EditText
+                android:id="@+id/edit_precio_vivienda"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@drawable/rounded_edit_text2"
+                android:fontFamily="@font/allerta"
+                android:layout_marginStart="20dp"
+                android:hint="   %"
+                android:inputType="number|numberDecimal"
+                android:layout_gravity="center"/>
+
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <CheckBox
+                android:id="@+id/checkBox_amort_total"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:checked="false"
+                android:text="Amortización total" />
+
+            <CheckBox
+                android:id="@+id/checkBox_amort_parcial"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="15dp"
+                android:checked="false"
+                android:text="Amortización total" />
+
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/allerta"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="20dp"
+            android:text="En función de:"
+            android:textSize="20sp" />
+
+        <!-- <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal"
+            android:layout_gravity="center">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:fontFamily="@font/allerta"
+                android:text="Dinero amortizado"
+                android:textSize="15sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/allerta"
+                android:gravity="center"
+                android:text="Reducción de plazo"
+                android:textSize="15sp" />
+
+        </LinearLayout> -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:fontFamily="@font/allerta"
+                        android:text="Dinero amortizado"
+                        android:textSize="15sp" />
+
+                    <EditText
+                        android:id="@+id/edit_dinero_amort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="10dp"
+                        android:paddingRight="10dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/rounded_edit_text2"
+                        android:fontFamily="@font/allerta"
+                        android:hint="     € "
+                        android:inputType="number|numberDecimal"/>
+
+                    <ImageButton
+                        android:id="@+id/btn_info_dinero_amort"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/info"
+                        android:layout_marginLeft="10dp"
+                        android:background="@null"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical"
+                android:gravity="center">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/allerta"
+                    android:gravity="center"
+                    android:text="Reducción de plazo"
+                    android:textSize="15sp" />
+
+                <EditText
+                    android:id="@+id/edit_reduccion_plazo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/rounded_edit_text2"
+                    android:fontFamily="@font/allerta"
+                    android:hint="meses"
+                    android:inputType="number"/>
+
+                <ImageButton
+                    android:id="@+id/btn_info_reduccion_plazo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/info"
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:orientation="vertical"
+        android:background="@drawable/btn_bordes_redondos">
+
+        <TextView
+            android:id="@+id/cuota_mensual_seguimiento_hip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/allerta"
+            android:textColor="@color/black"
+            android:gravity="center"
+            android:text="PONER LA INFO EN FUNCION DE LO QUE ESCOJA EL USUARIO"
+            android:textSize="22sp" />
+    </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

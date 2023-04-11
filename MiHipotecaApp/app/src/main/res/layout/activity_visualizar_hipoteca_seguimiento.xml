@@ -131,7 +131,8 @@
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
                 android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"                    android:textColor="@color/black"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/black"
                 android:text="@string/label_dinero_que_falta_por_pagar"
                 android:textSize="18sp"/>
 
@@ -180,7 +181,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/info"
-                    android:layout_marginLeft="10dp"/>
+                    android:layout_marginLeft="10dp"
+                    android:background="@null"/>
 
             </LinearLayout>
 
@@ -294,7 +296,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/info"/>
+                    android:src="@drawable/info"
+                    android:background="@null"/>
 
              </LinearLayout>
 

@@ -72,6 +72,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
 
     private HipotecaSeguimiento hip;
     private Button btn_cuadro_amortizacion;
+    private Button btn_amortizar_antes;
+
     private ImageButton info_dinero_restante;
     private ImageView info_cuota;
     private LinearLayout capital_layout;
@@ -112,6 +114,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         numero_cuota_actual       = findViewById(R.id.numero_cuota_actual_hip);
 
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
+        btn_amortizar_antes                  = findViewById(R.id.btn_amortizar_antes);
         info_dinero_restante                 = findViewById(R.id.btn_info_dinero_por_pagar);
         info_cuota                           = findViewById(R.id.btn_info_cuota);
 
@@ -238,6 +241,16 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(VisualizarHipotecaSeguimiento.this, Cuadro_amortizacion.class);
+                i.putExtra("hipoteca", hip);
+                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                startActivity(i);
+            }
+        });
+
+        btn_amortizar_antes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, AmortizarAntes.class);
                 i.putExtra("hipoteca", hip);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 startActivity(i);
