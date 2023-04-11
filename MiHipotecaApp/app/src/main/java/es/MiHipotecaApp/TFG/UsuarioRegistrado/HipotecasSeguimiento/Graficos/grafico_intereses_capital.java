@@ -2,7 +2,10 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.view.View;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -15,16 +18,19 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento;
 
 public class grafico_intereses_capital extends AppCompatActivity {
 
     private AnyChartView grafico;
     private HipotecaSeguimiento hip;
+    private CircleImageView closeIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +38,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
         setContentView(R.layout.activity_grafico_intereses_capital);
         initUI();
         construirGraficoLineas();
+        eventos();
     }
 
     private void initUI(){
@@ -39,6 +46,8 @@ public class grafico_intereses_capital extends AppCompatActivity {
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+
+        closeIcon = findViewById(R.id.close_icon_graf_int);
     }
 
     public void construirGraficoLineas(){
@@ -75,5 +84,14 @@ public class grafico_intereses_capital extends AppCompatActivity {
         lineChart.legend().position("bottom");
         grafico.setChart(lineChart);
         grafico.invalidate();
+    }
+
+    public void eventos(){
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }

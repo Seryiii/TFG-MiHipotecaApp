@@ -78,8 +78,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     private LinearLayout capital_layout_valor;
     private LinearLayout intereses_layout;
     private LinearLayout intereses_layout_valor;
-    private ImageButton btn_grafico_gastos_totales;
-    private ImageButton btn_grafico_intereses_capital;
+    private LinearLayout btn_grafico_gastos_totales;
+    private LinearLayout btn_grafico_intereses_capital;
 
     //private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
 

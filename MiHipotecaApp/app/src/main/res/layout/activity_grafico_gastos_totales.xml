@@ -8,6 +8,15 @@
     android:background="@color/background_aplicacion"
     tools:context=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_gastos_totales">
 
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/close_icon_graf_gastos"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/close_icon"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -3,8 +3,11 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
@@ -20,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -31,6 +35,7 @@ public class grafico_gastos_totales extends AppCompatActivity {
     private final String TAG = "GraficoGasTot";
     private AnyChartView grafico;
     private HipotecaSeguimiento hip;
+    private CircleImageView closeIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +43,7 @@ public class grafico_gastos_totales extends AppCompatActivity {
         setContentView(R.layout.activity_grafico_gastos_totales);
         initUI();
         construirGraficoGastosTotales();
+        eventos();
     }
 
     private void initUI(){
@@ -45,6 +51,8 @@ public class grafico_gastos_totales extends AppCompatActivity {
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+
+        closeIcon = findViewById(R.id.close_icon_graf_gastos);
     }
 
 
@@ -101,5 +109,14 @@ public class grafico_gastos_totales extends AppCompatActivity {
             }
         });
 
+    }
+
+    public void eventos(){
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 }
