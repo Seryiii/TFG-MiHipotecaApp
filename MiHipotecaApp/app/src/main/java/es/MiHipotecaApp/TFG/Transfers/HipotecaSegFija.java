@@ -8,14 +8,15 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable {
 
     //Hipoteca fija
     private double porcentaje_fijo;
 
-    public HipotecaSegFija(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, Date fecha_inicio, String tipo_hipoteca, double totalGastos, double totalVinculacionesAnual, String banco_asociado, double porcentaje_fijo) {
-        super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, fecha_inicio, tipo_hipoteca, totalGastos, totalVinculacionesAnual, banco_asociado);
+    public HipotecaSegFija(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, Date fecha_inicio, String tipo_hipoteca, double totalGastos, List<Double> arrayVinculacionesAnual, String banco_asociado, double porcentaje_fijo) {
+        super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, fecha_inicio, tipo_hipoteca, totalGastos, arrayVinculacionesAnual, banco_asociado);
         this.porcentaje_fijo = porcentaje_fijo;
         //obtenerCuotaMensual();
     }
@@ -61,7 +62,11 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     /** Cuotas mensuales + Gastos asociados + Vinculaciones **/
     @Override
     public double getGastosTotalesHipoteca(){
-        return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12) * plazo_anios*12 + totalVinculacionesAnual*plazo_anios + totalGastos;
+        double totalVinc = 0;
+        for(int i = 0; i < arrayVinculacionesAnual.size(); i++){
+            totalVinc += arrayVinculacionesAnual.get(i);
+        }
+        return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12) * plazo_anios*12 + totalVinc + totalGastos;
     }
 
     /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/

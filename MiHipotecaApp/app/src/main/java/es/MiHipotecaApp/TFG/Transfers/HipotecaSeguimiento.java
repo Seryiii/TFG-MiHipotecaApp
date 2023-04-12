@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class HipotecaSeguimiento implements Serializable {
@@ -21,13 +22,13 @@ public class HipotecaSeguimiento implements Serializable {
 
     //Gastos
     protected double totalGastos;
-    protected double totalVinculacionesAnual;
+    protected List<Double> arrayVinculacionesAnual;
     protected String idUsuario;
 
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
     }
-    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, Date fecha_inicio, String tipo_hipoteca, double totalGastos, double totalVinculacionesAnual, String banco_asociado) {
+    public HipotecaSeguimiento(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, Date fecha_inicio, String tipo_hipoteca, double totalGastos, List<Double> arrayVinculacionesAnual, String banco_asociado) {
         this.nombre = nombre;
         this.comunidad_autonoma = comunidad_autonoma;
         this.tipo_vivienda = tipo_vivienda;
@@ -38,7 +39,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.fecha_inicio = fecha_inicio;
         this.tipo_hipoteca = tipo_hipoteca;
         this.totalGastos = totalGastos;
-        this.totalVinculacionesAnual = totalVinculacionesAnual;
+        this.arrayVinculacionesAnual = arrayVinculacionesAnual;
         this.banco_asociado = banco_asociado;
     }
 
@@ -183,7 +184,7 @@ public class HipotecaSeguimiento implements Serializable {
     }
 
     public double getPorcentaje_fijo_mixta() {
-        return 0;
+        return 0f;
     }
 
     public double getPorcentaje_diferencial_mixta() {
@@ -233,8 +234,10 @@ public class HipotecaSeguimiento implements Serializable {
         return totalGastos;
     }
 
-    public double getTotalVinculacionesAnual() {
-        return totalVinculacionesAnual;
+    public List<Double> getArrayVinculacionesAnual(){ return arrayVinculacionesAnual; }
+
+    public Double getPosArrayVinculacionesAnual(int i) {
+        return arrayVinculacionesAnual.get(i);
     }
 
     public String getIdUsuario() {
@@ -286,8 +289,8 @@ public class HipotecaSeguimiento implements Serializable {
         this.totalGastos = totalGastos;
     }
 
-    public void setTotalVinculacionesAnual(double totalVinculacionesAnual) {
-        this.totalVinculacionesAnual = totalVinculacionesAnual;
+    public void setPosArrayVinculacionesAnual(int i, double vinculaciones) {
+        this.arrayVinculacionesAnual.set(i, vinculaciones);
     }
 
     public void setIdUsuario(String idUsuario) {

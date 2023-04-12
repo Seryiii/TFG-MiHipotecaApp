@@ -67,8 +67,8 @@ public class grafico_intereses_capital extends AppCompatActivity {
             capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(1)));
             interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(2)));
             cuotaAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(0)));
-            vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getTotalVinculacionesAnual()));
-
+            if(i <= hip.getArrayVinculacionesAnual().size() - 1) vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getPosArrayVinculacionesAnual(i)));
+            else vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
         }
 
         Cartesian lineChart = AnyChart.line();

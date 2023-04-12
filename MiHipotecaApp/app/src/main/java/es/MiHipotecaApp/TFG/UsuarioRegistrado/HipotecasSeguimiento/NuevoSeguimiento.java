@@ -35,8 +35,12 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.PaginaPrincipal;
@@ -602,8 +606,19 @@ public class NuevoSeguimiento extends AppCompatActivity {
         else gastos_reg = Double.parseDouble(gastos_registro.getText().toString());
         if(TextUtils.isEmpty(gastos_tasacion.getText())) gastos_tas = 0;
         else gastos_tas = Double.parseDouble(gastos_tasacion.getText().toString());
+
+        List<Double> arrayVinculacionesAnuales = new ArrayList<>();
         if(TextUtils.isEmpty(gastos_vinculaciones.getText())) gastos_vin = 0;
         else gastos_vin = Double.parseDouble(gastos_vinculaciones.getText().toString());
+
+        //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca
+        int aniosHastaAhora = plazo_hip - getAniosMesesRestantes(plazo_hip, getNumeroCuotaActual(fecha_inicio, plazo_hip)).get(0);
+        if(aniosHastaAhora > 1){
+            for(int i = 0; i < aniosHastaAhora; i++){
+                arrayVinculacionesAnuales.add(gastos_vin);
+            }
+        }
+
         if(TextUtils.isEmpty(gastos_comisiones.getText())) gastos_com = 0;
         else gastos_com = Double.parseDouble(gastos_comisiones.getText().toString());
         double totalGastos = gastos_gest + gastos_not + gastos_reg + gastos_tas + gastos_com;
@@ -614,7 +629,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
         if(check_fija.isChecked()){
             double porcentaje_fijo = Double.parseDouble(edit_porcentaje_fijo.getText().toString());
 
-            nuevaHip = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, porcentaje_fijo);
+            nuevaHip = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, arrayVinculacionesAnuales, banco_asociado, porcentaje_fijo);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());
@@ -627,7 +642,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
 
-            nuevaHip = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, duracion_primer_porcentaje, primer_porc_variable, diferencial_variable, revision_anual);
+            nuevaHip = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, arrayVinculacionesAnuales, banco_asociado, duracion_primer_porcentaje, primer_porc_variable, diferencial_variable, revision_anual);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());
@@ -639,13 +654,33 @@ public class NuevoSeguimiento extends AppCompatActivity {
             double porc_fijo_mixta = Double.parseDouble(edit_porcentaje_fijo_mix.getText().toString());
             double porc_diferencial_mixta = Double.parseDouble(edit_diferencial_mixto.getText().toString());
 
-            nuevaHip = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, anios_fijo, porc_fijo_mixta, porc_diferencial_mixta, revision_anual);
+            nuevaHip = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, arrayVinculacionesAnuales, banco_asociado, anios_fijo, porc_fijo_mixta, porc_diferencial_mixta, revision_anual);
 
             nuevaHip.setTipo_hipoteca(tipo_hipoteca);
             nuevaHip.setIdUsuario(user.getUid());
         }
 
         db.collection("hipotecas_seguimiento").add(nuevaHip).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                registrarNuevaTablaAmortizacionAnticipada();
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w(TAG,"Error al registrar hipoteca de seguimiento en Firestore: ");
+            }
+        });
+    }
+
+    private void registrarNuevaTablaAmortizacionAnticipada(){
+        Map<Integer, Object> lista_amortizaciones_anticipadas = new HashMap<>();
+        Map<String, Object> amortizacion_anticipada = new HashMap<>();
+        amortizacion_anticipada.put("nombre_hipoteca", nombre_hipoteca.getText().toString());
+        amortizacion_anticipada.put("idUsuario", auth.getCurrentUser().getUid());
+        amortizacion_anticipada.put("amortizaciones_anticipadas", lista_amortizaciones_anticipadas);
+
+        db.collection("amortizaciones_anticipadas").add(amortizacion_anticipada).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(NuevoSeguimiento.this, getString(R.string.hipoteca_seguimiento_exito), Toast.LENGTH_LONG).show();
@@ -655,9 +690,42 @@ public class NuevoSeguimiento extends AppCompatActivity {
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Log.w(TAG,"Error al registrar hipoteca de seguimiento en Firestore: ");
+                Log.w(TAG,"Error al registrar tabla amortizaciones anticipadas en Firestore: ");
             }
         });
+
+    }
+
+    /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
+    public ArrayList<Integer> getAniosMesesRestantes(int plazo, int cuota){
+
+        ArrayList<Integer> anios_meses = new ArrayList<>();
+        int cuotasRestantes = (plazo * 12) - cuota;
+        int anios = cuotasRestantes / 12;
+        int meses = cuotasRestantes % 12;
+        anios_meses.add(anios);
+        anios_meses.add(meses);
+        return anios_meses;
+    }
+
+    /** Devuelve el numero de cuota por el que va actualmente la hipoteca [1 - plazo_anios * 12 ] **/
+    public int getNumeroCuotaActual(Date fecha_inicio, int plazo){
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        // Dia actual
+        Calendar actual = Calendar.getInstance();
+        // En caso de que todavia no haya empezado el seguimiento de la hipoteca
+        if(actual.compareTo(inicio) < 0) return 0;
+        int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
+
+        // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
+        if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
+        //else return numeroPagoActual + 1;
+        // Fin de hipoteca
+        if (numeroPagoActual >= plazo * 12) numeroPagoActual = plazo * 12;
+        return numeroPagoActual;
+
     }
 
 }

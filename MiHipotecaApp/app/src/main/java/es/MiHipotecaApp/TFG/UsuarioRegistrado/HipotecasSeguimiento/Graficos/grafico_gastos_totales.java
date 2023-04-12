@@ -60,7 +60,12 @@ public class grafico_gastos_totales extends AppCompatActivity {
 
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("VINCULACIONES", hip.getTotalVinculacionesAnual()));
+
+        double totalVinculaciones = 0;
+        for(int i = 0; i < hip.getArrayVinculacionesAnual().size(); i++){
+            totalVinculaciones += hip.getPosArrayVinculacionesAnual(i);
+        }
+        data.add(new ValueDataEntry("VINCULACIONES", totalVinculaciones));
         data.add(new ValueDataEntry("OTROS GASTOS (GESTORÍA, COMISIONES, ...)", hip.getTotalGastos()));
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("impuestos").document(hip.getComunidad_autonoma()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {

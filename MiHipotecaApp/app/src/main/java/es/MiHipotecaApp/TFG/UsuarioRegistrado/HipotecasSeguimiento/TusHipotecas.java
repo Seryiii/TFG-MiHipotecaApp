@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -34,7 +35,9 @@ import com.google.firebase.firestore.WriteBatch;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.PaginaPrincipal;
@@ -103,27 +106,27 @@ public class TusHipotecas extends Fragment {
                     Date fecha_inicio = documentSnapshot.getDate("fecha_inicio");
                     String tipo_hipoteca = documentSnapshot.getString("tipo_hipoteca");
                     double total_gastos = documentSnapshot.getDouble("totalGastos");
-                    double total_vinculaciones = documentSnapshot.getDouble("totalVinculacionesAnual");
+                    List<Double> array_vinculaciones_anuales =  (List<Double>) documentSnapshot.get("arrayVinculacionesAnual");
                     String banco_asociado = documentSnapshot.getString("banco_asociado");
                     HipotecaSeguimiento h;
 
                     if (tipo_hipoteca.equals("fija")){
                         double porcen_fijo = documentSnapshot.getDouble("porcentaje_fijo");
-                        h = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, total_vinculaciones, banco_asociado, porcen_fijo);
+                        h = new HipotecaSegFija(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, array_vinculaciones_anuales, banco_asociado, porcen_fijo);
                     }else if(tipo_hipoteca.equals("variable")){
                         long duracion_primer_por_l = documentSnapshot.getLong("duracion_primer_porcentaje_variable");
                         int duracion_primer_por = (int) duracion_primer_por_l;
                         double primer_porcen = documentSnapshot.getDouble("primer_porcentaje_variable");
                         double porcentaje_diferen = documentSnapshot.getDouble("porcentaje_diferencial_variable");
                         boolean revision = documentSnapshot.getBoolean("revision_anual");
-                        h = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, total_vinculaciones, banco_asociado, duracion_primer_por, primer_porcen, porcentaje_diferen, revision);
+                        h = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, array_vinculaciones_anuales, banco_asociado, duracion_primer_por, primer_porcen, porcentaje_diferen, revision);
                     }else{
                         long anios_fija_mix_l =  documentSnapshot.getLong("anios_fija_mixta");
                         int anios_fija_mix = (int) anios_fija_mix_l;
                         double porcen_fijo_mix = documentSnapshot.getDouble("porcentaje_fijo_mixta");
                         double porcent_diferen_mix = documentSnapshot.getDouble("porcentaje_diferencial_mixta");
                         boolean revision = documentSnapshot.getBoolean("revision_anual");
-                        h = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, total_vinculaciones, banco_asociado, anios_fija_mix, porcen_fijo_mix, porcent_diferen_mix, revision);
+                        h = new HipotecaSegMixta(nombre, comunidad, tipo_vivienda, antiguedad, precio_vivienda, cantidad_abonada, plazo, fecha_inicio, tipo_hipoteca, total_gastos, array_vinculaciones_anuales, banco_asociado, anios_fija_mix, porcen_fijo_mix, porcent_diferen_mix, revision);
                     }
                     listaHipotecasSeg.add(h);
                 }
@@ -169,42 +172,7 @@ public class TusHipotecas extends Fragment {
                                                         @Override
                                                         public void onClick(DialogInterface dialog, int which) {
                                                             //Eliminar hipoteca de la base de datos
-                                                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-
-                                                            CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
-
-                                                            Query query = hipotecasRef.whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid())
-                                                                    .whereEqualTo("nombre", hip.getNombre());
-
-                                                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                                                @Override
-                                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                                                    if (task.isSuccessful()) {
-                                                                        QuerySnapshot querySnapshot = task.getResult();
-                                                                        if (!querySnapshot.isEmpty()) {
-                                                                            DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                                                                            documentSnapshot.getReference().delete()
-                                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                                        @Override
-                                                                                        public void onSuccess(Void aVoid) {
-                                                                                            // Documento eliminado correctamente
-                                                                                            Intent i = new Intent(getActivity(), PaginaPrincipal.class);
-                                                                                            startActivity(i);
-                                                                                        }
-                                                                                    })
-                                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                                        @Override
-                                                                                        public void onFailure(@NonNull Exception e) {
-                                                                                            // Error al eliminar el documento
-                                                                                        }
-                                                                                    });
-                                                                        }
-                                                                    } else {
-                                                                        // Error al obtener la referencia al documento
-                                                                    }
-                                                                }
-                                                            });
+                                                            eliminarHipoteca();
                                                         }
                                                     })
                                                     .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
@@ -280,4 +248,69 @@ public class TusHipotecas extends Fragment {
 
     }
 
+    private void eliminarHipoteca(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+        Query query = hipotecasRef.whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid())
+                .whereEqualTo("nombre", hip.getNombre());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                        documentSnapshot.getReference().delete()
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // Documento eliminado correctamente
+                                        // Eliminar también su tabla de amortizaciones anticipadas
+                                        CollectionReference amortAntRef = db.collection("amortizaciones_anticipadas");
+
+                                        Query query1 = amortAntRef.whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid())
+                                                .whereEqualTo("nombre_hipoteca", hip.getNombre());
+
+                                        query1.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                if (task.isSuccessful()){
+                                                    QuerySnapshot querySnapshot1 = task.getResult();
+                                                    if (!querySnapshot1.isEmpty()) {
+                                                        DocumentSnapshot documentSnapshot1 = querySnapshot1.getDocuments().get(0);
+                                                        documentSnapshot1.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void unused) {
+                                                                // Documentos eliminado correctamente
+                                                                Toast.makeText(getActivity(), getString(R.string.hipoteca_seguimiento_borrada_exito), Toast.LENGTH_LONG).show();
+                                                                Intent i = new Intent(getActivity(), PaginaPrincipal.class);
+                                                                startActivity(i);
+                                                            }
+                                                        }).addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+
+                                                            }
+                                                        });
+                                                    }
+                                                }else{
+                                                    //Error al obtener el documento
+                                                }
+                                            }
+                                        });
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Error al eliminar el documento
+                                    }
+                                });
+                    }
+                } else {
+                    // Error al obtener la referencia al documento
+                }
+            }
+        });
+    }
 }

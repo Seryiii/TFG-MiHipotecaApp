@@ -10,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,8 +27,13 @@ import com.anychart.enums.LegendLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.skydoves.balloon.ArrowOrientation;
 import com.skydoves.balloon.ArrowPositionRules;
 import com.skydoves.balloon.Balloon;
@@ -37,8 +43,12 @@ import com.skydoves.balloon.BalloonSizeSpec;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -47,7 +57,8 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_gastos_totales;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_intereses_capital;
 
-public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
+public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements NuevoAnioHipotecaFragment.NuevoAnioHipotecaListener {
+    private final String TAG = "VISUALIZAR_HIPOTECA ACTIVITY";
 
     private TextView nombre_hipoteca;
     private TextView tipo_hipoteca_seg;
@@ -237,6 +248,21 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
     }
     private void eventos(){
 
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(hip.getFecha_inicio());
+        int i = fecha.get(Calendar.DAY_OF_YEAR) + 1;
+        int j = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1;
+        //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca
+        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0);
+
+
+        if(i == j && hip.getArrayVinculacionesAnual().size() < hip.getPlazo_anios()) {
+            NuevoAnioHipotecaFragment fragment = new NuevoAnioHipotecaFragment();
+            fragment.show(getSupportFragmentManager(), "NuevoAnioHipotecaFragment");
+            //actualizarNuevaVinculacionAnual(Double.parseDouble(getIntent().getStringExtra("vinculacionAnual")));
+        }
+
         btn_cuadro_amortizacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -327,43 +353,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
                 startActivity(i);
             }
         });
-
-        /*
-        next_grafico.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(numGrafico == 0) camposGraficoAportarVsFinanciar(View.GONE);
-                numGrafico++;
-                if(numGrafico == 1) construirGraficoLineas();
-                else if(numGrafico == 2) construirGraficoLineas();
-                else{
-                    numGrafico = 0;
-                    camposGraficoAportarVsFinanciar(View.VISIBLE);
-                    construirGraficoAportadoVsAFinanciar();
-                }
-
-            }
-        });*/
-
-        /*
-
-        before_grafico.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(numGrafico == 0) camposGraficoAportarVsFinanciar(View.GONE);
-                numGrafico--;
-                if(numGrafico == -1){
-                    numGrafico = 2;
-                    construirGraficoLineas();
-                }
-                else if(numGrafico == 1) construirGraficoLineas();
-                else {
-                    camposGraficoAportarVsFinanciar(View.VISIBLE);
-                    construirGraficoAportadoVsAFinanciar();
-                }
-            }
-        });*/
-
      }
 
 
@@ -404,5 +393,75 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity {
         intereses_layout.setVisibility(view);
         intereses_layout_valor.setVisibility(view);
     }*/
+
+    @Override
+    public void sendInput(double input) {
+
+        Map<String, Object> nuevosDatos = new HashMap<>();
+        hip.getArrayVinculacionesAnual().add(input);
+        nuevosDatos.put("arrayVinculacionesAnual", hip.getArrayVinculacionesAnual());
+
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // obtener una referencia a la colección
+        CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+
+        // crear una consulta para obtener el documento específico
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+
+        Query query = hipotecasRef.whereEqualTo("nombre", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+
+        // ejecutar la consulta
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        // actualizar el documento con los nuevos valores
+                        hipotecasRef.document(document.getId()).update(nuevosDatos);
+                        Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.vinculaciones_actualizdas), Toast.LENGTH_LONG).show();
+                        Intent i = new Intent(VisualizarHipotecaSeguimiento.this, PaginaPrincipal.class);
+                        startActivity(i);
+                    }
+                } else {
+                    Log.e("ERROR", " getting documents");
+                }
+            }
+        });
+
+    }
+
+    /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
+    public ArrayList<Integer> getAniosMesesRestantes(int plazo, int cuota){
+
+        ArrayList<Integer> anios_meses = new ArrayList<>();
+        int cuotasRestantes = (plazo * 12) - cuota;
+        int anios = cuotasRestantes / 12;
+        int meses = cuotasRestantes % 12;
+        anios_meses.add(anios);
+        anios_meses.add(meses);
+        return anios_meses;
+    }
+
+    /** Devuelve el numero de cuota por el que va actualmente la hipoteca [1 - plazo_anios * 12 ] **/
+    public int getNumeroCuotaActual(Date fecha_inicio, int plazo){
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        // Dia actual
+        Calendar actual = Calendar.getInstance();
+        // En caso de que todavia no haya empezado el seguimiento de la hipoteca
+        if(actual.compareTo(inicio) < 0) return 0;
+        int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
+
+        // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
+        if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
+        //else return numeroPagoActual + 1;
+        // Fin de hipoteca
+        if (numeroPagoActual >= plazo * 12) numeroPagoActual = plazo * 12;
+        return numeroPagoActual;
+
+    }
 }
 

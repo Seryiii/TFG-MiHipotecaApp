@@ -569,7 +569,9 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         nuevosDatos.put("totalGastos", totalGastos);
         if(TextUtils.isEmpty(vinculaciones.getText())) gastos_vin = 0;
         else gastos_vin = Double.parseDouble(vinculaciones.getText().toString());
-        nuevosDatos.put("totalViculacionesActual", gastos_vin);
+
+        hip.setPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1, gastos_vin);
+        nuevosDatos.put("arrayVinculacionesAnual", hip.getArrayVinculacionesAnual());
 
         nuevosDatos.put("banco_asociado", sp_bancos.getSelectedItem().toString());
         HipotecaSeguimiento nuevaHip;
@@ -715,7 +717,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         }
 
         gastos_totales.setText(Double.toString(hip.getTotalGastos()));
-        vinculaciones.setText(Double.toString(hip.getTotalVinculacionesAnual()));
+        vinculaciones.setText(Double.toString(hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
         nombre_hipoteca.setText(hip.getNombre());
 
     }
