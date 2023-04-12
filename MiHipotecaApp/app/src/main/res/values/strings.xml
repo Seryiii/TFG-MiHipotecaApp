@@ -161,6 +161,8 @@
     <string name="sesion_cerrada">Sesión cerrada</string>
     <string name="mensaje_enviado_recuperar_contra">Se ha enviado un correo electrónico para restablecer su contraseña</string>
     <string name="hipoteca_seguimiento_exito">Hipoteca creada con éxito!</string>
+    <string name="hipoteca_seguimiento_borrada_exito">Hipoteca borrada con éxito!</string>
+    <string name="vinculaciones_actualizdas">Vinculaciones anuales añadidas con éxito!</string>
     <string name="hipoteca_seguimiento_editada_exito">Hipoteca editada con éxito!</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
