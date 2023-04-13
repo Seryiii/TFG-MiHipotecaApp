@@ -217,7 +217,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
                             }
                         })
-                        .setTitle("CANCELAR NUEVO SEGUIMIENTO").setMessage("¿Desea dejar de crear nuevo seguimeinto? Perderá todo su progreso").create();
+                        .setTitle("CANCELAR NUEVO SEGUIMIENTO").setMessage("¿Desea dejar de crear nuevo seguimiento? Perderá todo su progreso").create();
                 dialogo.show();
             }
         });

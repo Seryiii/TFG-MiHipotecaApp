@@ -2,7 +2,11 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -12,7 +16,12 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
+import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 
 public class AmortizarAntes extends AppCompatActivity {
 
@@ -21,6 +30,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private EditText edit_comision;
     private CheckBox check_amort_total;
     private CheckBox check_amort_parcial;
+    private TextView label_info_amort_parcial;
     private CheckBox check_reducir_cuota;
     private CheckBox check_reducir_plazo;
     private EditText edit_dinero_a_amortizar;
@@ -33,9 +43,20 @@ public class AmortizarAntes extends AppCompatActivity {
 
     private TextView capital_amortizado;
     private TextView total_comision;
+    private TextView cuota_plazo_antigua_valor;
+    private TextView cuota_plazo_nueva_valor;
+    private TextView cuota_plazo_antigua_tv;
+    private TextView cuota_plazo_nueva_tv;
+
     //Utilizar este layout tambien para num cuotas anterior vs num_cuotas
     private LinearLayout layout_cuotaplazo_antigua_vs_nueva;
     private LinearLayout layout_amort_parcial;
+
+    private LinearLayout layout_reducir_cuota;
+    private LinearLayout layout_reducir_plazo;
+    private CircleImageView close_icon;
+
+    private HipotecaSeguimiento hip;
 
 
 
@@ -43,26 +64,45 @@ public class AmortizarAntes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amortizar_antes);
+        if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
+        else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
+        else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
         initUI();
+        //Como empieza marcada la casilla de amortizacion total, se pone en capital amortizado el capital pendiente actual
+        capital_amortizado.setText("Capital amortizar: " + hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual()) + "€");
+        cuota_plazo_antigua_valor.setText(getIntent().getStringExtra("cuota_actual"));
+        cuota_plazo_nueva_valor.setText(getIntent().getStringExtra("cuota_actual"));
         eventos();
     }
 
     private void initUI(){
         titulo_hipoteca = findViewById(R.id.nombre_amort_anticipada_hip);
-        check_comision  = findViewById(R.id.checkBox_comision_amrotizacion_anticipada);
+        titulo_hipoteca.setText(hip.getNombre());
+        check_comision  = findViewById(R.id.check_comision_anticipada);
         edit_comision = findViewById(R.id.edit_porcentaje_comision_ant);
-        check_amort_total = findViewById(R.id.checkBox_amort_total);
-        check_amort_parcial = findViewById(R.id.checkBox_amort_parcial);
+        check_amort_total = findViewById(R.id.check_amort_total);
+        check_amort_parcial = findViewById(R.id.check_amort_parcial);
+        label_info_amort_parcial = findViewById(R.id.label_info_amort_parcial);
         check_reducir_cuota = findViewById(R.id.check_reducir_cuota);
         check_reducir_plazo = findViewById(R.id.check_reducir_plazo);
         edit_dinero_a_amortizar = findViewById(R.id.edit_dinero_amort);
         edit_reduccion_plazo_meses = findViewById(R.id.edit_reduccion_plazo);
-        //todo Faltan los botones de informacion
+        //todo Faltan los botones de informacion ponerle funcionalidad
         btn_info_dinero_amort = findViewById(R.id.btn_info_dinero_amort);
         btn_info_reduccion_plazo = findViewById(R.id.btn_info_reduccion_plazo);
         layout_cuotaplazo_antigua_vs_nueva = findViewById(R.id.layout_cuotavsnueva);
         layout_amort_parcial = findViewById(R.id.layout_amort_parcial);
+        layout_reducir_cuota = findViewById(R.id.layout_reducir_cuota);
+        layout_reducir_plazo = findViewById(R.id.layout_reducir_plazo);
+        capital_amortizado = findViewById(R.id.tv_capital_amortizado);
+        total_comision = findViewById(R.id.tv_comision);
+        cuota_plazo_antigua_valor = findViewById(R.id.tv_cuota_plazo_antigua_valor);
+        cuota_plazo_nueva_valor = findViewById(R.id.tv_cuota_plazo_nueva_valor);
+        cuota_plazo_antigua_tv = findViewById(R.id.tv_cuota_plazo_antigua);
+        cuota_plazo_nueva_tv = findViewById(R.id.tv_cuota_plazo_nueva);
         amortizar_antes = findViewById(R.id.btn_realizar_amortizacion_anticipada);
+        close_icon = findViewById(R.id.close_icon_amort_ant);
+
     }
 
     private void eventos(){
@@ -78,17 +118,44 @@ public class AmortizarAntes extends AppCompatActivity {
             }
         });
 
+        edit_comision.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                //COGER CAPITAL PEDIENTE * edit_comision.getText()
+
+                if(s.toString().equals("")) total_comision.setText("Comisión: 0€");
+                else{
+                    double capPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+                    total_comision.setText("Comisión: " + capPendiente * Double.parseDouble(edit_comision.getText().toString()) + "€");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         check_amort_total.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     check_amort_parcial.setChecked(false);
+                    edit_dinero_a_amortizar.setText("");
+                    edit_reduccion_plazo_meses.setText("");
                     layout_cuotaplazo_antigua_vs_nueva.setVisibility(View.GONE);
                     layout_amort_parcial.setVisibility(View.GONE);
-                    edit_dinero_a_amortizar.setText("PONER AQUI EL CAPITAL PENDIENTE");
-                    //SI LA COMISION ESTA MARCADA PONER LA CANTIDAD EN EL EDIT
-                } else{
-
+                    layout_reducir_plazo.setVisibility(View.GONE);
+                    layout_reducir_cuota.setVisibility(View.GONE);
+                    label_info_amort_parcial.setVisibility(View.GONE);
+                    capital_amortizado.setText("Capital amortizar: " + hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual()) + "€");
+                }else{
+                    if (!check_amort_parcial.isChecked()) check_amort_total.setChecked(true);
                 }
             }
         });
@@ -98,12 +165,155 @@ public class AmortizarAntes extends AppCompatActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     check_amort_total.setChecked(false);
+                    label_info_amort_parcial.setVisibility(View.VISIBLE);
+                    layout_amort_parcial.setVisibility(View.VISIBLE);
                     layout_cuotaplazo_antigua_vs_nueva.setVisibility(View.VISIBLE);
-                } else{
-
+                    capital_amortizado.setText("Capital Amortizar: 0€");
+                    if(check_reducir_cuota.isChecked()){
+                        layout_reducir_cuota.setVisibility(View.VISIBLE);
+                        layout_reducir_plazo.setVisibility(View.GONE);
+                        cuota_plazo_antigua_tv.setText("Cuota Antigua");
+                        cuota_plazo_nueva_tv.setText("Cuota Nueva");
+                    }else{
+                        layout_reducir_cuota.setVisibility(View.GONE);
+                        layout_reducir_plazo.setVisibility(View.VISIBLE);
+                        cuota_plazo_antigua_tv.setText("Plazo Antiguo");
+                        cuota_plazo_nueva_tv.setText("Plazo Nuevo");
+                    }
+                }else{
+                    if (!check_amort_total.isChecked()) check_amort_parcial.setChecked(true);
                 }
             }
         });
 
+        check_reducir_cuota.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    check_reducir_plazo.setChecked(false);
+                    layout_reducir_plazo.setVisibility(View.GONE);
+                    layout_reducir_cuota.setVisibility(View.VISIBLE);
+                    cuota_plazo_antigua_tv.setText("Cuota Antigua");
+                    cuota_plazo_antigua_valor.setText(getIntent().getStringExtra("cuota_actual"));
+                    cuota_plazo_nueva_tv.setText("Cuota Nueva");
+                    cuota_plazo_antigua_valor.setText(getIntent().getStringExtra("cuota_actual"));
+                    cuota_plazo_nueva_valor.setText(getIntent().getStringExtra("cuota_actual"));
+                    edit_reduccion_plazo_meses.setText("");
+                    edit_dinero_a_amortizar.setText("");
+                }else{
+                    if (!check_reducir_plazo.isChecked()) check_reducir_cuota.setChecked(true);
+                }
+            }
+        });
+
+        check_reducir_plazo.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    check_reducir_cuota.setChecked(false);
+                    layout_reducir_plazo.setVisibility(View.VISIBLE);
+                    layout_reducir_cuota.setVisibility(View.GONE);
+                    cuota_plazo_antigua_tv.setText("Plazo Antiguo");
+                    cuota_plazo_nueva_tv.setText("Plazo Nuevo");
+
+                    //FALTA PONER AQUI EL PLAZO ANTIGUO EN LOS DOS
+                    cuota_plazo_antigua_valor.setText("PLAZO ANTIGUO CALCULAR");
+                    cuota_plazo_nueva_valor.setText("PLAZO ANTIGUO CALCULAR");
+                    edit_dinero_a_amortizar.setText("");
+                    edit_reduccion_plazo_meses.setText("");
+                }else{
+                    if (!check_reducir_cuota.isChecked()) check_reducir_plazo.setChecked(true);
+                }
+            }
+        });
+
+        edit_dinero_a_amortizar.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                if(s.toString().equals("")){
+                    cuota_plazo_nueva_valor.setText(getIntent().getStringExtra("cuota_actual"));
+                }
+                else{
+                    double porcentaje_aplicado  = getIntent().getDoubleExtra("porcentaje_aplicado", -1);
+                    int numero_cuotas_restantes = getIntent().getIntExtra("cuotas_pendientes", -1);
+                    double cantidad_pendiente = getIntent().getDoubleExtra("cantidad_pendiente", -1);
+                    double capital_a_amortizar = Double.parseDouble(s.toString());
+                    double capitalPendienteTotalActual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+                    if (capital_a_amortizar > capitalPendienteTotalActual){
+                        edit_dinero_a_amortizar.setError("El capital a amortizar no puede ser mayor que el capital pendiente");
+                        capital_amortizado.setText("Cantidad no válida");
+                    }
+                    else{
+                        double capitalPendienteConAmortizacion = cantidad_pendiente - capital_a_amortizar;
+                        cuota_plazo_nueva_valor.setText(hip.getCuotaMensual(porcentaje_aplicado, capitalPendienteConAmortizacion, numero_cuotas_restantes)+"€");
+                        capital_amortizado.setText(Math.round((capitalPendienteTotalActual - capital_a_amortizar) * 100) / 100 + "€");
+                    }
+
+                }
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        edit_reduccion_plazo_meses.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // calcular Y poner en cuota_plazo_antigua_valor y cuota_plazo_nueva_valor el plazo antiguo y el nuevo calculado
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        close_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog dialogo = new AlertDialog.Builder(AmortizarAntes.this)
+                        .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setTitle("CANCELAR AMORTIZACIÓN ANTICIPADA").setMessage("¿Desea dejar de hacer la amortización anticipada? Perderá todo su progreso").create();
+                dialogo.show();
+            }
+        });
+
+        amortizar_antes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                amortizar();
+            }
+        });
+
     }
+
+    private void amortizar(){
+
+    }
+
 }

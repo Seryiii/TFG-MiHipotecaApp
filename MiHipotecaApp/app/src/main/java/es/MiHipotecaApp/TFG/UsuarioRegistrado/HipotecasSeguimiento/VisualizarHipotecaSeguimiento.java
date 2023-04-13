@@ -94,6 +94,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private LinearLayout btn_grafico_gastos_totales;
     private LinearLayout btn_grafico_intereses_capital;
 
+    private String cuotaFormateada;
+    private double porcentaje_aplicado;
+    private int numero_cuotas_restantes;
+    private double cantidad_pendiente;
+
     //private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
 
     //private static int numGrafico = 0;
@@ -163,9 +168,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         mes_actual_cuota.setText(hip.getNombreMesActual());
         numero_cuota_actual.setText("Cuotas pagadas: " + hip.getNumeroCuotaActual() + " / " + hip.getPlazo_anios() * 12);
 
-        double porcentaje_aplicado;
-        double cantidad_pendiente;
-        int numero_cuotas_restantes;
+
+
+
 
         if(hip.getTipo_hipoteca().equals("fija")) {
             porcentaje_aplicado  = hip.getPorcentaje_fijo();
@@ -192,7 +197,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             info_cuota.setVisibility(View.GONE);
         }
         double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
-        String cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
+        cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);
 
         double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
@@ -277,6 +282,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             @Override
             public void onClick(View view) {
                 Intent i = new Intent(VisualizarHipotecaSeguimiento.this, AmortizarAntes.class);
+                i.putExtra("cuota_actual", cuotaFormateada);
+                i.putExtra("porcentaje_aplicado", porcentaje_aplicado);
+                i.putExtra("cuotas_pendientes", numero_cuotas_restantes);
+                i.putExtra("cantidad_pendiente", cantidad_pendiente);
                 i.putExtra("hipoteca", hip);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 startActivity(i);
