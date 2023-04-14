@@ -18,6 +18,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -63,7 +64,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private CircleImageView close_icon;
 
     private HipotecaSeguimiento hip;
-    private HashMap<Integer, Object> amortizaciones_hip;
+    private HashMap<Integer, List<Object>> amortizaciones_hip;
 
     private double capital_pendiente_actual;
     private String cuota_mensual_actual;
@@ -83,7 +84,7 @@ public class AmortizarAntes extends AppCompatActivity {
         capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
         cuota_mensual_actual = getIntent().getStringExtra("cuota_actual");
         Bundle bundle = getIntent().getExtras();
-        amortizaciones_hip = (HashMap<Integer, Object>) bundle.getSerializable("amortizaciones_anticipadas");
+        amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
         plazo_actual = hip.getPlazoActual(amortizaciones_hip);
 
         //Como empieza marcada la casilla de amortizacion total, se pone en capital amortizado el capital pendiente actual

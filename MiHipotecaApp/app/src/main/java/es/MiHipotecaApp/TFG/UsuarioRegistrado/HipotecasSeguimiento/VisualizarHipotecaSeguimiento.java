@@ -40,6 +40,7 @@ import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.BalloonSizeSpec;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -168,10 +169,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
                         Map<String, Object> amortizaciones = (Map<String, Object>) data.get("amortizaciones_anticipadas");
 
-                        Map<Integer, List<Object>> amortizaciones_anticipadas = new HashMap<>();
+                        amortizaciones_anticipadas = new HashMap<>();
                         for (String clave : amortizaciones.keySet()) {
                             Integer claveInt = Integer.parseInt(clave);
-                            List<Object> lista = (List<Object>) amortizaciones.get(claveInt);
+                            List<Object> lista = (List<Object>) amortizaciones.get(clave);
                             amortizaciones_anticipadas.put(claveInt, lista);
                         }
                         rellenarUI();
@@ -321,6 +322,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 i.putExtra("porcentaje_aplicado", porcentaje_aplicado);
                 i.putExtra("cuotas_pendientes", numero_cuotas_restantes);
                 i.putExtra("cantidad_pendiente", cantidad_pendiente);
+                i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
+                //Map<Integer, List<Object>>
                 i.putExtra("hipoteca", hip);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 startActivity(i);

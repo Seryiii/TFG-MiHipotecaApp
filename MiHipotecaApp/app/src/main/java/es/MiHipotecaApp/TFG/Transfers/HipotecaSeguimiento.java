@@ -47,12 +47,17 @@ public class HipotecaSeguimiento implements Serializable {
 
     //FUNCIONES
 
-    /** Esta funcion devuelve el plazo actual de la hipoteca en meses/numero de cuotas en funcion de las amortizaciones
+    /** Esta funcion devuelve el plazo total actual de la hipoteca en meses/numero de cuotas en funcion de las amortizaciones
      *  anticapadas realizadas (afectarían las parciales reduciendo el plazo solo) **/
-    public int getPlazoActual(HashMap<Integer, Object> amortizaciones){
-        //todo Falta hacer esta función
-
-        return plazo_anios * 12;
+    public int getPlazoActual(HashMap<Integer, List<Object>> amortizaciones){
+        int plazoTotalActual = plazo_anios * 12;
+        int cuotaActual = getNumeroCuotaActual();
+        for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
+            if(entry.getKey() < cuotaActual && entry.getValue().get(0).equals("parcial_plazo")){
+                plazoTotalActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
+            }
+        }
+        return plazoTotalActual;
     }
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
