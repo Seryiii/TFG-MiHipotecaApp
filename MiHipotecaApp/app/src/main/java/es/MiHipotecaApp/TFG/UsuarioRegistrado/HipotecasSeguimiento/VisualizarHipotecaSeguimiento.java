@@ -58,7 +58,7 @@ import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.graf
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_intereses_capital;
 
 public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements NuevoAnioHipotecaFragment.NuevoAnioHipotecaListener {
-    private final String TAG = "VISUALIZAR_HIPOTECA ACTIVITY";
+    private final String TAG = "VIS_HIP_ACTIVITY";
 
     private TextView nombre_hipoteca;
     private TextView tipo_hipoteca_seg;
@@ -82,6 +82,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private TextView intereses_pendientes;
 
     private HipotecaSeguimiento hip;
+    private Map<Integer, List<Object>> amortizaciones_anticipadas;
     private Button btn_cuadro_amortizacion;
     private Button btn_amortizar_antes;
 
@@ -111,9 +112,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
         initUI();
-        rellenarUI();
-        eventos();
-        construirGraficoAportadoVsAFinanciar();
+        cogerAmortizaciones();
+
     }
 
     private void initUI(){
@@ -148,6 +148,41 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         btn_grafico_gastos_totales           = findViewById(R.id.btn_grafico_gastos_totales);
         btn_grafico_intereses_capital        = findViewById(R.id.btn_grafico_intereses_capital);
+
+    }
+
+    private void cogerAmortizaciones(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        CollectionReference amort_ref = db.collection("amortizaciones_anticipadas");
+        Query query = amort_ref.whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", auth.getCurrentUser().getUid());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()){
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if(!querySnapshot.isEmpty()){
+                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                        Map<String, Object> data = documentSnapshot.getData();
+
+                        Map<String, Object> amortizaciones = (Map<String, Object>) data.get("amortizaciones_anticipadas");
+
+                        Map<Integer, List<Object>> amortizaciones_anticipadas = new HashMap<>();
+                        for (String clave : amortizaciones.keySet()) {
+                            Integer claveInt = Integer.parseInt(clave);
+                            List<Object> lista = (List<Object>) amortizaciones.get(claveInt);
+                            amortizaciones_anticipadas.put(claveInt, lista);
+                        }
+                        rellenarUI();
+                        eventos();
+                        construirGraficoAportadoVsAFinanciar();
+                    }
+                }else Log.e(TAG, "Error al cargar amortizaciones anticipadas", task.getException());
+
+            }
+        });
+
 
     }
 

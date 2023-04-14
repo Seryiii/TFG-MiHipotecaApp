@@ -674,13 +674,16 @@ public class NuevoSeguimiento extends AppCompatActivity {
     }
 
     private void registrarNuevaTablaAmortizacionAnticipada(){
-        Map<Integer, Object> lista_amortizaciones_anticipadas = new HashMap<>();
-        Map<String, Object> amortizacion_anticipada = new HashMap<>();
-        amortizacion_anticipada.put("nombre_hipoteca", nombre_hipoteca.getText().toString());
-        amortizacion_anticipada.put("idUsuario", auth.getCurrentUser().getUid());
-        amortizacion_anticipada.put("amortizaciones_anticipadas", lista_amortizaciones_anticipadas);
 
-        db.collection("amortizaciones_anticipadas").add(amortizacion_anticipada).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+
+        Map<Integer, List<Object>> lista_amortizaciones_anticipadas = new HashMap<>();
+
+        Map<String, Object> doc_amortizacion_anticipada = new HashMap<>();
+        doc_amortizacion_anticipada.put("nombre_hipoteca", nombre_hipoteca.getText().toString());
+        doc_amortizacion_anticipada.put("idUsuario", auth.getCurrentUser().getUid());
+        doc_amortizacion_anticipada.put("amortizaciones_anticipadas", lista_amortizaciones_anticipadas);
+
+        db.collection("amortizaciones_anticipadas").add(doc_amortizacion_anticipada).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
             @Override
             public void onSuccess(DocumentReference documentReference) {
                 Toast.makeText(NuevoSeguimiento.this, getString(R.string.hipoteca_seguimiento_exito), Toast.LENGTH_LONG).show();

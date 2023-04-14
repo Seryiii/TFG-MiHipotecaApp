@@ -242,14 +242,36 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_capital_amortizado"
+                android:id="@+id/tv_cantidad_amortizado"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
-                android:text="Capital amortizar: 5000€"
+                android:text="Cantidad a amortizar: 5000€"
                 android:textColor="@color/black"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_capital_pendiente_amort_antiguo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/allerta"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Capital pdte anterior: 5000€"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <TextView
+                android:id="@+id/tv_capital_pendiente_amort_nuevo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/allerta"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="Capital pdte nuevo: 5000€"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
 
             <LinearLayout
                 android:id="@+id/layout_cuotavsnueva"
@@ -329,7 +351,7 @@
                 android:gravity="center"
                 android:text="Comisión: 0€"
                 android:textColor="@color/black"
-                android:textSize="22sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 

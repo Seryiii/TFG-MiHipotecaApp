@@ -4,8 +4,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class HipotecaSeguimiento implements Serializable {
 
@@ -44,6 +46,14 @@ public class HipotecaSeguimiento implements Serializable {
     }
 
     //FUNCIONES
+
+    /** Esta funcion devuelve el plazo actual de la hipoteca en meses/numero de cuotas en funcion de las amortizaciones
+     *  anticapadas realizadas (afectarían las parciales reduciendo el plazo solo) **/
+    public int getPlazoActual(HashMap<Integer, Object> amortizaciones){
+        //todo Falta hacer esta función
+
+        return plazo_anios * 12;
+    }
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
