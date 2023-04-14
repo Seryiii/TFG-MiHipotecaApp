@@ -1,5 +1,6 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -16,7 +17,17 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,7 +94,6 @@ public class AmortizarAntes extends AppCompatActivity {
 
         capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
         cuota_mensual_actual = getIntent().getStringExtra("cuota_actual");
-        Bundle bundle = getIntent().getExtras();
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
         plazo_actual = hip.getPlazoActual(amortizaciones_hip);
 
@@ -150,13 +160,10 @@ public class AmortizarAntes extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                //COGER CAPITAL PEDIENTE * edit_comision.getText()
 
                 if(s.toString().equals("")) total_comision.setText("Comisión: 0€");
-                else{
-                    double capPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-                    total_comision.setText("Comisión: " + capPendiente * Double.parseDouble(edit_comision.getText().toString()) + "€");
-                }
+                else total_comision.setText("Comisión: " + capital_pendiente_actual * Double.parseDouble(edit_comision.getText().toString()) + "€");
+
             }
 
             @Override
@@ -177,9 +184,8 @@ public class AmortizarAntes extends AppCompatActivity {
                     layout_reducir_plazo.setVisibility(View.GONE);
                     layout_reducir_cuota.setVisibility(View.GONE);
                     label_info_amort_parcial.setVisibility(View.GONE);
-                    double cap_pendiente_actual =  hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-                    cantidad_capital_amortizado.setText("Cantidad a amortizar: " + cap_pendiente_actual + "€");
-                    capital_pendiente_antiguo.setText("Capital pdte anterior: " + cap_pendiente_actual + "€");
+                    cantidad_capital_amortizado.setText("Cantidad a amortizar: " + capital_pendiente_actual + "€");
+                    capital_pendiente_antiguo.setText("Capital pdte anterior: " + capital_pendiente_actual + "€");
                     capital_pendiente_nuevo.setText("Capital pdte nuevo:  0€");
                 }else{
                     if (!check_amort_parcial.isChecked()) check_amort_total.setChecked(true);
@@ -196,9 +202,8 @@ public class AmortizarAntes extends AppCompatActivity {
                     layout_amort_parcial.setVisibility(View.VISIBLE);
                     layout_cuotaplazo_antigua_vs_nueva.setVisibility(View.VISIBLE);
                     cantidad_capital_amortizado.setText("Cantidad a amortizar: 0€");
-                    double cap_pendiente_actual =  hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-                    capital_pendiente_antiguo.setText("Capital pdte anterior: " + cap_pendiente_actual + "€");
-                    capital_pendiente_nuevo.setText("Capital pdte nuevo: " + cap_pendiente_actual + "€");
+                    capital_pendiente_antiguo.setText("Capital pdte anterior: " + capital_pendiente_actual + "€");
+                    capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual + "€");
                     if(check_reducir_cuota.isChecked()){
                         layout_reducir_cuota.setVisibility(View.VISIBLE);
                         layout_reducir_plazo.setVisibility(View.GONE);
@@ -226,14 +231,11 @@ public class AmortizarAntes extends AppCompatActivity {
                     cuota_plazo_antigua_tv.setText("Cuota Antigua");
                     cuota_plazo_antigua_valor.setText(cuota_mensual_actual);
                     cuota_plazo_nueva_tv.setText("Cuota Nueva");
-                    cuota_plazo_antigua_valor.setText(getIntent().getStringExtra("cuota_actual"));
-                    cuota_plazo_nueva_valor.setText(getIntent().getStringExtra("cuota_actual"));
+                    cuota_plazo_nueva_valor.setText(cuota_mensual_actual);
                     edit_reduccion_plazo_meses.setText("");
                     edit_dinero_a_amortizar.setText("");
                     cantidad_capital_amortizado.setText("Cantidad a amortizar: 0€");
-                    double cap_pendiente_actual =  hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-                    capital_pendiente_antiguo.setText("Capital pdte anterior: " + cap_pendiente_actual + "€");
-                    capital_pendiente_nuevo.setText("Capital pdte nuevo: " + cap_pendiente_actual + "€");
+                    capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual + "€");
                 }else{
                     if (!check_reducir_plazo.isChecked()) check_reducir_cuota.setChecked(true);
                 }
@@ -250,9 +252,8 @@ public class AmortizarAntes extends AppCompatActivity {
                     cuota_plazo_antigua_tv.setText("Plazo Antiguo");
                     cuota_plazo_nueva_tv.setText("Plazo Nuevo");
 
-                    int plazo_antiguo = 1; //hip.getPlazoActual();
-                    cuota_plazo_antigua_valor.setText(plazo_antiguo + "meses");
-                    cuota_plazo_nueva_valor.setText(plazo_antiguo + "meses");
+                    cuota_plazo_antigua_valor.setText(plazo_actual + "meses");
+                    cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
                     edit_dinero_a_amortizar.setText("");
                     edit_reduccion_plazo_meses.setText("");
                 }else{
@@ -270,27 +271,23 @@ public class AmortizarAntes extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-                if(s.toString().equals("")){
-                    cuota_plazo_nueva_valor.setText(getIntent().getStringExtra("cuota_actual"));
-                }
+                if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(cuota_mensual_actual);
                 else{
                     double porcentaje_aplicado  = getIntent().getDoubleExtra("porcentaje_aplicado", -1);
                     int numero_cuotas_restantes = getIntent().getIntExtra("cuotas_pendientes", -1);
                     double cantidad_pendiente = getIntent().getDoubleExtra("cantidad_pendiente", -1);
                     double capital_a_amortizar = Double.parseDouble(s.toString());
-                    double capitalPendienteTotalActual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
-                    if (capital_a_amortizar > capitalPendienteTotalActual){
+                    if (capital_a_amortizar > capital_pendiente_actual){
                         edit_dinero_a_amortizar.setError("El capital a amortizar no puede ser mayor que el capital pendiente");
                         cantidad_capital_amortizado.setText("Cantidad no válida");
-                        capital_pendiente_antiguo.setText("Capital pdte anterior: " + capitalPendienteTotalActual + "€");
-                        capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capitalPendienteTotalActual + "€");
+                        capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual + "€");
                     }
                     else{
                         double cantidad_pendiente_con_amortizacion = cantidad_pendiente - capital_a_amortizar;
                         cuota_plazo_nueva_valor.setText(hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente_con_amortizacion, numero_cuotas_restantes)+"€");
                         cantidad_capital_amortizado.setText("Cantidad a amortizar: " + edit_dinero_a_amortizar.getText().toString() + "€");
                         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
-                        String cap_formateado = "Capital pdte nuevo: " + formato.format(capitalPendienteTotalActual - capital_a_amortizar)  + "€";
+                        String cap_formateado = "Capital pdte nuevo: " + formato.format(capital_pendiente_actual - capital_a_amortizar)  + "€";
                         capital_pendiente_nuevo.setText(cap_formateado);
                     }
 
@@ -313,6 +310,25 @@ public class AmortizarAntes extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // calcular Y poner en cuota_plazo_antigua_valor y cuota_plazo_nueva_valor el plazo antiguo y el nuevo calculado
+
+                if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
+                else{
+                    int meses_reducir = Integer.parseInt(s.toString());
+                    if(meses_reducir >= plazo_actual) {
+                        edit_reduccion_plazo_meses.setError("Como máximo puedes reducir " + plazo_actual + " meses");
+                        cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
+                    }else{
+                        cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducir) + " meses");
+                        //TODO CALCULAR CANTIDAD AMORTIZADA
+                        double cantidad_amortizada = 0;
+
+
+
+                        cantidad_capital_amortizado.setText("Cantidad a amortizar: " + cantidad_amortizada + "€");
+                        capital_pendiente_nuevo.setText("Capital pdte nuevo: " + (capital_pendiente_actual - cantidad_amortizada) + "€");
+                    }
+                }
+
             }
 
             @Override
@@ -352,6 +368,39 @@ public class AmortizarAntes extends AppCompatActivity {
     }
 
     private void amortizar(){
+
+        double total_comision = check_comision.isChecked() ? capital_pendiente_actual * Double.parseDouble(edit_comision.getText().toString()) : 0;
+        int num_cuota_amortizacion = hip.getNumeroCuotaActual() + 1;
+        List<Object> amortizacion = new ArrayList<>();
+        //AMORTIZACION ANTICIPADA TOTAL
+        if(check_amort_total.isChecked()){
+            amortizacion.add("total");
+            amortizacion.add(capital_pendiente_actual);
+        }
+        //AMORTIZACION ANTICIPADA PARCIAL
+        else{
+            //AMORTIZACION REDUCCION CUOTA
+            if(check_reducir_cuota.isChecked()){
+                amortizacion.add("parcial_cuota");
+                amortizacion.add(Double.parseDouble(edit_dinero_a_amortizar.getText().toString()));
+            }
+            //AMORTIZACION REDUCCION PLAZO
+            else{
+                amortizacion.add("parcial_plazo");
+                amortizacion.add("AQUI PONER LA CANTIDAD DE CAPITAL");
+                amortizacion.add(Integer.parseInt(edit_reduccion_plazo_meses.getText().toString()));
+            }
+        }
+        registrar_amortizacion(num_cuota_amortizacion, amortizacion, total_comision);
+
+    }
+
+    private void registrar_amortizacion(int num_cuota, List<Object> amortizacion, double total_comision){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        Query query = db.collection("amortizaciones_anticipadas").whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", auth.getCurrentUser());
+
+        //FALTA REGISTRAR LA AMORTIZACION EN FIRESTORE Y METER LAS COMISIONES EN LA HIPOTECA EN FIRESTORE SI ES > 0
 
     }
 
