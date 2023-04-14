@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -16,10 +18,12 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -80,6 +84,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private double capital_pendiente_actual;
     private String cuota_mensual_actual;
     private double plazo_actual;
+    private double cantidad_amortizada;
 
 
 
@@ -319,10 +324,9 @@ public class AmortizarAntes extends AppCompatActivity {
                         cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
                     }else{
                         cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducir) + " meses");
-                        //TODO CALCULAR CANTIDAD AMORTIZADA
-                        double cantidad_amortizada = 0;
+                        //todo CALCULAR CANTIDAD AMORTIZADA
 
-
+                        cantidad_amortizada = hip.getAmortizarAlReducirMeses(meses_reducir, amortizaciones_hip);
 
                         cantidad_capital_amortizado.setText("Cantidad a amortizar: " + cantidad_amortizada + "€");
                         capital_pendiente_nuevo.setText("Capital pdte nuevo: " + (capital_pendiente_actual - cantidad_amortizada) + "€");
@@ -387,7 +391,7 @@ public class AmortizarAntes extends AppCompatActivity {
             //AMORTIZACION REDUCCION PLAZO
             else{
                 amortizacion.add("parcial_plazo");
-                amortizacion.add("AQUI PONER LA CANTIDAD DE CAPITAL");
+                amortizacion.add(cantidad_amortizada);
                 amortizacion.add(Integer.parseInt(edit_reduccion_plazo_meses.getText().toString()));
             }
         }
@@ -397,11 +401,63 @@ public class AmortizarAntes extends AppCompatActivity {
 
     private void registrar_amortizacion(int num_cuota, List<Object> amortizacion, double total_comision){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        Query query = db.collection("amortizaciones_anticipadas").whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", auth.getCurrentUser());
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
 
-        //FALTA REGISTRAR LA AMORTIZACION EN FIRESTORE Y METER LAS COMISIONES EN LA HIPOTECA EN FIRESTORE SI ES > 0
+        //ACTUALIZAR amortizaciones_anticipadas
 
+        Map<String, Object> nuevosDatos = new HashMap<>();
+        Map<String, Object> amortizaciones = new HashMap<>();
+        for (Integer clave : amortizaciones_hip.keySet()) {
+            List<Object> lista = (List<Object>) amortizaciones_hip.get(clave);
+            amortizaciones.put(String.valueOf(clave), lista);
+        }
+        amortizaciones.put(String.valueOf(num_cuota), amortizacion);
+        nuevosDatos.put("amortizaciones_anticipadas", amortizaciones);
+
+        // obtener una referencia a la colección
+        CollectionReference amortizacionesRef = db.collection("amortizaciones_anticipadas");
+
+        Query query = amortizacionesRef.whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+
+        // ejecutar la consulta
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        // actualizar el documento con los nuevos valores
+                        //LO ACTUALIZA MAL PORQUE DEBERIA DE UPDATEARNUEVOS DATOS ENTERO, PERO SI LO HAGO SE QUEDA EN UN BUCLE INFINITO NO SE POR QUE
+                        amortizacionesRef.document(document.getId()).update((Map<String, Object>) nuevosDatos.get("amortizaciones_anticipadas"));
+                    }
+                } else {
+                    Log.e("ERROR", " getting documents");
+                }
+            }
+        });
+
+        //ACTUALIZAR comisiones
+        Map<String, Object> nuevosDatos2 = new HashMap<>();
+        nuevosDatos2.put("totalGastos", total_comision);
+        CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+        Query query2 = hipotecasRef.whereEqualTo("nombre", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+        // ejecutar la consulta
+        query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document2 : task.getResult()) {
+                        // actualizar el documento con los nuevos valores
+                        hipotecasRef.document(document2.getId()).update(nuevosDatos2);
+                    }
+                } else {
+                    Log.e("ERROR", " getting documents");
+                }
+            }
+        });
+        Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
+        i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+        i.putExtra("hipoteca", hip);
+        startActivity(i);
     }
 
 }

@@ -1,8 +1,6 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,7 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 
 import es.MiHipotecaApp.TFG.R;
 
-public class NuevoAnioHipotecaFragment extends AppCompatDialogFragment {
+public class NuevaVinculacionAnualFragment extends AppCompatDialogFragment {
 
     private EditText mGastosEditText;
 

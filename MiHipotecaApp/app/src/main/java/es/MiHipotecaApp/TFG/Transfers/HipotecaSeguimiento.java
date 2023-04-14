@@ -1,5 +1,20 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,6 +42,10 @@ public class HipotecaSeguimiento implements Serializable {
     protected List<Double> arrayVinculacionesAnual;
     protected String idUsuario;
 
+    private boolean mapAMortizaciones;
+
+    private Map<Integer, List<Double>> amortizaciones_anticipadas;
+
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
     }
@@ -43,6 +62,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.totalGastos = totalGastos;
         this.arrayVinculacionesAnual = arrayVinculacionesAnual;
         this.banco_asociado = banco_asociado;
+        mapAMortizaciones = false;
     }
 
     //FUNCIONES
@@ -166,6 +186,17 @@ public class HipotecaSeguimiento implements Serializable {
         return numeroPagoActual;
     }
 
+    /** Devuelve la cantidad que el usuario deberá de amortizar en funcion de los meses pasados **/
+    public double getAmortizarAlReducirMeses(int meses_reducir,  HashMap<Integer, List<Object>> amortizaciones){
+        double cantAmortizar = 0;
+        int plazoReducido = getPlazoActual(amortizaciones) - meses_reducir;
+
+        for(int i = plazoReducido; i < plazoReducido + meses_reducir; i++){
+            cantAmortizar += getCapitalDeUnaCuota(i + 1);
+        }
+
+        return Math.round(cantAmortizar * 100.0) / 100.0;
+    }
 
     //FUNCIONES SOBREESCRITAS
     public double getCapitalPendienteTotalActual(int numero_pago){
@@ -176,7 +207,7 @@ public class HipotecaSeguimiento implements Serializable {
     public boolean siguienteCuotaRevision(){ return false; }
 
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){ return null; }
-
+    public double getCapitalDeUnaCuota(int numCuota){ return 0;}
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){ return null; }
 
     public double getPorcentajePorCuota(int numCuota){ return 0; }

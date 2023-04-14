@@ -1,7 +1,6 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -16,16 +15,12 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import com.anychart.APIlib;
 import com.anychart.AnyChart;
 import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
-import com.anychart.charts.Cartesian;
 import com.anychart.charts.Pie;
-import com.anychart.enums.LegendLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -49,7 +44,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -58,7 +52,7 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_gastos_totales;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_intereses_capital;
 
-public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements NuevoAnioHipotecaFragment.NuevoAnioHipotecaListener {
+public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements NuevaVinculacionAnualFragment.NuevoAnioHipotecaListener {
     private final String TAG = "VIS_HIP_ACTIVITY";
 
     private TextView nombre_hipoteca;
@@ -155,9 +149,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private void cogerAmortizaciones(){
 
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        CollectionReference amort_ref = db.collection("amortizaciones_anticipadas");
-        Query query = amort_ref.whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", auth.getCurrentUser().getUid());
+        FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        CollectionReference amortizacionesRef = db.collection("amortizaciones_anticipadas");
+
+        Query query = amortizacionesRef.whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -293,15 +288,14 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         fecha.setTime(hip.getFecha_inicio());
         int i = fecha.get(Calendar.DAY_OF_YEAR) + 1;
         int j = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-        if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1;
+        if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1; //comprueba si año bisiesto
         //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca
-        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0);
+        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0) + 1;
 
 
-        if(i == j && hip.getArrayVinculacionesAnual().size() < hip.getPlazo_anios()) {
-            NuevoAnioHipotecaFragment fragment = new NuevoAnioHipotecaFragment();
+        if(i == j && hip.getArrayVinculacionesAnual().size() < c) {
+            NuevaVinculacionAnualFragment fragment = new NuevaVinculacionAnualFragment();
             fragment.show(getSupportFragmentManager(), "NuevoAnioHipotecaFragment");
-            //actualizarNuevaVinculacionAnual(Double.parseDouble(getIntent().getStringExtra("vinculacionAnual")));
         }
 
         btn_cuadro_amortizacion.setOnClickListener(new View.OnClickListener() {
@@ -468,8 +462,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         // actualizar el documento con los nuevos valores
                         hipotecasRef.document(document.getId()).update(nuevosDatos);
                         Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.vinculaciones_actualizdas), Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(VisualizarHipotecaSeguimiento.this, PaginaPrincipal.class);
-                        startActivity(i);
+                        /*Intent i = new Intent(VisualizarHipotecaSeguimiento.this, PaginaPrincipal.class);
+                        startActivity(i);*/
                     }
                 } else {
                     Log.e("ERROR", " getting documents");

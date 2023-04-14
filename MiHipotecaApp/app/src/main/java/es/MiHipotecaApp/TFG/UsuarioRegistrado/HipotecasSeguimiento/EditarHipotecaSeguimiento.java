@@ -717,7 +717,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         }
 
         gastos_totales.setText(Double.toString(hip.getTotalGastos()));
-        vinculaciones.setText(Double.toString(hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
+        if(hip.getArrayVinculacionesAnual().size() > 0) vinculaciones.setText(Double.toString(hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
         nombre_hipoteca.setText(hip.getNombre());
 
     }
