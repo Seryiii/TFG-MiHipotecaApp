@@ -311,16 +311,25 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         btn_amortizar_antes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, AmortizarAntes.class);
-                i.putExtra("cuota_actual", cuotaFormateada);
-                i.putExtra("porcentaje_aplicado", porcentaje_aplicado);
-                i.putExtra("cuotas_pendientes", numero_cuotas_restantes);
-                i.putExtra("cantidad_pendiente", cantidad_pendiente);
-                i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
-                //Map<Integer, List<Object>>
-                i.putExtra("hipoteca", hip);
-                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
-                startActivity(i);
+
+                //Comprobar si la siguiente cuota es la ultima que no deje amortizar
+                if(hip.getNumeroCuotaActual() < hip.getPlazoActual((HashMap<Integer, List<Object>>) amortizaciones_anticipadas) - 1){
+                    //Comprobar si ya hay una amortización para la siguiente cuota
+                    if(amortizaciones_anticipadas.containsKey(hip.getNumeroCuotaActual() + 1)) Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.amortizacion_existente), Toast.LENGTH_LONG).show();
+                    else{
+                        Intent i = new Intent(VisualizarHipotecaSeguimiento.this, AmortizarAntes.class);
+                        i.putExtra("cuota_actual", cuotaFormateada);
+                        i.putExtra("porcentaje_aplicado", porcentaje_aplicado);
+                        i.putExtra("cuotas_pendientes", numero_cuotas_restantes);
+                        i.putExtra("cantidad_pendiente", cantidad_pendiente);
+                        i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
+                        //Map<Integer, List<Object>>
+                        i.putExtra("hipoteca", hip);
+                        i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                        startActivity(i);
+                    }
+                }else Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.no_puede_amortizar), Toast.LENGTH_LONG).show();
+
             }
         });
 

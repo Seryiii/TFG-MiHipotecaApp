@@ -154,7 +154,8 @@
     <string name="ahorro_mayor_80_por_ciento">La cantidad financiada por el banco no puede ser mayor al 80% del precio de la vivienda.</string>
     <string name="anios_menor_plazo">El campo duración no puede ser mayor o igual que el plazo de la hipoteca</string>
     <string name="meses_menor_plazo">Los meses de este campo pueden ser como maximo el numero de cuotas menos el ultimo año</string>
-
+    <string name="no_puede_amortizar">No se puede amortizar debido a que ya solo queda una cuota</string>
+    <string name="amortizacion_existente">Ya existe una amortización para la siguiente cuota</string>
 
     <!-- MENSAJES DE EXITO -->
     <string name="usuario_creado_exito">Usuario creado con éxito!</string>
@@ -164,6 +165,7 @@
     <string name="hipoteca_seguimiento_borrada_exito">Hipoteca borrada con éxito!</string>
     <string name="vinculaciones_actualizdas">Vinculaciones anuales añadidas con éxito!</string>
     <string name="hipoteca_seguimiento_editada_exito">Hipoteca editada con éxito!</string>
+    <string name="amortizacion_anticipada_exito">Amortización anticipada creada con éxito!</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>

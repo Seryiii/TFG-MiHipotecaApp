@@ -21,10 +21,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -85,6 +88,8 @@ public class AmortizarAntes extends AppCompatActivity {
     private String cuota_mensual_actual;
     private double plazo_actual;
     private double cantidad_amortizada;
+
+    private final String TAG = "AmortizarAntes";
 
 
 
@@ -405,55 +410,73 @@ public class AmortizarAntes extends AppCompatActivity {
 
         //ACTUALIZAR amortizaciones_anticipadas
 
-        Map<String, Object> nuevosDatos = new HashMap<>();
-        Map<String, Object> amortizaciones = new HashMap<>();
-        for (Integer clave : amortizaciones_hip.keySet()) {
-            List<Object> lista = (List<Object>) amortizaciones_hip.get(clave);
-            amortizaciones.put(String.valueOf(clave), lista);
-        }
-        amortizaciones.put(String.valueOf(num_cuota), amortizacion);
-        nuevosDatos.put("amortizaciones_anticipadas", amortizaciones);
+        CollectionReference amort_ref = db.collection("amortizaciones_anticipadas");
 
-        // obtener una referencia a la colección
-        CollectionReference amortizacionesRef = db.collection("amortizaciones_anticipadas");
-
-        Query query = amortizacionesRef.whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
-
-        // ejecutar la consulta
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        Query query = amort_ref.whereEqualTo("nombre_hipoteca", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+        query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document : task.getResult()) {
-                        // actualizar el documento con los nuevos valores
-                        //LO ACTUALIZA MAL PORQUE DEBERIA DE UPDATEARNUEVOS DATOS ENTERO, PERO SI LO HAGO SE QUEDA EN UN BUCLE INFINITO NO SE POR QUE
-                        amortizacionesRef.document(document.getId()).update((Map<String, Object>) nuevosDatos.get("amortizaciones_anticipadas"));
+            public void onSuccess(QuerySnapshot querySnapshot) {
+                if (!querySnapshot.isEmpty()) {
+                    DocumentSnapshot docSnapshot = querySnapshot.getDocuments().get(0);
+                    String docId = docSnapshot.getId();
+                    DocumentReference docRef = amort_ref.document(docId);
+
+                    Map<String, Object> nuevosDatos = new HashMap<>();
+                    Map<String, Object> amortizaciones = new HashMap<>();
+                    for (Integer clave : amortizaciones_hip.keySet()) {
+                        List<Object> lista = amortizaciones_hip.get(clave);
+                        amortizaciones.put(String.valueOf(clave), lista);
                     }
+                    amortizaciones.put(String.valueOf(num_cuota), amortizacion);
+                    nuevosDatos.put("amortizaciones_anticipadas", amortizaciones);
+
+                    docRef.update(nuevosDatos).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            // El documento se actualizó con éxito
+                            Toast.makeText(AmortizarAntes.this, getString(R.string.amortizacion_anticipada_exito), Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            // Ocurrió un error al actualizar el documento
+                            Log.e(TAG, "Error al actualizar amortizaciones");
+                        }
+                    });
                 } else {
-                    Log.e("ERROR", " getting documents");
+                    // No se encontraron documentos que cumplan con el criterio de búsqueda
                 }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                // Ocurrió un error al leer los documentos
             }
         });
 
         //ACTUALIZAR comisiones
-        Map<String, Object> nuevosDatos2 = new HashMap<>();
-        nuevosDatos2.put("totalGastos", total_comision);
-        CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
-        Query query2 = hipotecasRef.whereEqualTo("nombre", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
-        // ejecutar la consulta
-        query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    for (QueryDocumentSnapshot document2 : task.getResult()) {
-                        // actualizar el documento con los nuevos valores
-                        hipotecasRef.document(document2.getId()).update(nuevosDatos2);
+        //TODO HABRIA QUE SUMAR A TOTAL GASTOS TOTAL COMISION
+        if(total_comision > 0){
+            Map<String, Object> nuevosDatos2 = new HashMap<>();
+            nuevosDatos2.put("totalGastos", total_comision);
+            CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+            Query query2 = hipotecasRef.whereEqualTo("nombre", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+            // ejecutar la consulta
+            query2.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document2 : task.getResult()) {
+                            // actualizar el documento con los nuevos valores
+                            hipotecasRef.document(document2.getId()).update(nuevosDatos2);
+                        }
+                    } else {
+                        Log.e("ERROR", " getting documents");
                     }
-                } else {
-                    Log.e("ERROR", " getting documents");
                 }
-            }
-        });
+            });
+        }
+
         Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
         i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
         i.putExtra("hipoteca", hip);
