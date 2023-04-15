@@ -166,6 +166,7 @@
     <string name="vinculaciones_actualizdas">Vinculaciones anuales añadidas con éxito!</string>
     <string name="hipoteca_seguimiento_editada_exito">Hipoteca editada con éxito!</string>
     <string name="amortizacion_anticipada_exito">Amortización anticipada creada con éxito!</string>
+    <string name="usuario_borrado_exito">Usuario borrado con éxito!</string>
 
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>

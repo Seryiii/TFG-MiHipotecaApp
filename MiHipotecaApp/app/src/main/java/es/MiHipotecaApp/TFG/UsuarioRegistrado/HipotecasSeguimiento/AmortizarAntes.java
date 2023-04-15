@@ -172,7 +172,7 @@ public class AmortizarAntes extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
 
                 if(s.toString().equals("")) total_comision.setText("Comisión: 0€");
-                else total_comision.setText("Comisión: " + capital_pendiente_actual * Double.parseDouble(edit_comision.getText().toString()) + "€");
+                else total_comision.setText("Comisión: " + Math.round(capital_pendiente_actual * Double.parseDouble(edit_comision.getText().toString()) * 100.0) / 100.0 + "€");
 
             }
 
@@ -458,7 +458,7 @@ public class AmortizarAntes extends AppCompatActivity {
         //TODO HABRIA QUE SUMAR A TOTAL GASTOS TOTAL COMISION
         if(total_comision > 0){
             Map<String, Object> nuevosDatos2 = new HashMap<>();
-            nuevosDatos2.put("totalGastos", total_comision);
+            nuevosDatos2.put("totalGastos", hip.getTotalGastos() + total_comision);
             CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
             Query query2 = hipotecasRef.whereEqualTo("nombre", hip.getNombre()).whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
             // ejecutar la consulta

@@ -20,9 +20,12 @@ import androidx.appcompat.widget.PopupMenu;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -31,8 +34,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.IniciarSesion;
 import es.MiHipotecaApp.TFG.MainActivity;
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Usuario;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.EditarHipotecaSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 
 public class InfoPerfilUsuario extends Fragment {
@@ -82,7 +87,7 @@ public class InfoPerfilUsuario extends Fragment {
                         .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Eliminar usuario de la base de datos
+                                eliminarUsuario();
                                 //Redirigir a iniciar sesion
                             }
                         })
@@ -172,6 +177,41 @@ public class InfoPerfilUsuario extends Fragment {
                 imagen_perfil.setImageResource(R.drawable.avatar5);
         }
 
+    }
+
+    public void eliminarUsuario(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference hipotecasRef = db.collection("usuarios");
+        Query query = hipotecasRef.whereEqualTo("correo", firebaseAuth.getCurrentUser().getEmail());
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                        documentSnapshot.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        // Documento eliminado correctamente
+                                        //todo no funciona aun!!! HACER
+                                        Toast.makeText(getActivity(), getString(R.string.usuario_borrado_exito), Toast.LENGTH_LONG).show();
+                                        Intent intent = new Intent(getActivity(), MainActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                        startActivity(intent);
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        // Error al eliminar el documento
+                                    }
+                                });
+                    }
+                }
+            }
+        });
     }
 
 }

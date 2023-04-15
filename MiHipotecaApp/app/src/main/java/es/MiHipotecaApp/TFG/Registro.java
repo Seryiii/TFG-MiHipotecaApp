@@ -1,5 +1,6 @@
 package es.MiHipotecaApp.TFG;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -37,6 +38,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import es.MiHipotecaApp.TFG.Transfers.Usuario;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.EditarHipotecaSeguimiento;
 
 
 public class Registro extends AppCompatActivity {
@@ -138,6 +140,8 @@ public class Registro extends AppCompatActivity {
                                     public void onSuccess(DocumentReference documentReference) {
                                         Toast.makeText(Registro.this, getString(R.string.usuario_creado_exito), Toast.LENGTH_LONG).show();
                                         finish();
+                                        Intent i = new Intent(Registro.this, PaginaPrincipal.class);
+                                        startActivity(i);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                                     @Override
@@ -256,6 +260,7 @@ public class Registro extends AppCompatActivity {
                 Pattern pat = Pattern.compile("^(?=\\w*\\d)(?=\\w*[A-Z])(?=\\w*[a-z])\\S{8,15}$");
                 Matcher mat = pat.matcher(contra.getText().toString());
                 if(mat.matches()) return true;
+                else contra.setError("Tiene que introduciral menos una mayúscula, una minúscula y un número, y que tenga entre 8 y 15 caracteres");
             }else contra.setError(getString(R.string.contras_no_coinciden));
         }
         return false;

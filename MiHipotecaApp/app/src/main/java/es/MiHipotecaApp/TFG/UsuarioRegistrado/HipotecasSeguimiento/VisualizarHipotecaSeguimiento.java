@@ -284,19 +284,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     }
     private void eventos(){
 
-        Calendar fecha = Calendar.getInstance();
-        fecha.setTime(hip.getFecha_inicio());
-        int i = fecha.get(Calendar.DAY_OF_YEAR) + 1;
-        int j = Calendar.getInstance().get(Calendar.DAY_OF_YEAR);
-        if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1; //comprueba si año bisiesto
-        //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca
-        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0) + 1;
-
-
-        if(i == j && hip.getArrayVinculacionesAnual().size() < c) {
-            NuevaVinculacionAnualFragment fragment = new NuevaVinculacionAnualFragment();
-            fragment.show(getSupportFragmentManager(), "NuevoAnioHipotecaFragment");
-        }
+        compruebaSiVinculacionAnual();
 
         btn_cuadro_amortizacion.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -315,7 +303,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 //Comprobar si la siguiente cuota es la ultima que no deje amortizar
                 if(hip.getNumeroCuotaActual() < hip.getPlazoActual((HashMap<Integer, List<Object>>) amortizaciones_anticipadas) - 1){
                     //Comprobar si ya hay una amortización para la siguiente cuota
-                    if(amortizaciones_anticipadas.containsKey(hip.getNumeroCuotaActual() + 1)) Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.amortizacion_existente), Toast.LENGTH_LONG).show();
+                    if(amortizaciones_anticipadas.containsKey(hip.getNumeroCuotaActual() + 1)){
+                        Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.amortizacion_existente), Toast.LENGTH_LONG).show();
+                    }
                     else{
                         Intent i = new Intent(VisualizarHipotecaSeguimiento.this, AmortizarAntes.class);
                         i.putExtra("cuota_actual", cuotaFormateada);
@@ -480,6 +470,23 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             }
         });
 
+    }
+
+    /** Muestra un dialogo en el que el usuario tiene que introducir la nueva cantidad de viculaciones anuales
+        si es un nuevo año de hipoteca y el usuario no lo ha introducido aun **/
+    public void compruebaSiVinculacionAnual(){
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(hip.getFecha_inicio());
+        int i = fecha.get(Calendar.DAY_OF_YEAR) + 1; //dia de inicio de la hipoteca + 1
+        if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1; //comprueba si año bisiesto
+
+        //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca
+        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0) + 1;
+
+        if(i <= Calendar.getInstance().get(Calendar.DAY_OF_YEAR) && hip.getArrayVinculacionesAnual().size() < c) {
+            NuevaVinculacionAnualFragment fragment = new NuevaVinculacionAnualFragment();
+            fragment.show(getSupportFragmentManager(), "NuevoAnioHipotecaFragment");
+        }
     }
 
     /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
