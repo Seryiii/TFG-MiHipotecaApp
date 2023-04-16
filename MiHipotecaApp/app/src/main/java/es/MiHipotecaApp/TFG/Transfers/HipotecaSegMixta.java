@@ -146,7 +146,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
 
     /** Esta funcion devuelve el capital del numero de cuota pasado **/
     @Override
-    public double getCapitalDeUnaCuota(int numCuota){
+    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
         double porcentaje_aplicado = getPorcentajePorCuota(numCuota);
         double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
 

@@ -111,6 +111,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     }
 
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
+    //TODO FALTA REVISAR BIEN ESTA FUNCION, ES JODIDA MUY JODIDA
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){
         ArrayList<Double> valores = new ArrayList<>();
@@ -128,19 +129,20 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones);
         // Capital pendiente para diciembre del año anterior
         double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones);
-        double pagadoTotalAnual = (precio_vivienda - cantidad_abonada) - getDineroRestanteActual();
 
-        for (Integer clave : amortizaciones.keySet()) {
 
-        }
-        double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
-        double cuotaMensual = getCuotaMensual(porcentaje_fijo, capPdteCuota, getPlazoActual(amortizaciones) - numCuota);
+        double dineroRestanteAnterior  = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getDineroRestanteActual(cuotasPagadas - cuotasAnuales, amortizaciones) ;
+        // COGES LO QUE TE QUEDA POR PAGAR EN ENERO DEL SIGUIENTE AÑO
+        double dineroRestanteSiguiente = getDineroRestanteActual(cuotasPagadas + 1, amortizaciones);
+        double pagadoTotalAnual = dineroRestanteAnterior - dineroRestanteSiguiente;
 
-        //double cuotaMensual = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
+        double interesesAnteriores = cuotasAnuales < 12 ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales, amortizaciones);
+        double interesesSiguientes = getInteresesHastaNumPago(cuotasPagadas, amortizaciones);
+        double totalInteresesAnio = interesesAnteriores - interesesSiguientes;
 
-        valores.add(Math.round(cuotaMensual * cuotasAnuales * 100.0) / 100.0);
+        valores.add(Math.round(pagadoTotalAnual * 100.0) / 100.0);
         valores.add(Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0);
-        valores.add(getInteresesPlazo(capPdteAnterior, cuotasAnuales, porcentaje_fijo, cuotaMensual));
+        valores.add(totalInteresesAnio);
         valores.add(capPdteUltimo);
 
         return valores;

@@ -28,15 +28,27 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
     /** Esta funcion devuelve el capital pendiente total por amortizar**/
     @Override
-    public double getCapitalPendienteTotalActual(int numero_pago){
+    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         double cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazo_anios * 12);
         double cantidad_capital;
+        int plazoActual = plazo_anios * 12;
         int aux = numero_pago > duracion_primer_porcentaje_variable ? duracion_primer_porcentaje_variable : numero_pago;
         for (int i = 1; i <= aux; i++){
+            if(amortizaciones.containsKey(i)){
+                if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
+                }
+                else {
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    plazoActual -= (Integer) amortizaciones.get(i).get(2);
+                }
+            }
             cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, primer_porcentaje_variable);
             capital_pendiente = capital_pendiente - cantidad_capital;
-            Log.i("Pago " + i + ": ", "CANT PDTE: " + capital_pendiente + "     CAPITAL MENSUAL: " + cantidad_capital + "     CUOTA MENSUAL: " + cuota_mensual);
+
         }
 
         int j = aux;
@@ -44,8 +56,20 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         while(j < numero_pago){
             if(isRevision_anual()) revision = 12;
             double euribor = getEuriborPasado(j);
-            cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente, plazoActual - j);
             for(int h = 0; h < revision && j < numero_pago; h++){
+                if(amortizaciones.containsKey(j + h)){
+                    if(amortizaciones.get(j + h).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(j + h).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(j + h).get(1);
+                        cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
+                    }
+                    else {
+                        capital_pendiente -= (Double) amortizaciones.get(j + h).get(1);
+                        plazoActual -= (Integer) amortizaciones.get(j + h).get(2);
+                    }
+                }
+
                 cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_variable + euribor);
                 capital_pendiente = capital_pendiente - cantidad_capital;
                 j++;
@@ -55,15 +79,29 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         return Math.round(capital_pendiente * 100.0) / 100.0;
     }
 
+
     /** Esta funcion devuelve la cantidad de intereses hasta el numero de pago pasado**/
     @Override
-    public double getInteresesHastaNumPago(int numero_pago){
+    public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
         double intereses_totales = 0;
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         double cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazo_anios * 12);
         double cantidad_capital;
+        int plazoActual = plazo_anios * 12;
+
         int aux = numero_pago > duracion_primer_porcentaje_variable ? duracion_primer_porcentaje_variable : numero_pago;
         for (int i = 1; i <= aux; i++){
+            if(amortizaciones.containsKey(i)){
+                if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
+                }
+                else {
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    plazoActual -= (Integer) amortizaciones.get(i).get(2);
+                }
+            }
             intereses_totales += getInteresMensual(capital_pendiente, primer_porcentaje_variable);
             cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, primer_porcentaje_variable);
             capital_pendiente = capital_pendiente - cantidad_capital;
@@ -74,8 +112,20 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         while(j < numero_pago){
             if(isRevision_anual()) revision = 12;
             double euribor = getEuriborPasado(j);
-            cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente,  plazoActual - j);
             for(int h = 0; h < revision && j < numero_pago; h++){
+                if(amortizaciones.containsKey(j + h)){
+                    if(amortizaciones.get(j + h).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(j + h).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(j + h).get(1);
+                        cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
+                    }
+                    else {
+                        capital_pendiente -= (Double) amortizaciones.get(j + h).get(1);
+                        plazoActual -= (Integer) amortizaciones.get(j + h).get(2);
+                    }
+                }
+
                 intereses_totales += getInteresMensual(capital_pendiente, porcentaje_diferencial_variable + euribor);
                 cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_diferencial_variable + euribor);
                 capital_pendiente = capital_pendiente - cantidad_capital;
@@ -89,26 +139,59 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
      *  durante los años restantes. (Se utiliza el euribor del mes actual) **/
+
+    //TODO A PARTIR DE ESTA FUNCION Y VER SI CAMBIAR TOTALCAPITAL PENDIENTE POR SI PODEMOS PONER UN NUMERO DE CUOTA NO PAGADO
     @Override
     public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones){
 
         // Si estas en primer porcentaje, tienes que acabar la fase fija y luego estimar con el euribor actual
         // Si estas en la fase variable, simular lo que queda en funcion del euribor actual
 
-        double capital_pendiente = getCapitalPendienteTotalActual(numPago);
+        int cuotasRestantes = getPlazoActual(amortizaciones) - numPago;
+        double capital_pendiente = getCapitalPendienteTotalActual(numPago, amortizaciones);
         double porcentaje_aplicado  = numPago <= duracion_primer_porcentaje_variable ? primer_porcentaje_variable : getEuriborActual() + porcentaje_diferencial_variable;
-        double cuota_mensual = getCuotaMensual(porcentaje_aplicado, capital_pendiente, plazo_anios * 12 - getNumeroCuotaActual());
+        double cuota_mensual = getCuotaMensual(porcentaje_aplicado, capital_pendiente, cuotasRestantes);
+        int plazoActual = plazo_anios * 12;
+
+        //ESTAS EN EL PRIMER PORCENTAJE
         if(numPago <= duracion_primer_porcentaje_variable){
-            int aux = duracion_primer_porcentaje_variable - numPago;
+            //int aux = duracion_primer_porcentaje_variable - numPago;
             // se inicializa el dinero restante con lo que queda por pagar del primer porcentaje
-            double dinero_restante = cuota_mensual * aux;
-            double capital_pendiente_restante = getCapitalPendienteTotalActual(duracion_primer_porcentaje_variable);
+            // PUEDE HACER UNA AMORTIZACION EN LA PARTE FIJA
+            double dinero_pagado = 0;
+            for(int i = 1; i <= numPago; i++){
+                if(amortizaciones.containsKey(i)){
+                    if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                        cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
+                    }
+                    else {
+                        capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                        plazoActual -= (Integer) amortizaciones.get(i).get(2);
+                    }
+                }
+                dinero_pagado += cuota_mensual;
+            }
+
+            double dinero_restante = getCapitalPendienteTotalActual() + getInteresesHastaNumPago();
+            return dinero_restante - dinero_pagado;
+
+            double capital_pendiente_restante = getCapitalPendienteTotalActual(duracion_primer_porcentaje_variable, amortizaciones);
+
+
             // Sumar lo que queda con el euribor actual + diferencial
+
+
             cuota_mensual = getCuotaMensual(getEuriborActual() + porcentaje_diferencial_variable, capital_pendiente_restante, plazo_anios * 12 - duracion_primer_porcentaje_variable);
             dinero_restante = dinero_restante + (cuota_mensual * (plazo_anios * 12 - duracion_primer_porcentaje_variable));
             return dinero_restante;
         }
-        else return cuota_mensual * (plazo_anios * 12 - numPago);
+        else {
+            //En este caso vamos por un numpago mayor al porcentajefijo
+
+            //return cuota_mensual * (plazo_anios * 12 - numPago);
+        }
     }
 
     /** Esta funcion devuelve si en el siguiente pago toca revision **/
@@ -148,9 +231,9 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
     /** Esta funcion devuelve el capital del numero de cuota pasado **/
     @Override
-    public double getCapitalDeUnaCuota(int numCuota){
+    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
         double porcentaje_aplicado = getPorcentajePorCuota(numCuota);
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
+        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
 
         double cuota   = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota + 1);
         double capitalCuota = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
@@ -189,12 +272,6 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         return valores;
     }
 
-    /** Esta funcion devuelve cuantos meses quedan para la siguiente revision **/
-    /*@Override
-    public int mesesParaSiguienteRevision(int numPago){
-        if (revision_anual) return numPago % 12;
-        else                return numPago % 6;
-    }*/
 
 
     /** Getters y Setters*/
