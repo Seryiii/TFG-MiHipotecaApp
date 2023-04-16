@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializable {
@@ -87,7 +88,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
      *  durante los años restantes. (Se utiliza el euribor del mes actual) **/
     @Override
-    public double getDineroRestanteActual(int numPago){
+    public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones){
 
         // Si estas en la fase fija, tienes que acabar la fase fija y luego estimar con el euribor actual
         // Si estas en la fase variable, simular lo que queda en funcion del euribor actual
@@ -187,11 +188,11 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
     }
 
     /** Esta funcion devuelve cuantos meses quedan para la siguiente revision **/
-    @Override
+   /* @Override
     public int mesesParaSiguienteRevision(int numPago){
         if (revision_anual) return numPago % 12;
         else                return numPago % 6;
-    }
+    }*/
 
     public int getAnios_fija_mixta() {
         return anios_fija_mixta;

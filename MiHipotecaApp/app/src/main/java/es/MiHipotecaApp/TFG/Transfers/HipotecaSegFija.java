@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable {
@@ -18,78 +19,92 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     public HipotecaSegFija(String nombre, String comunidad_autonoma, String tipo_vivienda, String antiguedad_vivienda, double precio_vivienda, double cantidad_abonada, int plazo_anios, Date fecha_inicio, String tipo_hipoteca, double totalGastos, List<Double> arrayVinculacionesAnual, String banco_asociado, double porcentaje_fijo) {
         super(nombre, comunidad_autonoma, tipo_vivienda, antiguedad_vivienda, precio_vivienda, cantidad_abonada, plazo_anios, fecha_inicio, tipo_hipoteca, totalGastos, arrayVinculacionesAnual, banco_asociado);
         this.porcentaje_fijo = porcentaje_fijo;
-        //obtenerCuotaMensual();
-    }
-
-    /** Esta funcion devuelve el capital y los intereses pagados hasta el momento actual**/
-    @Override
-    public double getDineroAportadoActual(int numPago){
-        return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12) * numPago;
     }
 
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar **/
     @Override
-    public double getDineroRestanteActual(int numPago){
-        return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12)*(plazo_anios*12 - numPago);
+    public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones){
+
+        int cuotasRestantes = getPlazoActual(amortizaciones) - numPago;
+        double capPendiente = getCapitalPendienteTotalActual(numPago, amortizaciones);
+        return getCuotaMensual(porcentaje_fijo, capPendiente, getPlazoActual(amortizaciones)) * cuotasRestantes;
     }
 
     /** Esta funcion devuelve el capital pendiente total por amortizar**/
     @Override
-    public double getCapitalPendienteTotalActual(int numero_pago){
+    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
         double capital_pendiente = precio_vivienda - cantidad_abonada;
-        double cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazo_anios * 12);
+        int plazoActual = plazo_anios * 12;
+        double cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual);
+
         for (int i = 1; i <= numero_pago; i++){
+            if(amortizaciones.containsKey(i)){
+                if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual);
+                }
+                else {
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    plazoActual -= (Integer) amortizaciones.get(i).get(2);
+                }
+            }
             double cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo);
             capital_pendiente = capital_pendiente - cantidad_capital;
         }
+
         return Math.round(capital_pendiente * 100.0) / 100.0;
     }
 
-    /** Revisar esta funcion, creo que esta mal*/
+    /** Devuelve los intereses hasta el numero de pago pasado por parametro **/
     @Override
-    public double getInteresesHastaNumPago(int num_pago) {
+    public double getInteresesHastaNumPago(int num_pago, HashMap<Integer, List<Object>> amortizaciones) {
         double interesesTotales = 0;
         double capPendiente = precio_vivienda - cantidad_abonada;
+        int plazoActual = plazo_anios * 12;
+        double cuota_mensual = getCuotaMensual(getPorcentaje_fijo(), capPendiente, plazoActual);
 
         for (int i = 1; i <= num_pago; i++) {
+            if(amortizaciones.containsKey(i)){
+                if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                    capPendiente -= (Double) amortizaciones.get(i).get(1);
+                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capPendiente, plazoActual);
+                }
+                else {
+                    capPendiente -= (Double) amortizaciones.get(i).get(1);
+                    plazoActual -= (Integer) amortizaciones.get(i).get(2);
+                }
+            }
             interesesTotales += getInteresMensual(capPendiente, porcentaje_fijo);
-            capPendiente -= (getCuotaMensual(getPorcentaje_fijo(), precio_vivienda - cantidad_abonada, plazo_anios * 12) - getInteresMensual(capPendiente, getPorcentaje_fijo()));
+            capPendiente -= (cuota_mensual - getInteresMensual(capPendiente, getPorcentaje_fijo()));
         }
 
         return Math.round(interesesTotales * 100.0) / 100.0;
     }
 
-    /** Cuotas mensuales + Gastos asociados + Vinculaciones **/
-    @Override
-    public double getGastosTotalesHipoteca(){
-        double totalVinc = 0;
-        for(int i = 0; i < arrayVinculacionesAnual.size(); i++){
-            totalVinc += arrayVinculacionesAnual.get(i);
-        }
-        return getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12) * plazo_anios*12 + totalVinc + totalGastos;
-    }
-
     /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/
     @Override
-    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
         ArrayList<Double> valores = new ArrayList<>();
-        double cuota   = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
-        double capPdteCuota = getCapitalPendienteTotalActual(numCuota);
+        double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
+        double cuota        = getCuotaMensual(porcentaje_fijo, capPdteCuota, getPlazoActual(amortizaciones) - numCuota);
+        double capPdte      = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
 
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
         valores.add(cuota);
         valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo));
         valores.add(getInteresMensual(capPdte, porcentaje_fijo));
         valores.add(capPdteCuota);
+
         return valores;
     }
 
     /** Esta funcion devuelve el capital del numero de cuota pasado **/
     @Override
-    public double getCapitalDeUnaCuota(int numCuota){
-        double cuota   = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
-
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1);
+    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
+        double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
+        double cuota        = getCuotaMensual(porcentaje_fijo, capPdteCuota, getPlazoActual(amortizaciones) - numCuota);
+        double capPdte      = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
         double capitalCuota = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
 
         return capitalCuota;
@@ -97,22 +112,31 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
     @Override
-    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){
         ArrayList<Double> valores = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha_inicio);
         int cuotasAnuales;
+
         //si es el primer año de hipoteca
         if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
-        else if(calendar.get(Calendar.YEAR) + plazo_anios == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
+        else if(calendar.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
         else cuotasAnuales = 12;
         int cuotasPagadas = num_anio > 1 ? (num_anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
+
         // Capital pendiente para diciembre de este año
-        double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);
+        double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones);
         // Capital pendiente para diciembre del año anterior
-        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
-        //double capPdteAnterior = getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
-        double cuotaMensual = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
+        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones);
+        double pagadoTotalAnual = (precio_vivienda - cantidad_abonada) - getDineroRestanteActual();
+
+        for (Integer clave : amortizaciones.keySet()) {
+
+        }
+        double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
+        double cuotaMensual = getCuotaMensual(porcentaje_fijo, capPdteCuota, getPlazoActual(amortizaciones) - numCuota);
+
+        //double cuotaMensual = getCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada, plazo_anios * 12);
 
         valores.add(Math.round(cuotaMensual * cuotasAnuales * 100.0) / 100.0);
         valores.add(Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0);

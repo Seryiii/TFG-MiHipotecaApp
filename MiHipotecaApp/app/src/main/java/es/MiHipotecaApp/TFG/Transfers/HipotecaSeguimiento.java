@@ -71,12 +71,14 @@ public class HipotecaSeguimiento implements Serializable {
      *  anticapadas realizadas (afectarían las parciales reduciendo el plazo solo) **/
     public int getPlazoActual(HashMap<Integer, List<Object>> amortizaciones){
         int plazoTotalActual = plazo_anios * 12;
-        int cuotaActual = getNumeroCuotaActual();
+        int cuotaActual = getNumeroCuotaActual(amortizaciones);
+
         for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
             if(entry.getKey() < cuotaActual && entry.getValue().get(0).equals("parcial_plazo")){
                 plazoTotalActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
             }
         }
+
         return plazoTotalActual;
     }
 
@@ -103,12 +105,6 @@ public class HipotecaSeguimiento implements Serializable {
         return Math.round(capitalAmortizadoMensual * 100.0) / 100.0;
     }
 
-    /** Funcion que devuelve el interes pagado de un determinado numero de pago **/
-    /*public double calcularInteresMensualConNumeroMes(int numPago){
-        double capitalPendiente = super.obtenerCuotaMensual(porcentaje_fijo, precio_vivienda - cantidad_abonada)  * numPago; //MAAAAAL
-        return capitalPendiente * (porcentaje_fijo / 100) / 12;
-    }*/
-
     /** Esta funcion devuelve los intereses en un plazo pasandole el capital pendiente, el numero de cuotas, y el
      *  porcentaje aplicado**/
     public double getInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado, double couta_mensual){
@@ -123,33 +119,36 @@ public class HipotecaSeguimiento implements Serializable {
     }
 
     /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
-    public ArrayList<Integer> getAniosMesesRestantes(){
-
+    public ArrayList<Integer> getAniosMesesRestantes(HashMap<Integer, List<Object>> amortizaciones){
         ArrayList<Integer> anios_meses = new ArrayList<>();
-        int cuotasRestantes = (plazo_anios * 12) - getNumeroCuotaActual();
+
+        int cuotasRestantes = getPlazoActual(amortizaciones) - getNumeroCuotaActual(amortizaciones);
         int anios = cuotasRestantes / 12;
         int meses = cuotasRestantes % 12;
         anios_meses.add(anios);
         anios_meses.add(meses);
+
         return anios_meses;
     }
 
     public String getNombreMesActual(){
         Calendar fechaActual = Calendar.getInstance();
         Calendar inicio = Calendar.getInstance();
+
         inicio.setTime(fecha_inicio);
         //Comprobar si ya se ha pagado
         if (fechaActual.get(Calendar.DAY_OF_MONTH) > inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
         String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
+
         return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
     }
 
     /** Devuelve el numero de cuota por el que va actualmente la hipoteca [1 - plazo_anios * 12 ] **/
-    public int getNumeroCuotaActual(){
+    public int getNumeroCuotaActual(HashMap<Integer, List<Object>> amortizaciones){
         Calendar inicio = Calendar.getInstance();
         inicio.setTime(fecha_inicio);
-        // Dia actual
-        Calendar actual = Calendar.getInstance();
+        Calendar actual = Calendar.getInstance(); // Dia actual
+
         // En caso de que todavia no haya empezado el seguimiento de la hipoteca
         if(actual.compareTo(inicio) < 0) return 0;
         int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
@@ -159,9 +158,9 @@ public class HipotecaSeguimiento implements Serializable {
         if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
         //else return numeroPagoActual + 1;
         // Fin de hipoteca
-        if (numeroPagoActual >= plazo_anios * 12) numeroPagoActual = plazo_anios * 12;
-        return numeroPagoActual;
+        if (numeroPagoActual >= getPlazoActual(amortizaciones)) numeroPagoActual = getPlazoActual(amortizaciones);
 
+        return numeroPagoActual;
     }
 
     /** Funcion que devuelve el numero de cuota de la hipoteca en enero del anio pasado por parametros **/
@@ -180,35 +179,33 @@ public class HipotecaSeguimiento implements Serializable {
 
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(cal.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
-        // Fin de hipoteca
-        //if (numeroPagoActual > plazo_anios * 12) numeroPagoActual = plazo_anios * 12;
 
         return numeroPagoActual;
     }
 
     /** Devuelve la cantidad que el usuario deberá de amortizar en funcion de los meses pasados **/
-    public double getAmortizarAlReducirMeses(int meses_reducir,  HashMap<Integer, List<Object>> amortizaciones){
+    public double getAmortizarAlReducirMeses(int meses_reducir, HashMap<Integer, List<Object>> amortizaciones){
         double cantAmortizar = 0;
         int plazoReducido = getPlazoActual(amortizaciones) - meses_reducir;
 
         for(int i = plazoReducido; i < plazoReducido + meses_reducir; i++){
-            cantAmortizar += getCapitalDeUnaCuota(i + 1);
+            cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones);
         }
 
         return Math.round(cantAmortizar * 100.0) / 100.0;
     }
 
     //FUNCIONES SOBREESCRITAS
-    public double getCapitalPendienteTotalActual(int numero_pago){
+    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
         return 0;
     }
 
-    public double getInteresesHastaNumPago(int numero_pago){ return 0; }
+    public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){ return 0; }
     public boolean siguienteCuotaRevision(){ return false; }
 
-    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota){ return null; }
-    public double getCapitalDeUnaCuota(int numCuota){ return 0;}
-    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio){ return null; }
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return null; }
+    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0;}
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){ return null; }
 
     public double getPorcentajePorCuota(int numCuota){ return 0; }
 
@@ -237,7 +234,7 @@ public class HipotecaSeguimiento implements Serializable {
         return 0;
     }
 
-    public int mesesParaSiguienteRevision(int numPago){ return 0; }
+    //public int mesesParaSiguienteRevision(int numPago){ return 0; }
 
 
 
@@ -347,12 +344,7 @@ public class HipotecaSeguimiento implements Serializable {
         this.banco_asociado = banco_asociado;
     }
 
-    public double getDineroAportadoActual(int i) { return 0;}
-
-    public double getDineroRestanteActual(int i) { return 0;}
-
-    public double getGastosTotalesHipoteca() { return 0;}
-
+    public double getDineroRestanteActual(int i, HashMap<Integer, List<Object>> amortizaciones) { return 0;}
 
 
     /** FUNCIONES DE PRUEBA PARA HACER MAS FUNCIONALIDADES, CAMBIAR POR WEB SCRAPING O SIMILARES*/

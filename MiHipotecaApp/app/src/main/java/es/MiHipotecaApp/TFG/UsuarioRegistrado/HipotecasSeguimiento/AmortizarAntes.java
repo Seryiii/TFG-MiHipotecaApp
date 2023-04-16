@@ -102,7 +102,7 @@ public class AmortizarAntes extends AppCompatActivity {
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
         initUI();
 
-        capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual());
+        capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_hip), amortizaciones_hip);
         cuota_mensual_actual = getIntent().getStringExtra("cuota_actual");
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
         plazo_actual = hip.getPlazoActual(amortizaciones_hip);
@@ -379,7 +379,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private void amortizar(){
 
         double total_comision = check_comision.isChecked() ? capital_pendiente_actual * Double.parseDouble(edit_comision.getText().toString()) : 0;
-        int num_cuota_amortizacion = hip.getNumeroCuotaActual() + 1;
+        int num_cuota_amortizacion = hip.getNumeroCuotaActual(amortizaciones_hip) + 1;
         List<Object> amortizacion = new ArrayList<>();
         //AMORTIZACION ANTICIPADA TOTAL
         if(check_amort_total.isChecked()){
@@ -455,7 +455,6 @@ public class AmortizarAntes extends AppCompatActivity {
         });
 
         //ACTUALIZAR comisiones
-        //TODO HABRIA QUE SUMAR A TOTAL GASTOS TOTAL COMISION
         if(total_comision > 0){
             Map<String, Object> nuevosDatos2 = new HashMap<>();
             nuevosDatos2.put("totalGastos", hip.getTotalGastos() + total_comision);
@@ -470,17 +469,17 @@ public class AmortizarAntes extends AppCompatActivity {
                             // actualizar el documento con los nuevos valores
                             hipotecasRef.document(document2.getId()).update(nuevosDatos2);
                         }
+
+                        Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
+                        i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                        i.putExtra("hipoteca", hip);
+                        startActivity(i);
                     } else {
                         Log.e("ERROR", " getting documents");
                     }
                 }
             });
         }
-
-        Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
-        i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
-        i.putExtra("hipoteca", hip);
-        startActivity(i);
     }
 
 }
