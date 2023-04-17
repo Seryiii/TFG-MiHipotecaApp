@@ -3,9 +3,14 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
+import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -37,9 +42,27 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
 
     @Override
     public void onBindViewHolder(@NonNull AdaptadorHipotecasSeguimiento.ViewHolderHipotecasSeguimiento holder, int position) {
-        holder.tituloHipoteca.setText(hipotecasSeg.get(position).getNombre());
-        if(position == hipotecasSeg.size() - 1) holder.fotoHipoteca.setImageResource(R.drawable.boton_anadir_hipoteca_seg);
-        else holder.fotoHipoteca.setImageResource(R.drawable.hipoteca_icono);
+        if(position == hipotecasSeg.size() - 1) {
+            holder.fotoHipoteca.setImageResource(R.drawable.boton_anadir_hipoteca_seg);
+            holder.grid_info_hip.setVisibility(View.GONE);
+            holder.titulo_tarjeta_hipoteca.setText("Añadir hipoteca nueva");
+            holder.cuotas_restantes.setVisibility(View.GONE);
+            holder.dinero_pagado.setVisibility(View.GONE);
+            holder.tipo_hipoteca.setVisibility(View.GONE);
+            holder.star_hip.setVisibility(View.GONE);
+
+        }
+        else {
+            holder.tituloHipoteca.setText(hipotecasSeg.get(position).getNombre());
+            String resourceName = ponerLogoBanco(hipotecasSeg.get(position).getBanco_asociado());
+            int resId = holder.itemView.getContext().getResources().getIdentifier(resourceName, "drawable", holder.itemView.getContext().getPackageName());
+            holder.fotoHipoteca.setImageResource(resId);
+            int numPago = 0;
+            //holder.cuotas_restantes.setText(hipotecasSeg.get(position).getNumeroCuotaActual(null) + "/" + hipotecasSeg.get(position).getPlazoActual(null));
+            //holder.dinero_pagado.setText((hipotecasSeg.get(position).getPrecio_vivienda() - hipotecasSeg.get(position).getCantidad_abonada()) - hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null);
+            holder.dinero_pendiente.setText(Double.toString(hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null)));
+            holder.tipo_hipoteca.setText("Tipo de hipoteca: " + hipotecasSeg.get(position).getTipo_hipoteca());
+        }
 
     }
 
@@ -63,15 +86,75 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
         this.hipotecasSeg = hipotecasSeg;
     }
 
+    private String ponerLogoBanco(String banco){
+        String banco_logo = "";
+        switch (banco){
+            case "ING":
+                banco_logo = "logo_ing";
+                break;
+            case "SANTANDER":
+                banco_logo = "logo_santander";
+                break;
+            case "BBVA":
+                banco_logo = "logo_bbva";
+                break;
+            case "CAIXABANK":
+                banco_logo = "logo_caixabank";
+                break;
+            case "BANKINTER":
+                banco_logo = "logo_bankinter";
+                break;
+            case "EVO BANCO":
+                banco_logo = "logo_evo_banco";
+                break;
+            case "SABADELL":
+                banco_logo = "logo_sabadell";
+                break;
+            case "UNICAJA":
+                banco_logo = "logo_unicaja";
+                break;
+            case "DEUTSCHE BANK":
+                banco_logo = "logo_deutsche_bank";
+                break;
+            case "OPEN BANK":
+                banco_logo = "logo_open_bank";
+                break;
+            case "KUTXA BANK":
+                banco_logo = "logo_kutxa_bank";
+                break;
+            case "IBERCAJA":
+                banco_logo = "logo_ibercaja";
+                break;
+            case "ABANCA":
+                banco_logo = "logo_abanca";
+                break;
+        }
+        return banco_logo;
+    }
     public class ViewHolderHipotecasSeguimiento extends RecyclerView.ViewHolder{
 
         TextView tituloHipoteca;
-        CircleImageView fotoHipoteca;
+        ImageView fotoHipoteca;
+        GridLayout grid_info_hip;
+        TextView titulo_tarjeta_hipoteca;
+        TextView cuotas_restantes;
+        TextView dinero_pagado;
+        TextView dinero_pendiente;
+        TextView tipo_hipoteca;
+        ImageView star_hip;
 
         public ViewHolderHipotecasSeguimiento(@NonNull View itemView) {
             super(itemView);
             tituloHipoteca = itemView.findViewById(R.id.titulo_tarjeta_hipoteca);
-            fotoHipoteca   = itemView.findViewById(R.id.foto_tarjeta_hipoteca);
+            fotoHipoteca   = itemView.findViewById(R.id.logo_banco_tarjeta);
+            grid_info_hip = itemView.findViewById(R.id.grid_info_hip);
+            titulo_tarjeta_hipoteca = itemView.findViewById(R.id.titulo_tarjeta_hipoteca);
+            cuotas_restantes = itemView.findViewById(R.id.cuotas_restantes);
+            dinero_pagado = itemView.findViewById(R.id.dinero_pagado);
+            dinero_pendiente = itemView.findViewById(R.id.dinero_pendiente);
+            tipo_hipoteca = itemView.findViewById(R.id.tipo_hipoteca);
+            star_hip = itemView.findViewById(R.id.star_hip);
+
         }
     }
 }

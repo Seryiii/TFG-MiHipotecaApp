@@ -67,8 +67,8 @@ public class TusHipotecas extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
 
         imagen_perfil = view.findViewById(R.id.foto_perfil_pag_principal);
-        recyclerHipotecas.addItemDecoration(new HorizontalSpaceItemDecoration(40));
-        recyclerHipotecas.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.HORIZONTAL,false));
+        recyclerHipotecas.addItemDecoration(new VerticalSpaceItemDecoration(40));
+        recyclerHipotecas.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL,false));
         listaHipotecasSeg = new ArrayList<>();
         adapter=new AdaptadorHipotecasSeguimiento(listaHipotecasSeg);
         cargarHipotecasUsuario();
