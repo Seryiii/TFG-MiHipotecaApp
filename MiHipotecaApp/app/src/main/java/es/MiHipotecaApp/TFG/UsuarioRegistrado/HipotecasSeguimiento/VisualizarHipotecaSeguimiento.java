@@ -221,7 +221,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         }
 
-        if (hip.siguienteCuotaRevision()) info_cuota.setVisibility(View.VISIBLE);
+        if (hip.siguienteCuotaRevision(amortizaciones_anticipadas)) info_cuota.setVisibility(View.VISIBLE);
 
         if(anios_meses.get(0) <= 0 && anios_meses.get(1) <= 0){
             numero_cuotas_restantes = 0;
@@ -292,6 +292,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 Intent i = new Intent(VisualizarHipotecaSeguimiento.this, Cuadro_amortizacion.class);
                 i.putExtra("hipoteca", hip);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
                 startActivity(i);
             }
         });

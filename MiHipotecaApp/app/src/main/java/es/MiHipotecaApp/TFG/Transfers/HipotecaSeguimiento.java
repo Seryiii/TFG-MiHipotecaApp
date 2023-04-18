@@ -42,9 +42,7 @@ public class HipotecaSeguimiento implements Serializable {
     protected List<Double> arrayVinculacionesAnual;
     protected String idUsuario;
 
-    private boolean mapAMortizaciones;
 
-    private Map<Integer, List<Double>> amortizaciones_anticipadas;
 
     public HipotecaSeguimiento(String nombre) {
         this.nombre = nombre;
@@ -62,7 +60,6 @@ public class HipotecaSeguimiento implements Serializable {
         this.totalGastos = totalGastos;
         this.arrayVinculacionesAnual = arrayVinculacionesAnual;
         this.banco_asociado = banco_asociado;
-        mapAMortizaciones = false;
     }
 
     //FUNCIONES
@@ -103,19 +100,6 @@ public class HipotecaSeguimiento implements Serializable {
     public double getCapitalAmortizadoMensual(double cuota_mensual, double capitalPendiente, double porcentaje_aplicado){
         double capitalAmortizadoMensual = cuota_mensual - getInteresMensual(capitalPendiente, porcentaje_aplicado);
         return Math.round(capitalAmortizadoMensual * 100.0) / 100.0;
-    }
-
-    /** Esta funcion devuelve los intereses en un plazo pasandole el capital pendiente, el numero de cuotas, y el
-     *  porcentaje aplicado**/
-    public double getInteresesPlazo(double capital_pendiente, int numeroCuotas, double porcentaje_aplicado, double couta_mensual){
-        double interesesTotales = 0;
-
-        for(int i = 0; i < numeroCuotas; i++){
-            interesesTotales += getInteresMensual(capital_pendiente, porcentaje_aplicado);
-            capital_pendiente -= couta_mensual - getInteresMensual(capital_pendiente, porcentaje_aplicado);
-        }
-
-        return Math.round(interesesTotales * 100.0) / 100.0;
     }
 
     /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
@@ -201,7 +185,7 @@ public class HipotecaSeguimiento implements Serializable {
     }
 
     public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){ return 0; }
-    public boolean siguienteCuotaRevision(){ return false; }
+    public boolean siguienteCuotaRevision(HashMap<Integer, List<Object>> amortizaciones){ return false; }
 
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return null; }
     public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0;}
@@ -233,10 +217,6 @@ public class HipotecaSeguimiento implements Serializable {
     public double getPorcentaje_diferencial_mixta() {
         return 0;
     }
-
-    //public int mesesParaSiguienteRevision(int numPago){ return 0; }
-
-
 
     //GETTERS
     public String getNombre() {

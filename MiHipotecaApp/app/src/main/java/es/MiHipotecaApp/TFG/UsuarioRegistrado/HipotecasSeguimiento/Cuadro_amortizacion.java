@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.List;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
@@ -39,6 +41,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private View primeraColumna1;
     private View primeraColumna2;
     private boolean primeraTablaVisible;
+
+    private HashMap<Integer, List<Object>> amortizaciones_hip;
 
 
 
@@ -67,7 +71,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
 
-
+        amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(hip.getFecha_inicio());
         /** Da valor al TextView del año mostrado en el calendario, si la hipoteca ya ha empezado, muestra el año actual
@@ -113,7 +117,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
 
                 // CUOTA, CAPITAL, INTERESES, CAPITAL PDTE
-                ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i);
+                ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i, amortizaciones_hip);
 
                 TextView cuota = new TextView(this);
                 cuota.setText(Double.toString(valores.get(0)));
@@ -164,7 +168,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
 
             // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i);
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
 
             TextView totalAnual = new TextView(this);
             totalAnual.setText(Double.toString(valores.get(0)));

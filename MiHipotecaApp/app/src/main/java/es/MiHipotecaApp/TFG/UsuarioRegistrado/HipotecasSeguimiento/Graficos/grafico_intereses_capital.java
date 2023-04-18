@@ -16,6 +16,7 @@ import com.anychart.enums.LegendLayout;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -32,6 +33,8 @@ public class grafico_intereses_capital extends AppCompatActivity {
     private HipotecaSeguimiento hip;
     private CircleImageView closeIcon;
 
+    private HashMap<Integer, List<Object>> amortizaciones_hip;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+        amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
 
         closeIcon = findViewById(R.id.close_icon_graf_int);
     }
@@ -62,7 +66,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
 
 
         for(int i = 1; i <= hip.getPlazo_anios(); i++){
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i);
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
 
             capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(1)));
             interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(2)));
