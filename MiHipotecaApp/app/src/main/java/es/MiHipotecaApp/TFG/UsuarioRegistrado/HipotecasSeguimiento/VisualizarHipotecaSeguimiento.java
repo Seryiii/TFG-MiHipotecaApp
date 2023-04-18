@@ -493,11 +493,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1; //comprueba si año bisiesto
 
         //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca
-        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0) + 1;
+        int c = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0);
 
         if(i <= Calendar.getInstance().get(Calendar.DAY_OF_YEAR) && hip.getArrayVinculacionesAnual().size() < c) {
             NuevaVinculacionAnualFragment fragment = new NuevaVinculacionAnualFragment();
-            fragment.show(getSupportFragmentManager(), "NuevoAnioHipotecaFragment");
+            fragment.show(getSupportFragmentManager(), "NuevaVinculacionAnualFragment");
         }
     }
 

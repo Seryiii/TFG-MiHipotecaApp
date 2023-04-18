@@ -185,7 +185,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         ArrayList<Double> valores = new ArrayList<>();
         double porcentaje_aplicado = getPorcentajePorCuota(numCuota);
 
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
+        double capPdte = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
 
         double capitalPdte = getCapitalPendienteTotalActual(numCuota, amortizaciones);
         double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota + 1);

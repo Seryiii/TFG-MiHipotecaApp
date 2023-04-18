@@ -190,7 +190,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         ArrayList<Double> valores = new ArrayList<>();
 
         double porcentaje_aplicado = getPorcentajePorCuota(numCuota);
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
+        double capPdte = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
         double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , getPlazoActual(amortizaciones)  - numCuota + 1);
         valores.add(cuota);
         valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado));

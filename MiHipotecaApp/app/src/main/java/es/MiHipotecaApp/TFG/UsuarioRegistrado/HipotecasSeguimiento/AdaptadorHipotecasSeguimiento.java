@@ -49,7 +49,6 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
             holder.cuotas_restantes.setVisibility(View.GONE);
             holder.dinero_pagado.setVisibility(View.GONE);
             holder.tipo_hipoteca.setVisibility(View.GONE);
-            holder.star_hip.setVisibility(View.GONE);
 
         }
         else {
@@ -61,7 +60,7 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
             //holder.cuotas_restantes.setText(hipotecasSeg.get(position).getNumeroCuotaActual(null) + "/" + hipotecasSeg.get(position).getPlazoActual(null));
             //holder.dinero_pagado.setText((hipotecasSeg.get(position).getPrecio_vivienda() - hipotecasSeg.get(position).getCantidad_abonada()) - hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null);
             holder.dinero_pendiente.setText(Double.toString(hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null)));
-            holder.tipo_hipoteca.setText("Tipo de hipoteca: " + hipotecasSeg.get(position).getTipo_hipoteca());
+            holder.tipo_hipoteca.setText("Tipo: " + hipotecasSeg.get(position).getTipo_hipoteca());
         }
 
     }
@@ -141,7 +140,6 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
         TextView dinero_pagado;
         TextView dinero_pendiente;
         TextView tipo_hipoteca;
-        ImageView star_hip;
 
         public ViewHolderHipotecasSeguimiento(@NonNull View itemView) {
             super(itemView);
@@ -153,7 +151,6 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
             dinero_pagado = itemView.findViewById(R.id.dinero_pagado);
             dinero_pendiente = itemView.findViewById(R.id.dinero_pendiente);
             tipo_hipoteca = itemView.findViewById(R.id.tipo_hipoteca);
-            star_hip = itemView.findViewById(R.id.star_hip);
 
         }
     }

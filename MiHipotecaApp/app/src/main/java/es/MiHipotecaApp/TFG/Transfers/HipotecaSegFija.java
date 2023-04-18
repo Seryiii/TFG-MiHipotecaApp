@@ -89,7 +89,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         ArrayList<Double> valores = new ArrayList<>();
         double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
         double cuota        = getCuotaMensual(porcentaje_fijo, capPdteCuota, getPlazoActual(amortizaciones) - numCuota);
-        double capPdte      = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
+        double capPdte      = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota, amortizaciones);
 
         valores.add(cuota);
         valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo));

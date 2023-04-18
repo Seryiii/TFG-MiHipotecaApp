@@ -2,6 +2,8 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
@@ -19,6 +21,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -28,6 +31,7 @@ import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.custom_dialog_a
 
 public class Cuadro_amortizacion extends AppCompatActivity implements custom_dialog_anios.customDialogInterface{
 
+    private CircleImageView closeIcon;
     private TextView year_of_calendar;
     private ImageButton before_year;
     private ImageButton next_year;
@@ -50,6 +54,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuadro_amortizacion);
+        closeIcon = findViewById(R.id.close_icon_cuadro);
 
         meses = new String[]{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
 
@@ -102,11 +107,11 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            if(numCuotaEnero + i > 0 && numCuotaEnero + i <= hip.getPlazo_anios() * 12) {
+            if(numCuotaEnero + i >= 0 && numCuotaEnero + i < hip.getPlazo_anios() * 12) {
 
 
                 TextView numCuota = new TextView(this);
-                numCuota.setText(Integer.toString(numCuotaEnero + i));
+                numCuota.setText(Integer.toString(numCuotaEnero + i + 1));
                 numCuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(numCuota);
 
@@ -195,6 +200,11 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     }
 
     public void eventos(){
+
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { finish(); }
+        });
         choose_year.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -122,7 +122,10 @@ public class HipotecaSeguimiento implements Serializable {
 
         inicio.setTime(fecha_inicio);
         //Comprobar si ya se ha pagado
-        if (fechaActual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
+        if (fechaActual.get(Calendar.DAY_OF_MONTH) > inicio.get(Calendar.DAY_OF_MONTH))
+            fechaActual.add(Calendar.MONTH, 1);
+        else if(fechaActual.get(Calendar.DAY_OF_MONTH) == inicio.get(Calendar.DAY_OF_MONTH) && fechaActual.after(inicio))
+            fechaActual.add(Calendar.MONTH, 1);
         String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
 
         return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
