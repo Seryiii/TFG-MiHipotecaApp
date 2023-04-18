@@ -29,20 +29,79 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         View view  = LayoutInflater.from(parent.getContext()).inflate(R.layout.ofertas_view, parent, false);
         return new RecyclerHolder(view);
     }
+    private void ponerLogoBanco(String nombre_banco,@NonNull RecyclerHolder holder){
+        switch (nombre_banco){
+            case "ING":
+                holder.img.setImageResource(R.drawable.logo_ing);
+                break;
+            case "SANTANDER":
+                holder.img.setImageResource(R.drawable.logo_santander);
+                break;
+            case "BBVA":
+                holder.img.setImageResource(R.drawable.logo_bbva);
+                break;
+            case "BANKIA":
+                holder.img.setImageResource(R.drawable.logo_caixabank);
+                break;
+            case "CAIXABANK":
+                holder.img.setImageResource(R.drawable.logo_caixabank);
+                break;
+            case "BANKINTER":
+                holder.img.setImageResource(R.drawable.logo_bankinter);
+                break;
+            case "EVOBANCO":
+                holder.img.setImageResource(R.drawable.logo_evo_banco);
+                break;
+            case "SABADELL":
+                holder.img.setImageResource(R.drawable.logo_sabadell);
+                break;
+            case "UNICAJA":
+                holder.img.setImageResource(R.drawable.logo_unicaja);
+                break;
+            case "DEUTSCHE BANK":
+                holder.img.setImageResource(R.drawable.logo_deutsche_bank);
+                break;
+            case "OPENBANK":
+                holder.img.setImageResource(R.drawable.logo_open_bank);
+                break;
+            case "KUTXA":
+                holder.img.setImageResource(R.drawable.logo_kutxa_bank);
+                break;
+            case "IBERCAJA":
+                holder.img.setImageResource(R.drawable.logo_ibercaja);
+                break;
+            case "ABANCA":
+                holder.img.setImageResource(R.drawable.logo_abanca);
+                break;
+            case "GLOBALCAJA":
+                holder.img.setImageResource(R.drawable.logo_global_caja);
+                break;
+            case "TARGOBANK":
+                holder.img.setImageResource(R.drawable.logo_targo_bank);
+                break;
+            case "MYINVESTOR":
+                holder.img.setImageResource(R.drawable.logo_myinvestor);
+                break;
+            case "BANCAMARCH":
+                holder.img.setImageResource(R.drawable.logo_bancamarch);
+                break;
+            default:
+                holder.img.setImageResource(R.drawable.logo_bancodesconocido);
+                break;
+        }
+    }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+        Oferta oferta = lista.get(position);
+        holder.tvBanco.setText(oferta.getBanco());
+        holder.tvDesc.setText(oferta.getDesc());
+        ponerLogoBanco(oferta.getBanco(), holder);
         if(tipo.equals("fija")){
-            Oferta oferta = lista.get(position);
-            holder.tvBanco.setText(oferta.getBanco());
-            holder.tvDesc.setText(oferta.getDesc());
             holder.tvTin.setText(oferta.getTin());
             holder.tvTae.setText("TAE " + oferta.getTae());
             holder.tvCuota.setText(oferta.getCuota());
         }else{
-            Oferta oferta = lista.get(position);
-            holder.tvBanco.setText(oferta.getBanco());
-            holder.tvDesc.setText(oferta.getDesc());
             holder.tvTin.setText("TIN " + oferta.getTin_x());
             holder.tvTin_resto.setText("TIN Resto "+ oferta.getTin_resto());
             holder.tvTae.setText("TAE " + oferta.getTae());
@@ -81,5 +140,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             tvCuota_resto = itemView.findViewById(R.id.tvCuota_resto);
 
         }
+
     }
 }
