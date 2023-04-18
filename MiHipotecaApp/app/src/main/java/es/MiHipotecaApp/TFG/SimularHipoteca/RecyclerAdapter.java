@@ -85,6 +85,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             case "BANCAMARCH":
                 holder.img.setImageResource(R.drawable.logo_bancamarch);
                 break;
+            case "IMAGIN":
+                holder.img.setImageResource(R.drawable.logo_imagin);
+                break;
             default:
                 holder.img.setImageResource(R.drawable.logo_bancodesconocido);
                 break;

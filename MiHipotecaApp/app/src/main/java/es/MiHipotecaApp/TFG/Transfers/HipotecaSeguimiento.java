@@ -71,13 +71,14 @@ public class HipotecaSeguimiento implements Serializable {
         int cuotaActual = getNumeroCuotaActual(amortizaciones);
 
         for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
-            if(entry.getKey() < cuotaActual && entry.getValue().get(0).equals("parcial_plazo")){
-                plazoTotalActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
+            if(entry.getKey() < cuotaActual){
+                if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
+                else if (entry.getValue().get(0).equals("total")) plazoTotalActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
             }
         }
-
         return plazoTotalActual;
     }
+
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
@@ -121,13 +122,13 @@ public class HipotecaSeguimiento implements Serializable {
 
         inicio.setTime(fecha_inicio);
         //Comprobar si ya se ha pagado
-        if (fechaActual.get(Calendar.DAY_OF_MONTH) > inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
+        if (fechaActual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) fechaActual.add(Calendar.MONTH, 1);
         String nombreMesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
 
         return nombreMesActual.substring(0, 1).toUpperCase() + nombreMesActual.substring(1);
     }
 
-    /** Devuelve el numero de cuota por el que va actualmente la hipoteca [1 - plazo_anios * 12 ] **/
+    /** Devuelve el numero de cuotas pagadas **/
     public int getNumeroCuotaActual(HashMap<Integer, List<Object>> amortizaciones){
         Calendar inicio = Calendar.getInstance();
         inicio.setTime(fecha_inicio);
@@ -140,10 +141,16 @@ public class HipotecaSeguimiento implements Serializable {
 
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
-        //else return numeroPagoActual + 1;
         // Fin de hipoteca
-        if (numeroPagoActual >= getPlazoActual(amortizaciones)) numeroPagoActual = getPlazoActual(amortizaciones);
-
+        int plazoActual = plazo_anios * 12;
+        for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
+            if(entry.getKey() < numeroPagoActual){
+                if(entry.getValue().get(0).equals("parcial_plazo")) plazoActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
+                else if (entry.getValue().get(0).equals("total")) plazoActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
+            }
+        }
+        //Solo para fin de hipoteca
+        if(numeroPagoActual >= plazoActual) numeroPagoActual = plazoActual;
         return numeroPagoActual;
     }
 

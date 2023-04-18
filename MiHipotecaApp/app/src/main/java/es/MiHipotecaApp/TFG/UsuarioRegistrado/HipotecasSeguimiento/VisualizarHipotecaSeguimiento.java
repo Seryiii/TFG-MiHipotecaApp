@@ -200,25 +200,33 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         numero_cuota_actual.setText("Cuotas pagadas: " + hip.getNumeroCuotaActual(amortizaciones_anticipadas) + " / " + hip.getPlazoActual(amortizaciones_anticipadas));
 
 
-
-
-
         if(hip.getTipo_hipoteca().equals("fija")) {
             porcentaje_aplicado  = hip.getPorcentaje_fijo();
-            cantidad_pendiente   = hip.getPrecio_vivienda() - hip.getCantidad_abonada() ;
-            numero_cuotas_restantes = hip.getPlazo_anios() * 12 ;
+            //COGER LA CANTIDAD PENDIENTE
+            cantidad_pendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas),amortizaciones_anticipadas);
+            //cantidad_pendiente   = hip.getPrecio_vivienda() - hip.getCantidad_abonada() ;
+            numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
             info_dinero_restante.setVisibility(View.GONE);
 
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
             porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrimer_porcentaje_variable() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_variable();
-            cantidad_pendiente   = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
-            numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
+
+            //cantidad_pendiente   = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+
+            cantidad_pendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+
+            //numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
+            numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         } else {
             //Si cumple la condicion, esta en la fase fija, en otro en la variable
             porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPorcentaje_fijo_mixta() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_mixta();
-            cantidad_pendiente   = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
-            numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
+
+            //cantidad_pendiente   = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+            cantidad_pendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+
+            //numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
+            numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         }
 
         if (hip.siguienteCuotaRevision(amortizaciones_anticipadas)) info_cuota.setVisibility(View.VISIBLE);
@@ -279,6 +287,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 break;
             case "ABANCA":
                 logo_banco_seg.setImageResource(R.drawable.logo_abanca);
+                break;
+            default:
+                logo_banco_seg.setImageResource(R.drawable.logo_bancodesconocido);
                 break;
         }
     }
