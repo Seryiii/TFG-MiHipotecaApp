@@ -2,9 +2,9 @@ package es.MiHipotecaApp.TFG.SimularHipoteca;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -12,6 +12,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
@@ -26,6 +29,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
     private EditText precioVivienda;
     private EditText cantidadAbonada;
     private EditText plazo;
+    private EditText ingresos;
     private Button btn_comparar_hipoteca;
 
     @Override
@@ -48,11 +52,12 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         ArrayAdapter<String> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
         comunidadComp.setAdapter(adapter2);
 
-        viviendaNuevaCheck = findViewById(R.id.checkBox_vivienda_nueva);
-        viviendaSegManoCheck = findViewById(R.id.checkBox_vivienda_seg_mano);
-        precioVivienda = findViewById(R.id.edit_precio_vivienda_comp);
-        cantidadAbonada = findViewById(R.id.edit_cant_abonada_comp);
-        plazo = findViewById(R.id.edit_plazo_pagar_comp);
+        viviendaNuevaCheck    = findViewById(R.id.checkBox_vivienda_nueva);
+        viviendaSegManoCheck  = findViewById(R.id.checkBox_vivienda_seg_mano);
+        precioVivienda        = findViewById(R.id.edit_precio_vivienda_comp);
+        cantidadAbonada       = findViewById(R.id.edit_cant_abonada_comp);
+        plazo                 = findViewById(R.id.edit_plazo_pagar_comp);
+        ingresos              = findViewById(R.id.edit_ingresos_mensuales);
         btn_comparar_hipoteca = findViewById(R.id.btn_comparar_hipoteca);
 
     }
@@ -83,7 +88,6 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 comprobarCampos();
-
             }
         });
     }
@@ -112,8 +116,31 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
             camposCorrectos = false;
         }
 
+        if(TextUtils.isEmpty(ingresos.getText())){
+            plazo.setError(getString(R.string.ingresos_vacio));
+            camposCorrectos = false;
+        }
+
         if(camposCorrectos){
-            Log.e("CompararNuevaHipoteca", "Pasar a la actividad que aparecen las ofertas de hipotecas");
+            Intent intent = new Intent(CompararNuevaHipoteca.this, MostrarOfertas.class);
+            //Establezco los datos para pasarselos a la intent
+            JSONObject datos = new JSONObject();
+            try {
+
+                datos.put("comunidad_autonoma", comunidadComp.getSelectedItem().toString());
+                String antiguedad = "nueva";
+                if(viviendaSegManoCheck.isChecked()) antiguedad = "segunda";
+                datos.put("antiguedad_vivienda", antiguedad);
+                datos.put("precio_vivienda", precioVivienda.getText().toString());
+                datos.put("cantidad_abonada", cantidadAbonada.getText().toString());
+                datos.put("plazo_anios", plazo.getText().toString());
+                datos.put("ingresos", ingresos.getText().toString());
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            String jsonStr = datos.toString();
+            intent.putExtra("datos", jsonStr);
+            startActivity(intent);
         }
     }
 }

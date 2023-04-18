@@ -14,6 +14,9 @@
         android:theme="@style/Theme.MiHipotecaApp"
         tools:targetApi="31">
         <activity
+            android:name=".SimularHipoteca.MostrarOfertas"
+            android:exported="false" />
+        <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.AmortizarAntes"
             android:exported="false" />
         <activity

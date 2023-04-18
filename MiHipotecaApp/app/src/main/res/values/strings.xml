@@ -124,6 +124,7 @@
     <string name="label_dinero_que_falta_por_pagar">Dinero que falta por pagar</string>
     <string name="label_tiempo_restante">Tiempo restante</string>
     <string name="label_cuota_de">CUOTA DE </string>
+    <string name="label_ingresos">Ingresos mensuales:</string>
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>
@@ -142,6 +143,7 @@
     <string name="precio_vacio">El campo precio vivienda no puede estar vacío</string>
     <string name="cantidad_abonada_vacio">El campo cantidad abonada no puede estar vacío</string>
     <string name="plazo_vacio">El campo plazo no puede estar vacío</string>
+    <string name="ingresos_vacio">El campo ingresos no puede estar vacío</string>
     <string name="cantidad_mayor_igual_cero">La cantidad debe ser mayor que 0</string>
     <string name="porcentaje_mayor_igual_cero">El porcentaje debe ser mayor que 0</string>
     <string name="duracion_mayor_igual_cero">La duracion debe ser mayor que 0</string>

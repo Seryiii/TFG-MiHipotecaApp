@@ -194,6 +194,27 @@
             android:inputType="number"
             android:text="" />
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:text="@string/label_ingresos"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/edit_ingresos_mensuales"
+            android:layout_width="300dp"
+            android:layout_height="48dp"
+            android:paddingLeft="10dp"
+            android:background="@drawable/rounded_edit_text"
+            android:fontFamily="@font/allerta"
+            android:layout_marginTop="10dp"
+            android:hint="Ingresos"
+            android:layout_gravity="center"
+            android:inputType="number"
+            android:text="" />
+
         <Button
             android:layout_marginTop="32dp"
             android:id="@+id/btn_comparar_hipoteca"

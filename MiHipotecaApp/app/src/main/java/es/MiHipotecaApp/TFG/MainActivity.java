@@ -68,7 +68,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        //FALTA ESTE
         btn_simular_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
