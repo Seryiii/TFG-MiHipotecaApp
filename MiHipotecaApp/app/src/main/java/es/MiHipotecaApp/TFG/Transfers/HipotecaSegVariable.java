@@ -34,6 +34,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         double cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
         double cantidad_capital;
 
+        //todo PUEDE QUE NO COMPROBEMOS MAS ALLA DEL ULTIMO PAGO, EJ PAGO 301 SI PLAZO 300
         int aux = numero_pago > duracion_primer_porcentaje_variable ? duracion_primer_porcentaje_variable : numero_pago;
         for (int i = 1; i <= aux; i++){
             if(amortizaciones.containsKey(i)){

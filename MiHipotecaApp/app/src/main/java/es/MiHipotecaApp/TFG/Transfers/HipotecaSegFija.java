@@ -114,6 +114,8 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     //TODO FALTA REVISAR BIEN ESTA FUNCION, ES JODIDA MUY JODIDA
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){
+
+        // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
         ArrayList<Double> valores = new ArrayList<>();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha_inicio);
@@ -129,19 +131,14 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones);
         // Capital pendiente para diciembre del año anterior
         double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones);
-
-
-        double dineroRestanteAnterior  = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getDineroRestanteActual(cuotasPagadas - cuotasAnuales, amortizaciones) ;
-        // COGES LO QUE TE QUEDA POR PAGAR EN ENERO DEL SIGUIENTE AÑO
-        double dineroRestanteSiguiente = getDineroRestanteActual(cuotasPagadas + 1, amortizaciones);
-        double pagadoTotalAnual = dineroRestanteAnterior - dineroRestanteSiguiente;
+        double totalCapitalAnual = capPdteAnterior - capPdteUltimo;
 
         double interesesAnteriores = cuotasAnuales < 12 ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales, amortizaciones);
         double interesesSiguientes = getInteresesHastaNumPago(cuotasPagadas, amortizaciones);
-        double totalInteresesAnio = interesesAnteriores - interesesSiguientes;
+        double totalInteresesAnio = interesesSiguientes - interesesAnteriores;
 
-        valores.add(Math.round(pagadoTotalAnual * 100.0) / 100.0);
-        valores.add(Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0);
+        valores.add(Math.round((totalCapitalAnual + totalInteresesAnio) * 100.0) / 100.0);
+        valores.add(Math.round(totalCapitalAnual * 100.0) / 100.0);
         valores.add(totalInteresesAnio);
         valores.add(capPdteUltimo);
 

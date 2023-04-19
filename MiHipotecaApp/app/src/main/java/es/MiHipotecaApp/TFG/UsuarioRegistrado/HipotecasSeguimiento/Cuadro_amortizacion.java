@@ -107,7 +107,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            if(numCuotaEnero + i >= 0 && numCuotaEnero + i < hip.getPlazo_anios() * 12) {
+            if(numCuotaEnero + i >= 0 && numCuotaEnero + i < hip.getPlazoActual(amortizaciones_hip)) {
 
 
                 TextView numCuota = new TextView(this);
@@ -153,7 +153,15 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
     public void actualizarTablaAnios(){
         if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(hip.getFecha_inicio());
+
         for (int i = 1; i <= hip.getPlazo_anios(); i++) {
+
+            // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
+            if(valores.get(3) <= 0) break;
 
             // Crear una nueva fila y agregarla al TableLayout
             TableRow tableRow = new TableRow(this);
@@ -164,16 +172,12 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             numAnio.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(numAnio);
 
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(hip.getFecha_inicio());
+
             TextView anio = new TextView(this);
             anio.setText(Integer.toString(calendar.get(Calendar.YEAR) + i - 1));
             anio.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(anio);
 
-
-            // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
 
             TextView totalAnual = new TextView(this);
             totalAnual.setText(Double.toString(valores.get(0)));

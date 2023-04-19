@@ -24,6 +24,8 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         app:itemIconSize="30dp"
+        app:itemRippleColor="@color/black"
+        app:itemTextColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"

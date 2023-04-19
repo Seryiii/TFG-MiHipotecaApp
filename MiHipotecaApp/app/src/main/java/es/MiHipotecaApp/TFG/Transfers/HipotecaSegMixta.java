@@ -213,9 +213,9 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){
 
-        /*
+
         ArrayList<Double> valores = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
+        /*Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha_inicio);
         int cuotasAnuales;
         //si es el primer año de hipoteca
@@ -237,10 +237,10 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         valores.add(Math.round((capitalTotal + interesesTotales) * 100.0) / 100.0);
         valores.add(capitalTotal);
         valores.add(interesesTotales);
-        valores.add(capPdteUltimo);
-        return valores;*/
+        valores.add(capPdteUltimo);*/
+        return valores;
 
-        return null;
+        //return null;
     }
 
     public int getAnios_fija_mixta() {

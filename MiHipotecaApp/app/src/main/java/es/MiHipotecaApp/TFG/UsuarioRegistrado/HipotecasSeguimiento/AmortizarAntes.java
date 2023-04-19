@@ -102,9 +102,10 @@ public class AmortizarAntes extends AppCompatActivity {
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
         initUI();
 
-        capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_hip), amortizaciones_hip);
         cuota_mensual_actual = getIntent().getStringExtra("cuota_actual");
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
+        capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_hip), amortizaciones_hip);
+
         plazo_actual = hip.getPlazoActual(amortizaciones_hip);
 
         //Como empieza marcada la casilla de amortizacion total, se pone en capital amortizado el capital pendiente actual

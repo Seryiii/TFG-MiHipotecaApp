@@ -196,7 +196,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         ArrayList<Integer> anios_meses = hip.getAniosMesesRestantes( amortizaciones_anticipadas);
         if(anios_meses.get(0) > 0) anios_restantes_hipoteca.setText(anios_meses.get(0) + " años " + anios_meses.get(1) + " meses");
         else anios_restantes_hipoteca.setText(anios_meses.get(1) + " meses");
-        mes_actual_cuota.setText(hip.getNombreMesActual());
+        mes_actual_cuota.setText(hip.getNombreMesActual(amortizaciones_anticipadas));
         numero_cuota_actual.setText("Cuotas pagadas: " + hip.getNumeroCuotaActual(amortizaciones_anticipadas) + " / " + hip.getPlazoActual(amortizaciones_anticipadas));
 
 
@@ -325,7 +325,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         i.putExtra("cuotas_pendientes", numero_cuotas_restantes);
                         i.putExtra("cantidad_pendiente", cantidad_pendiente);
                         i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
-                        //Map<Integer, List<Object>>
                         i.putExtra("hipoteca", hip);
                         i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                         startActivity(i);
