@@ -107,11 +107,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            if(numCuotaEnero + i >= 0 && numCuotaEnero + i < hip.getPlazoActual(amortizaciones_hip)) {
-
+            if(numCuotaEnero + i > 0 && numCuotaEnero + i <= hip.getPlazoActual(amortizaciones_hip)) {
 
                 TextView numCuota = new TextView(this);
-                numCuota.setText(Integer.toString(numCuotaEnero + i + 1));
+                numCuota.setText(Integer.toString(numCuotaEnero + i));
                 numCuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(numCuota);
 
