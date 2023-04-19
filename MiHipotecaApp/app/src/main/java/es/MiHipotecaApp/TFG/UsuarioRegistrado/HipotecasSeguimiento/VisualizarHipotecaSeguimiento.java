@@ -193,7 +193,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
         ponerLogoBanco();
         comunidad_autonoma_seg.setText(hip.getComunidad_autonoma());
-        ArrayList<Integer> anios_meses = hip.getAniosMesesRestantes( amortizaciones_anticipadas);
+        ArrayList<Integer> anios_meses = hip.getAniosMesesRestantes(amortizaciones_anticipadas);
         if(anios_meses.get(0) > 0) anios_restantes_hipoteca.setText(anios_meses.get(0) + " años " + anios_meses.get(1) + " meses");
         else anios_restantes_hipoteca.setText(anios_meses.get(1) + " meses");
         mes_actual_cuota.setText(hip.getNombreMesActual(amortizaciones_anticipadas));
@@ -235,7 +235,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             numero_cuotas_restantes = 0;
             info_cuota.setVisibility(View.GONE);
         }
-        double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
+        double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes, amortizaciones_anticipadas);
         cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);
 

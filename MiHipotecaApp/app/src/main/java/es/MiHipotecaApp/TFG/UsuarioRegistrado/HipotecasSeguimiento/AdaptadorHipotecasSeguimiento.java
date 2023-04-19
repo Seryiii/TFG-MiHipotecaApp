@@ -59,7 +59,7 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
             int numPago = 0;
             //holder.cuotas_restantes.setText(hipotecasSeg.get(position).getNumeroCuotaActual(null) + "/" + hipotecasSeg.get(position).getPlazoActual(null));
             //holder.dinero_pagado.setText((hipotecasSeg.get(position).getPrecio_vivienda() - hipotecasSeg.get(position).getCantidad_abonada()) - hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null);
-            holder.dinero_pendiente.setText(Double.toString(hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null)));
+            //holder.dinero_pendiente.setText(Double.toString(hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null)));
             holder.tipo_hipoteca.setText("Tipo: " + hipotecasSeg.get(position).getTipo_hipoteca());
         }
 

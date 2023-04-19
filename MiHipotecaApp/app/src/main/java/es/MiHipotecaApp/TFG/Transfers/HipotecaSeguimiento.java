@@ -72,7 +72,7 @@ public class HipotecaSeguimiento implements Serializable {
 
         for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
             if(entry.getKey() < cuotaActual){
-                if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
+                if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
                 else if (entry.getValue().get(0).equals("total")) plazoTotalActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
             }
         }
@@ -82,9 +82,18 @@ public class HipotecaSeguimiento implements Serializable {
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
-    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes){
+    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes, HashMap<Integer, List<Object>> amortizaciones){
+
+        //Este bucle sirve para que la cuota no cambie cuando se reducen meses amortizando anticipadamente
+        int cuotasReducidas = 0;
+        for (Map.Entry<Integer, List<Object>> entry : amortizaciones.entrySet()) {
+            if (entry.getValue().get(0).equals("parcial_plazo"))
+                cuotasReducidas += (Long) entry.getValue().get(2); //Campo con los meses reducidos
+
+        }
+
         if (num_cuotas_restantes <= 0) return 0;
-        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes);
+        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes + cuotasReducidas);
         double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
         return Math.round(cuotaMensual * 100.0) / 100.0;
     }
@@ -152,7 +161,7 @@ public class HipotecaSeguimiento implements Serializable {
             for (Map.Entry<Integer, List<Object>> entry : amortizaciones.entrySet()) {
                 if (entry.getKey() < numeroPagoActual) {
                     if (entry.getValue().get(0).equals("parcial_plazo"))
-                        plazoActual -= (Integer) entry.getValue().get(2); //Campo con los meses reducidos
+                        plazoActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
                     else if (entry.getValue().get(0).equals("total"))
                         plazoActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
                 }
@@ -180,7 +189,7 @@ public class HipotecaSeguimiento implements Serializable {
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(cal.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
 
-        return numeroPagoActual;
+        return numeroPagoActual + 1;
     }
 
     /** Devuelve la cantidad que el usuario deberá de amortizar en funcion de los meses pasados **/

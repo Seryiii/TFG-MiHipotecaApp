@@ -263,8 +263,8 @@ public class AmortizarAntes extends AppCompatActivity {
                     cuota_plazo_antigua_tv.setText("Plazo Antiguo");
                     cuota_plazo_nueva_tv.setText("Plazo Nuevo");
 
-                    cuota_plazo_antigua_valor.setText(plazo_actual + "meses");
-                    cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
+                    cuota_plazo_antigua_valor.setText(plazo_actual + " meses");
+                    cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                     edit_dinero_a_amortizar.setText("");
                     edit_reduccion_plazo_meses.setText("");
                 }else{
@@ -295,7 +295,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     }
                     else{
                         double cantidad_pendiente_con_amortizacion = cantidad_pendiente - capital_a_amortizar;
-                        cuota_plazo_nueva_valor.setText(hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente_con_amortizacion, numero_cuotas_restantes)+"€");
+                        cuota_plazo_nueva_valor.setText(hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente_con_amortizacion, numero_cuotas_restantes, amortizaciones_hip)+"€");
                         cantidad_capital_amortizado.setText("Cantidad a amortizar: " + edit_dinero_a_amortizar.getText().toString() + "€");
                         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
                         String cap_formateado = "Capital pdte nuevo: " + formato.format(capital_pendiente_actual - capital_a_amortizar)  + "€";
@@ -322,12 +322,12 @@ public class AmortizarAntes extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // calcular Y poner en cuota_plazo_antigua_valor y cuota_plazo_nueva_valor el plazo antiguo y el nuevo calculado
 
-                if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
+                if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                 else{
                     int meses_reducir = Integer.parseInt(s.toString());
                     if(meses_reducir >= plazo_actual) {
                         edit_reduccion_plazo_meses.setError("Como máximo puedes reducir " + plazo_actual + " meses");
-                        cuota_plazo_nueva_valor.setText(plazo_actual + "meses");
+                        cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                     }else{
                         cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducir) + " meses");
                         //todo CALCULAR CANTIDAD AMORTIZADA
@@ -481,6 +481,7 @@ public class AmortizarAntes extends AppCompatActivity {
                 }
             });
         }
+        finish();
     }
 
 }
