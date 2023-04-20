@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         comprobarSiSesionIniciada();
         db = FirebaseFirestore.getInstance();
         initUI();
+        comprobarEuribor();
     }
 
     private void comprobarSiSesionIniciada(){
@@ -57,17 +58,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         comprobarSiSesionIniciada();
+
+    }
+    private void comprobarEuribor(){
         db.collection("euribor").get().addOnCompleteListener(task-> {
-        if(task.isSuccessful()){
-            QuerySnapshot querySnapshot=task.getResult();
-            if(querySnapshot==null || querySnapshot.isEmpty()){
-                EuriborHistorico hist=new EuriborHistorico();
-                hist.ActualizarEuribor();
+            if(task.isSuccessful()){
+                QuerySnapshot querySnapshot=task.getResult();
+                if(querySnapshot==null || querySnapshot.isEmpty()){
+                    EuriborHistorico hist=new EuriborHistorico();
+                    hist.ActualizarEuribor();
                 }
-         }
+            }
         });
     }
-
 
     private void initUI() {
         btn_simular_hipoteca = findViewById(R.id.btn_simular_pagina_inicio);
