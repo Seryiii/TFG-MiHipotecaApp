@@ -38,12 +38,12 @@ public class EuriborHistorico extends AppCompatActivity {
 
     private final String TAG = "EURIBOR ACTIVITY";
 
-    protected void onCreate(Bundle savedInstanceState) {
+    public EuriborHistorico(Context context) {
 
-        super.onCreate(savedInstanceState);
+
         db = FirebaseFirestore.getInstance();
-        context = this;
-        requestQueue = Volley.newRequestQueue( context,new HurlStack());
+        this.context = context;
+        requestQueue = Volley.newRequestQueue( this.context,new HurlStack());
     }
     protected void ActualizarEuribor() {
         String url = "http://10.0.2.2:5000/Euribor";
@@ -57,7 +57,7 @@ public class EuriborHistorico extends AppCompatActivity {
 
                         JSONArray mJsonArray = null;
                         try {
-                            mJsonArray = response.getJSONArray("EuriborHistorico");
+                            mJsonArray = response.getJSONArray("prueba");
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
@@ -67,7 +67,8 @@ public class EuriborHistorico extends AppCompatActivity {
                                 JSONObject jsonObject = mJsonArray.getJSONObject(i);
                                 String anio = jsonObject.getString("anio");
                                 String mes = jsonObject.getString("mes");
-                                Double valor = jsonObject.getDouble("valor");
+                                String valor_euribor = jsonObject.getString("valor");
+                                Double valor=Double.parseDouble(valor_euribor);
                                 Euribor eu=new Euribor(anio,mes,valor);
                                 db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
 

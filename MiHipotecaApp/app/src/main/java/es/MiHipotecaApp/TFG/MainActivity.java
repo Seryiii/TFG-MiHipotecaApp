@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
             if(task.isSuccessful()){
                 QuerySnapshot querySnapshot=task.getResult();
                 if(querySnapshot==null || querySnapshot.isEmpty()){
-                    EuriborHistorico hist=new EuriborHistorico();
+                    EuriborHistorico hist=new EuriborHistorico(this);
                     hist.ActualizarEuribor();
                 }
             }
