@@ -1,7 +1,7 @@
 <resources>
 
     <!-- NOMBRE APP -->
-    <string name="app_name">Mi Hipoteca App</string>
+    <string name="app_name">MiHipotecaApp</string>
 
     <!-- BOTONES -->
     <string name="txt_btn_simular_hipoteca">SIMULAR HIPOTECA</string>

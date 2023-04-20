@@ -31,6 +31,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         android:background="@color/background_bottom_bar"
-        app:menu="@menu/bottom_nav_menu"/>
+        app:menu="@menu/bottom_nav_menu"
+        app:itemActiveIndicatorStyle="@color/purple_700"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
