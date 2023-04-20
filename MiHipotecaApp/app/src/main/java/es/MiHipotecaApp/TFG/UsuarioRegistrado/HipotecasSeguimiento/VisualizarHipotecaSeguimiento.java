@@ -23,6 +23,7 @@ import com.anychart.charts.Pie;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -458,6 +459,35 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         capital_pendiente.setText("" + formato.format(capitalPendiente) + "€");
         intereses_pagados.setText("" + formato.format(interesesPagados) + "€");
         intereses_pendientes.setText("" + formato.format(interesesPendientes) + "€");
+
+        //COMPRUEBA SI EL USUARIO ES NO PREMIUM
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String userMail = user.getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    if(!document.getBoolean("premium")) {
+                        //Al no ser premium no deja interactuar con los graficos
+                        grafico.setAlpha(0.1f); //Hace que el grafico se vea menos
+                        grafico.setEnabled(false);
+                        btn_grafico_gastos_totales.setAlpha(0.1f);
+                        btn_grafico_gastos_totales.setEnabled(false);
+                        btn_grafico_intereses_capital.setAlpha(0.1f);
+                        btn_grafico_intereses_capital.setEnabled(false);
+                    }
+
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
     }
 
     @Override

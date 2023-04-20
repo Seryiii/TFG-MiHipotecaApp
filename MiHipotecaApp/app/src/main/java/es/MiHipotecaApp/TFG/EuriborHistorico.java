@@ -102,7 +102,7 @@ public class EuriborHistorico extends AppCompatActivity {
                 60000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
+        //requestQueue.add(request);
     }
 }
 

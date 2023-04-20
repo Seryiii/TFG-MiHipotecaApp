@@ -29,13 +29,10 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.WriteBatch;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -192,8 +189,35 @@ public class TusHipotecas extends Fragment {
                             });
                             popupMenu.show();
                         }else{
-                            Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
-                            startActivity(i);
+
+                            String userMail = user.getEmail();
+                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+                            Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+                            query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        QuerySnapshot querySnapshot = task.getResult();
+                                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                                        if(document.getBoolean("premium")) {
+                                            Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
+                                            startActivity(i);
+                                        } else{
+                                            if(listaHipotecasSeg.size() < 1){
+                                                Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
+                                                startActivity(i);
+                                            } else {
+                                                Toast.makeText(getActivity(), "ACTUALIZA A PREMIUM PARA TENER MAS HIPOTECAS DE SEGUIMIENTO", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+
+                                    } else {
+                                        Log.d(TAG, "Error getting documents: ", task.getException());
+                                    }
+                                }
+                            });
+
                         }
                     }
                 });
@@ -313,4 +337,6 @@ public class TusHipotecas extends Fragment {
             }
         });
     }
+
+
 }
