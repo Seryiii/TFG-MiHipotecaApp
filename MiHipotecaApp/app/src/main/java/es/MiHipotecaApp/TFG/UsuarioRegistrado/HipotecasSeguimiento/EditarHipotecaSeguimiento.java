@@ -104,14 +104,19 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseUser user;
+
+    private String[] comunidades;
+    private String[] comunidades_base_datos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_hipoteca_seguimiento);
         sp_comunidad = findViewById(R.id.sp_comunidad_edit);
-        String[] comunidades = {"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
+        comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
         sp_comunidad.setAdapter(adapter);
+        comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
+
         initUI();
         rellenarCampos();
         Eventos();
@@ -540,7 +545,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         Map<String, Object> nuevosDatos = new HashMap<>();
 
         nuevosDatos.put("nombre", nombre_hipoteca.getText().toString());
-        nuevosDatos.put("comunidad_autonoma", sp_comunidad.getSelectedItem().toString());
+        nuevosDatos.put("comunidad_autonoma", comunidades_base_datos[sp_comunidad.getSelectedItemPosition()]);
 
         String tipo_vivienda = "general";
         if(check_vivienda_poficial.isChecked()) tipo_vivienda = "proteccion_oficial";
@@ -639,10 +644,9 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
 
-        String[] comunidades = {"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
         int i = 0;
-        while(i < comunidades.length){
-            if(hip.getComunidad_autonoma().equals(comunidades[i])) break;
+        while(i < comunidades_base_datos.length){
+            if(hip.getComunidad_autonoma().equals(comunidades_base_datos[i])) break;
             i++;
         }
         sp_comunidad.setSelection(i);

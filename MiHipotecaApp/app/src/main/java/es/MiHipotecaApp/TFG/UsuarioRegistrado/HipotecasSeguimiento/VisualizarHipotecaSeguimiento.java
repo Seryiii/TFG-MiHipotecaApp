@@ -391,6 +391,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_gastos_totales.class);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 i.putExtra("hipoteca", hip);
+                i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
                 startActivity(i);
             }
         });
@@ -401,6 +402,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_intereses_capital.class);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 i.putExtra("hipoteca", hip);
+                i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
                 startActivity(i);
             }
         });
@@ -408,6 +410,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
 
     public void construirGraficoAportadoVsAFinanciar(){
+        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         titulo_grafico.setText("Aportado vs a financiar");
         double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
@@ -419,10 +422,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("CAPITAL AMORTIZADO", capitalAmortizado));
-        data.add(new ValueDataEntry("CAPITAL PENDIENTE", capitalPendiente));
-        data.add(new ValueDataEntry("INTERESES PENDIENTES", interesesPendientes));
-        data.add(new ValueDataEntry("INTERESES PAGADOS", interesesPagados));
+        data.add(new ValueDataEntry("CAPITAL AMORTIZADO", Double.parseDouble(formato.format(capitalAmortizado))));
+        data.add(new ValueDataEntry("CAPITAL PENDIENTE", Double.parseDouble(formato.format(capitalPendiente))));
+        data.add(new ValueDataEntry("INTERESES PENDIENTES", Double.parseDouble(formato.format(interesesPendientes))));
+        data.add(new ValueDataEntry("INTERESES PAGADOS", Double.parseDouble(formato.format(interesesPagados))));
         pie.data(data);
         pie.labels().fontSize(18);
         pie.labels().position("outside");
@@ -431,10 +434,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         grafico.setChart(pie);
         grafico.invalidate();
 
-        capital_amortizado.setText("" + Math.round(capitalAmortizado * 100.0) / 100.0 + "€");
-        capital_pendiente.setText("" + capitalPendiente + "€");
-        intereses_pagados.setText("" + interesesPagados + "€");
-        intereses_pendientes.setText("" + interesesPendientes + "€");
+
+        capital_amortizado.setText("" + formato.format(capitalAmortizado) + "€");
+        capital_pendiente.setText("" + formato.format(capitalPendiente) + "€");
+        intereses_pagados.setText("" + formato.format(interesesPagados) + "€");
+        intereses_pendientes.setText("" + formato.format(interesesPendientes) + "€");
     }
 
     /*

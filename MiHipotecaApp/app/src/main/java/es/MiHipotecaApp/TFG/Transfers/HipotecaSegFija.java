@@ -53,7 +53,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
             capital_pendiente = capital_pendiente - cantidad_capital;
         }
 
-        return Math.round(capital_pendiente * 100.0) / 100.0;
+        return capital_pendiente;
     }
 
     /** Devuelve los intereses hasta el numero de pago pasado por parametro **/
@@ -80,7 +80,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
             capPendiente -= (cuota_mensual - getInteresMensual(capPendiente, getPorcentaje_fijo()));
         }
 
-        return Math.round(interesesTotales * 100.0) / 100.0;
+        return interesesTotales;
     }
 
     /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/
@@ -142,8 +142,8 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         double interesesSiguientes = getInteresesHastaNumPago(cuotasPagadas, amortizaciones);
         double totalInteresesAnio = interesesSiguientes - interesesAnteriores;
 
-        valores.add(Math.round((totalCapitalAnual + totalInteresesAnio) * 100.0) / 100.0);
-        valores.add(Math.round(totalCapitalAnual * 100.0) / 100.0);
+        valores.add(totalCapitalAnual + totalInteresesAnio);
+        valores.add(totalCapitalAnual);
         valores.add(totalInteresesAnio);
         valores.add(capPdteUltimo);
 

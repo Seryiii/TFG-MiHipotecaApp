@@ -20,6 +20,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,6 +58,7 @@ public class grafico_gastos_totales extends AppCompatActivity {
 
 
     public void construirGraficoGastosTotales(){
+        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
@@ -65,8 +67,8 @@ public class grafico_gastos_totales extends AppCompatActivity {
         for(int i = 0; i < hip.getArrayVinculacionesAnual().size(); i++){
             totalVinculaciones += hip.getPosArrayVinculacionesAnual(i);
         }
-        data.add(new ValueDataEntry("VINCULACIONES", totalVinculaciones));
-        data.add(new ValueDataEntry("OTROS GASTOS (GESTORÍA, COMISIONES, ...)", hip.getTotalGastos()));
+        data.add(new ValueDataEntry("VINCULACIONES", Double.parseDouble(formato.format(totalVinculaciones))));
+        data.add(new ValueDataEntry("OTROS GASTOS (GESTORÍA, COMISIONES, ...)", Double.parseDouble(formato.format(hip.getTotalGastos()))));
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("impuestos").document(hip.getComunidad_autonoma()).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
@@ -93,8 +95,8 @@ public class grafico_gastos_totales extends AppCompatActivity {
                         iva_itp = hip.getPrecio_vivienda() * (iva_itp / 100);
                         ajd     = hip.getPrecio_vivienda() * (ajd / 100);
 
-                        data.add(new ValueDataEntry(impuestos, iva_itp));
-                        data.add(new ValueDataEntry("AJD", ajd));
+                        data.add(new ValueDataEntry(impuestos, Double.parseDouble(formato.format(iva_itp))));
+                        data.add(new ValueDataEntry("AJD", Double.parseDouble(formato.format(ajd))));
                         pie.data(data);
                         pie.labels().fontSize(22);
                         pie.labels().position("outside");

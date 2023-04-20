@@ -74,7 +74,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
                 j++;
             }
         }
-        return Math.round(capital_pendiente * 100.0) / 100.0;
+        return capital_pendiente;
     }
 
     /** Esta funcion devuelve la cantidad de intereses hasta el numero de pago pasado**/
@@ -130,7 +130,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
             }
         }
 
-        return Math.round(intereses_totales * 100.0) / 100.0;
+        return intereses_totales;
     }
 
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo

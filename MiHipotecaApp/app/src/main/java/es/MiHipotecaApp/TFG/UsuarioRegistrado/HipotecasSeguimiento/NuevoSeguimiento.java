@@ -111,14 +111,20 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     private FirebaseAuth auth;
     private FirebaseUser user;
+
+    private String[] comunidades;
+    private String[] comunidades_base_datos;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_nuevo_seguimiento);
         sp_comunidad = findViewById(R.id.sp_comunidad);
-        String[] comunidades = {"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
+        comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
         sp_comunidad.setAdapter(adapter);
+        comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
+
         initUI();
         Eventos();
         db   = FirebaseFirestore.getInstance();
@@ -571,7 +577,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private void registrarNuevaHipoteca(){
 
         String nombre = nombre_hipoteca.getText().toString();
-        String comunidad = sp_comunidad.getSelectedItem().toString();
+        String comunidad = comunidades_base_datos[sp_comunidad.getSelectedItemPosition()];
         String tipo_vivienda = "general";
         if(check_vivienda_poficial.isChecked()) tipo_vivienda = "proteccion_oficial";
         String antiguedad_vivienda = "nueva";

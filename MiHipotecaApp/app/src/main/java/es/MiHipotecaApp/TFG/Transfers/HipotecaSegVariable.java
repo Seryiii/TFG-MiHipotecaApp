@@ -78,7 +78,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
             }
         }
 
-        return Math.round(capital_pendiente * 100.0) / 100.0;
+        return capital_pendiente;
     }
 
 
@@ -135,7 +135,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
             }
         }
 
-        return Math.round(intereses_totales * 100.0) / 100.0;
+        return intereses_totales;
     }
 
 

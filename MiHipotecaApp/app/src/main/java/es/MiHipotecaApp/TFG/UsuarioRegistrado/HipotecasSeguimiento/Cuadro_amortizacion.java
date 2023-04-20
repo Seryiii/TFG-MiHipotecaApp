@@ -16,6 +16,7 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -95,6 +96,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     /** Funcion a la que se llama cuando el textView que marca el año mostrado en el calendario cambia, ya sea
         por alguno de los botones laterales o por el uso de la seekBar **/
     public void actualizarTablaMeses(int anio){
+        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+
         //Obtiene el numero de cuota de enero del año mostrado en el textView
         int numCuotaEnero = hip.getNumeroCuotaEnEnero(anio);
         //Elimina las filas de la tabla a excepcion de la primera
@@ -124,22 +127,22 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i, amortizaciones_hip);
 
                 TextView cuota = new TextView(this);
-                cuota.setText(Double.toString(valores.get(0)));
+                cuota.setText(formato.format(valores.get(0)));
                 cuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(cuota);
 
                 TextView capital = new TextView(this);
-                capital.setText(Double.toString(valores.get(1)));
+                capital.setText(formato.format(valores.get(1)));
                 capital.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(capital);
 
                 TextView interes = new TextView(this);
-                interes.setText(Double.toString(valores.get(2)));
+                interes.setText(formato.format(valores.get(2)));
                 interes.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(interes);
 
                 TextView pendiente = new TextView(this);
-                pendiente.setText(Double.toString(valores.get(3)));
+                pendiente.setText(formato.format(valores.get(3)));
                 pendiente.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(pendiente);
             }
@@ -152,6 +155,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
     public void actualizarTablaAnios(){
         if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
+        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(hip.getFecha_inicio());
@@ -179,22 +183,22 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
 
             TextView totalAnual = new TextView(this);
-            totalAnual.setText(Double.toString(valores.get(0)));
+            totalAnual.setText(formato.format(valores.get(0)));
             totalAnual.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(totalAnual);
 
             TextView capitalAnual = new TextView(this);
-            capitalAnual.setText(Double.toString(valores.get(1)));
+            capitalAnual.setText(formato.format(valores.get(1)));
             capitalAnual.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(capitalAnual);
 
             TextView interesAnual = new TextView(this);
-            interesAnual.setText(Double.toString(valores.get(2)));
+            interesAnual.setText(formato.format(valores.get(2)));
             interesAnual.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(interesAnual);
 
             TextView pendiente = new TextView(this);
-            pendiente.setText(Double.toString(valores.get(3)));
+            pendiente.setText(formato.format(valores.get(3)));
             pendiente.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(pendiente);
 

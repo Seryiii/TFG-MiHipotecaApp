@@ -95,21 +95,21 @@ public class HipotecaSeguimiento implements Serializable {
         if (num_cuotas_restantes <= 0) return 0;
         double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes + cuotasReducidas);
         double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
-        return Math.round(cuotaMensual * 100.0) / 100.0;
+        return cuotaMensual;
     }
 
     /** Funcion que devuelve el interes pagado en funcion del capital que quede por pagar
      *  y un porcentaje aplicado **/
     public double getInteresMensual(double capitalPendiente, double porcentaje_aplicado){
         double interesesMensual = (capitalPendiente * (porcentaje_aplicado / 100) / 12);
-        return Math.round(interesesMensual * 100.0) / 100.0;
+        return interesesMensual;
     }
 
     /** Funcion que devuelve el capital amortizado mensual en funcion del capital pendiente y un
      *  porcentaje aplicado **/
     public double getCapitalAmortizadoMensual(double cuota_mensual, double capitalPendiente, double porcentaje_aplicado){
         double capitalAmortizadoMensual = cuota_mensual - getInteresMensual(capitalPendiente, porcentaje_aplicado);
-        return Math.round(capitalAmortizadoMensual * 100.0) / 100.0;
+        return capitalAmortizadoMensual;
     }
 
     /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
@@ -201,7 +201,7 @@ public class HipotecaSeguimiento implements Serializable {
             cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones);
         }
 
-        return Math.round(cantAmortizar * 100.0) / 100.0;
+        return cantAmortizar;
     }
 
     //FUNCIONES SOBREESCRITAS

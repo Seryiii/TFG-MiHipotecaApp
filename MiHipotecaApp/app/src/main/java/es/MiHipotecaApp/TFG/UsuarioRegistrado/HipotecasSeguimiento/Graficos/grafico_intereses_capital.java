@@ -14,6 +14,7 @@ import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Cartesian;
 import com.anychart.enums.LegendLayout;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -55,6 +56,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
     }
 
     public void construirGraficoLineas(){
+        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         List<DataEntry> capitalAnual = new ArrayList<>();
         List<DataEntry> interesesAnuales = new ArrayList<>();
@@ -68,9 +70,9 @@ public class grafico_intereses_capital extends AppCompatActivity {
         for(int i = 1; i <= hip.getPlazo_anios(); i++){
             ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
 
-            capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(1)));
-            interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(2)));
-            cuotaAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, valores.get(0)));
+            capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(1)))));
+            interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(2)))));
+            cuotaAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(0)))));
             if(i <= hip.getArrayVinculacionesAnual().size() - 1) vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getPosArrayVinculacionesAnual(i)));
             else vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
         }
