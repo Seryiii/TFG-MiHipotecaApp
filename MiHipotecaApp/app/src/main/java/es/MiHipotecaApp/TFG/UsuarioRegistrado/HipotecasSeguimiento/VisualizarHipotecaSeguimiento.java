@@ -87,6 +87,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private LinearLayout capital_layout_valor;
     private LinearLayout intereses_layout;
     private LinearLayout intereses_layout_valor;
+    private LinearLayout layout_cuota_seguimiento;
+    private LinearLayout layout_amortizacion_anticipada;
+    private LinearLayout layout_capital_intereses1;
+    private LinearLayout layout_capital_intereses2;
+    private TextView amortizacion_anticipada_valor;
     private LinearLayout btn_grafico_gastos_totales;
     private LinearLayout btn_grafico_intereses_capital;
 
@@ -95,20 +100,21 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private int numero_cuotas_restantes;
     private double cantidad_pendiente;
 
-    //private int[] colorClassArray = new int[] {Color.LTGRAY, Color.BLUE, Color.CYAN, Color.DKGRAY, Color.GREEN, Color.MAGENTA, Color.RED};
+    private int numero_cuotas_pagadas;
 
-    //private static int numGrafico = 0;
+    private String[] comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
+    private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_hipoteca_seguimiento);
-
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
         initUI();
         cogerAmortizaciones();
-
     }
 
     private void initUI(){
@@ -123,6 +129,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         capital_cuota_mensual     = findViewById(R.id.capital_cuota_mensual_hip);
         intereses_cuota_mensual   = findViewById(R.id.intereses_cuota_mensual_hip);
         numero_cuota_actual       = findViewById(R.id.numero_cuota_actual_hip);
+        layout_amortizacion_anticipada = findViewById(R.id.layout_amortizacion_anticipada);
+        amortizacion_anticipada_valor = findViewById(R.id.amortizacion_anticipada_valor);
+        layout_cuota_seguimiento = findViewById(R.id.layout_cuota_seguimiento);
 
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
         btn_amortizar_antes                  = findViewById(R.id.btn_amortizar_antes);
@@ -184,49 +193,41 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private void rellenarUI(){
 
+        numero_cuotas_pagadas = hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         info_cuota.setVisibility(View.GONE);
 
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
-        String numeroFormateado = formato.format(hip.getDineroRestanteActual(hip.getNumeroCuotaActual( amortizaciones_anticipadas), amortizaciones_anticipadas))  + "€"; // Formatear el número
+        String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
         ponerLogoBanco();
-        comunidad_autonoma_seg.setText(hip.getComunidad_autonoma());
+        int i = 0;
+        while(i < comunidades_base_datos.length){
+            if(hip.getComunidad_autonoma().equals(comunidades_base_datos[i])) break;
+            i++;
+        }
+        comunidad_autonoma_seg.setText(comunidades[i]);
         ArrayList<Integer> anios_meses = hip.getAniosMesesRestantes(amortizaciones_anticipadas);
         if(anios_meses.get(0) > 0) anios_restantes_hipoteca.setText(anios_meses.get(0) + " años " + anios_meses.get(1) + " meses");
         else anios_restantes_hipoteca.setText(anios_meses.get(1) + " meses");
         mes_actual_cuota.setText(hip.getNombreMesActual(amortizaciones_anticipadas));
-        numero_cuota_actual.setText("Cuotas pagadas: " + hip.getNumeroCuotaActual(amortizaciones_anticipadas) + " / " + hip.getPlazoActual(amortizaciones_anticipadas));
+        int plazoTotalActual = hip.getPlazoActual(amortizaciones_anticipadas);
 
+
+
+        cantidad_pendiente = hip.getCapitalPendienteTotalActual(numero_cuotas_pagadas,amortizaciones_anticipadas);
+        numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - numero_cuotas_pagadas;
 
         if(hip.getTipo_hipoteca().equals("fija")) {
             porcentaje_aplicado  = hip.getPorcentaje_fijo();
-            //COGER LA CANTIDAD PENDIENTE
-            cantidad_pendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas),amortizaciones_anticipadas);
-            //cantidad_pendiente   = hip.getPrecio_vivienda() - hip.getCantidad_abonada() ;
-            numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
             info_dinero_restante.setVisibility(View.GONE);
-
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
             porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrimer_porcentaje_variable() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_variable();
-
-            //cantidad_pendiente   = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
-
-            cantidad_pendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
-
-            //numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
-            numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         } else {
             //Si cumple la condicion, esta en la fase fija, en otro en la variable
             porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPorcentaje_fijo_mixta() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_mixta();
-
-            //cantidad_pendiente   = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPrecio_vivienda() - hip.getCantidad_abonada() : hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
-            cantidad_pendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
-
-            //numero_cuotas_restantes = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPlazo_anios() * 12 : hip.getPlazo_anios() * 12 - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
-            numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         }
 
         if (hip.siguienteCuotaRevision(amortizaciones_anticipadas)) info_cuota.setVisibility(View.VISIBLE);
@@ -235,7 +236,25 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             numero_cuotas_restantes = 0;
             info_cuota.setVisibility(View.GONE);
         }
+        //la cuota se calcula mal
         double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes, amortizaciones_anticipadas);
+        //SI HAY AMORTIZACION EN LA SIGUIENTE CUOTA
+        if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)){
+            double amortizacion_ant = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
+            layout_amortizacion_anticipada.setVisibility(View.VISIBLE);
+            if(amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(0).equals("total")) {
+                plazoTotalActual = numero_cuotas_pagadas + 1;
+                layout_cuota_seguimiento.setVisibility(View.GONE);
+                layout_capital_intereses1.setVisibility(View.GONE);
+                layout_capital_intereses2.setVisibility(View.GONE);
+            }else if(amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(0).equals("parcial_plazo")){
+                plazoTotalActual -= (Long) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(2);
+            }
+            amortizacion_anticipada_valor.setText(formato.format(amortizacion_ant) + "€");
+        }else layout_amortizacion_anticipada.setVisibility(View.GONE);
+
+        numero_cuota_actual.setText("Cuotas pagadas: " + numero_cuotas_pagadas + " / " + plazoTotalActual);
+
         cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);
 
@@ -440,14 +459,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         intereses_pagados.setText("" + formato.format(interesesPagados) + "€");
         intereses_pendientes.setText("" + formato.format(interesesPendientes) + "€");
     }
-
-    /*
-    private void camposGraficoAportarVsFinanciar(int view) {
-        capital_layout.setVisibility(view);
-        capital_layout_valor.setVisibility(view);
-        intereses_layout.setVisibility(view);
-        intereses_layout_valor.setVisibility(view);
-    }*/
 
     @Override
     public void sendInput(double input) {

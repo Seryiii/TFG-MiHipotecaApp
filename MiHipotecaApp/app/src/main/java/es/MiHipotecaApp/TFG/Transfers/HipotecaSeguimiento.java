@@ -71,7 +71,7 @@ public class HipotecaSeguimiento implements Serializable {
         int cuotaActual = getNumeroCuotaActual(amortizaciones);
 
         for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
-            if(entry.getKey() < cuotaActual){
+            if(entry.getKey() <= cuotaActual){
                 if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
                 else if (entry.getValue().get(0).equals("total")) plazoTotalActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
             }
@@ -85,15 +85,15 @@ public class HipotecaSeguimiento implements Serializable {
     public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes, HashMap<Integer, List<Object>> amortizaciones){
 
         //Este bucle sirve para que la cuota no cambie cuando se reducen meses amortizando anticipadamente
-        int cuotasReducidas = 0;
+        /*int cuotasReducidas = 0;
         for (Map.Entry<Integer, List<Object>> entry : amortizaciones.entrySet()) {
             if (entry.getValue().get(0).equals("parcial_plazo"))
                 cuotasReducidas += (Long) entry.getValue().get(2); //Campo con los meses reducidos
 
-        }
+        }*/
 
         if (num_cuotas_restantes <= 0) return 0;
-        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes + cuotasReducidas);
+        double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes); //+ cuotasReducidas);
         double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
         return cuotaMensual;
     }
@@ -157,16 +157,16 @@ public class HipotecaSeguimiento implements Serializable {
         if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
         // Fin de hipoteca
         int plazoActual = plazo_anios * 12;
-        if(!amortizaciones.isEmpty()) {
-            for (Map.Entry<Integer, List<Object>> entry : amortizaciones.entrySet()) {
-                if (entry.getKey() < numeroPagoActual) {
-                    if (entry.getValue().get(0).equals("parcial_plazo"))
-                        plazoActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
-                    else if (entry.getValue().get(0).equals("total"))
-                        plazoActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
-                }
+
+        for (Map.Entry<Integer, List<Object>> entry : amortizaciones.entrySet()) {
+            if (entry.getKey() <= numeroPagoActual) {
+                if (entry.getValue().get(0).equals("parcial_plazo"))
+                    plazoActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
+                else if (entry.getValue().get(0).equals("total"))
+                    plazoActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
             }
         }
+
         //Solo para fin de hipoteca
         if(numeroPagoActual >= plazoActual) numeroPagoActual = plazoActual;
         return numeroPagoActual;
@@ -195,11 +195,10 @@ public class HipotecaSeguimiento implements Serializable {
     /** Devuelve la cantidad que el usuario deberá de amortizar en funcion de los meses pasados **/
     public double getAmortizarAlReducirMeses(int meses_reducir, HashMap<Integer, List<Object>> amortizaciones){
         double cantAmortizar = 0;
-        int plazoReducido = getPlazoActual(amortizaciones) - meses_reducir;
+        int plazoActual = getPlazoActual(amortizaciones);
+        int plazoReducido = plazoActual - meses_reducir;
 
-        for(int i = plazoReducido; i < plazoReducido + meses_reducir; i++){
-            cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones);
-        }
+        for(int i = plazoReducido; i < plazoActual; i++) cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones);
 
         return cantAmortizar;
     }
