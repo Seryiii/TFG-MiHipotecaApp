@@ -73,6 +73,8 @@ public class MostrarOfertas extends AppCompatActivity {
         Intent intent = getIntent();
         String jsonStr = intent.getStringExtra("datos");
         datos = new JSONObject(jsonStr);
+        
+
     }
     private void eventos(){
         btn_fijas.setOnClickListener(new View.OnClickListener() {
@@ -114,9 +116,9 @@ public class MostrarOfertas extends AppCompatActivity {
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
+                Request.Method.POST,
                 url,
-                null,
+                datos,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
@@ -185,7 +187,7 @@ public class MostrarOfertas extends AppCompatActivity {
         }
         );
         request.setRetryPolicy(new DefaultRetryPolicy(
-                60000, // segundos
+                120000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         requestQueue.add(request);

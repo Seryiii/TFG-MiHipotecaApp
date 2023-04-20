@@ -12,6 +12,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Switch;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,9 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
     private EditText plazo;
     private EditText ingresos;
     private Button btn_comparar_hipoteca;
+    private Switch switch_detalles;
+
+    private boolean detalles = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +52,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         tipoVivienda.setAdapter(adapter);
 
         comunidadComp = findViewById(R.id.sp_comunidad_comparador);
-        String[] comunidades = {"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
+        String[] comunidades = {"Alava", "Albacete", "Alicante", "Almeria", "Avila", "Badajoz", " Illes Balears ", "Barcelona", "Burgos", "Caceres", "Cadiz", "Castellon", "Ciudad Real", "Cordoba", "A Coruña", "Cuenca", "Girona", "Granada", "Guadalajara", "Guipuzcoa", "Huelva", "Huesca", "Jaen", "Leon", "LLeida", "La Rioja", "Lugo", "Madrid", "Malaga", "Murcia", "Navarra", "Ourense", "Asturias", "Palencia", "Palmas", "Pontevedra", "Salamanca", "Santa Cruz De Tenerife", "Cantabria", "Segovia", "Sevilla", "Soria", "Tarragona", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
         comunidadComp.setAdapter(adapter2);
 
@@ -59,6 +63,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         plazo                 = findViewById(R.id.edit_plazo_pagar_comp);
         ingresos              = findViewById(R.id.edit_ingresos_mensuales);
         btn_comparar_hipoteca = findViewById(R.id.btn_comparar_hipoteca);
+        switch_detalles       = findViewById(R.id.switch_detalle);
 
     }
 
@@ -75,7 +80,18 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
                 if(!viviendaSegManoCheck.isChecked()) viviendaNuevaCheck.setChecked(true);
             }
         });
-
+        switch_detalles.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //Aquí es donde puedes hacer algo con el estado del switch
+                if (isChecked) {
+                    //el switch está activado
+                    detalles = true;
+                } else {
+                    detalles = false;
+                }
+            }
+        });
         viviendaSegManoCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -128,6 +144,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
             try {
 
                 datos.put("comunidad_autonoma", comunidadComp.getSelectedItem().toString());
+                datos.put("tipo_vivienda" ,tipoVivienda.getSelectedItem().toString() );
                 String antiguedad = "nueva";
                 if(viviendaSegManoCheck.isChecked()) antiguedad = "segunda";
                 datos.put("antiguedad_vivienda", antiguedad);
@@ -135,6 +152,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
                 datos.put("cantidad_abonada", cantidadAbonada.getText().toString());
                 datos.put("plazo_anios", plazo.getText().toString());
                 datos.put("ingresos", ingresos.getText().toString());
+                datos.put("detalles", detalles);
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }

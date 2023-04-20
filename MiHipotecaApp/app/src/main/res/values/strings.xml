@@ -125,6 +125,7 @@
     <string name="label_tiempo_restante">Tiempo restante</string>
     <string name="label_cuota_de">CUOTA DE </string>
     <string name="label_ingresos">Ingresos mensuales:</string>
+    <string name="label_ofertas_con_detalle">Obtener mejores ofertas con detalle</string>
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>
