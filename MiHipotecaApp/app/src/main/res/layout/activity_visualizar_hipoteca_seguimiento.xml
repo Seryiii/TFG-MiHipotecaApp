@@ -419,7 +419,6 @@
             android:background="@drawable/btn_bordes_redondos2">
 
             <LinearLayout
-                android:id="@+id/btn_grafico_gastos_totales"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -428,6 +427,7 @@
                 android:layout_marginBottom="15dp">
 
                 <ImageButton
+                    android:id="@+id/btn_grafico_gastos_totales"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -445,7 +445,6 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/btn_grafico_intereses_capital"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -454,6 +453,7 @@
                 android:layout_marginBottom="15dp">
 
                 <ImageButton
+                    android:id="@+id/btn_grafico_intereses_capital"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"

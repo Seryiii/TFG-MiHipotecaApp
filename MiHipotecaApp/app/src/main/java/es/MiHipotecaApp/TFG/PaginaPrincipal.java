@@ -7,15 +7,29 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import es.MiHipotecaApp.TFG.SimularHipoteca.CompararNuevaHipoteca;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.CustomDialogoPremium;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.InfoPerfilUsuario;
 
 public class PaginaPrincipal extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+
+    private final String TAG = "Pagina principal";
 
     private BottomNavigationView bottomNavigationView;
     private TusHipotecas tusHipotecasFragment           = new TusHipotecas();
@@ -45,8 +59,49 @@ public class PaginaPrincipal extends AppCompatActivity implements BottomNavigati
                 return true;
 
             case R.id.aniadir_hipoteca:
-                Intent i = new Intent(PaginaPrincipal.this, NuevoSeguimiento.class);
-                startActivity(i);
+
+                FirebaseAuth auth = FirebaseAuth.getInstance();
+                FirebaseUser user = auth.getCurrentUser();
+                String userMail = user.getEmail();
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                            if(document.getBoolean("premium")) {
+                                Intent i = new Intent(PaginaPrincipal.this, NuevoSeguimiento.class);
+                                startActivity(i);
+                            } else {
+
+                                CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+                                Query consultaHipotecasUsu = hipotecasRef.whereEqualTo("idUsuario", user.getUid());
+                                consultaHipotecasUsu.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                        int countHipotecas = queryDocumentSnapshots.getDocuments().size();
+                                        if (countHipotecas < 1) {
+                                            Intent i = new Intent(PaginaPrincipal.this, NuevoSeguimiento.class);
+                                            startActivity(i);
+                                        } else {
+                                            //Toast.makeText(PaginaPrincipal.this, "ACTUALIZA A PREMIUM PARA TENER MAS HIPOTECAS DE SEGUIMIENTO", Toast.LENGTH_LONG).show();
+                                            CustomDialogoPremium dialogo = new CustomDialogoPremium();
+                                            dialogo.show(getSupportFragmentManager(), "dialogo");
+                                        }
+                                    }
+
+
+                                });
+                            }
+
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
                 return true;
 
             case R.id.comparar_hipoteca:

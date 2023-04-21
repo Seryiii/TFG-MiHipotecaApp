@@ -43,6 +43,8 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.CustomDialogoPremium;
+
 public class TusHipotecas extends Fragment {
 
     private RecyclerView recyclerHipotecas;
@@ -204,11 +206,13 @@ public class TusHipotecas extends Fragment {
                                             Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
                                             startActivity(i);
                                         } else{
-                                            if(listaHipotecasSeg.size() < 1){
+                                            if(listaHipotecasSeg.size() < 2){
                                                 Intent i = new Intent(getActivity().getApplicationContext(), NuevoSeguimiento.class);
                                                 startActivity(i);
                                             } else {
-                                                Toast.makeText(getActivity(), "ACTUALIZA A PREMIUM PARA TENER MAS HIPOTECAS DE SEGUIMIENTO", Toast.LENGTH_LONG).show();
+                                                //Toast.makeText(getActivity(), "ACTUALIZA A PREMIUM PARA TENER MAS HIPOTECAS DE SEGUIMIENTO", Toast.LENGTH_LONG).show();
+                                                CustomDialogoPremium dialogo = new CustomDialogoPremium();
+                                                dialogo.show(getFragmentManager(), "dialogo");
                                             }
                                         }
 

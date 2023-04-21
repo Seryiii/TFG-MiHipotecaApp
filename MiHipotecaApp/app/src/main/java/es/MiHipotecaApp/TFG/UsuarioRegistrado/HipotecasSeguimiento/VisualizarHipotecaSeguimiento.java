@@ -50,6 +50,7 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.CustomDialogoPremium;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_gastos_totales;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_intereses_capital;
 
@@ -93,8 +94,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private LinearLayout layout_capital_intereses1;
     private LinearLayout layout_capital_intereses2;
     private TextView amortizacion_anticipada_valor;
-    private LinearLayout btn_grafico_gastos_totales;
-    private LinearLayout btn_grafico_intereses_capital;
+    private ImageButton btn_grafico_gastos_totales;
+    private ImageButton btn_grafico_intereses_capital;
 
     private String cuotaFormateada;
     private double porcentaje_aplicado;
@@ -408,22 +409,32 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         btn_grafico_gastos_totales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_gastos_totales.class);
-                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
-                i.putExtra("hipoteca", hip);
-                i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
-                startActivity(i);
+                if(!btn_grafico_gastos_totales.isEnabled()){
+                    CustomDialogoPremium dialogo = new CustomDialogoPremium();
+                    dialogo.show(getSupportFragmentManager(), "dialogo");
+                }else {
+                    Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_gastos_totales.class);
+                    i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                    i.putExtra("hipoteca", hip);
+                    i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
+                    startActivity(i);
+                }
             }
         });
 
         btn_grafico_intereses_capital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_intereses_capital.class);
-                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
-                i.putExtra("hipoteca", hip);
-                i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
-                startActivity(i);
+                if(!btn_grafico_intereses_capital.isEnabled()){
+                    CustomDialogoPremium dialogo = new CustomDialogoPremium();
+                    dialogo.show(getSupportFragmentManager(), "dialogo");
+                }else {
+                    Intent i = new Intent(VisualizarHipotecaSeguimiento.this, grafico_intereses_capital.class);
+                    i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                    i.putExtra("hipoteca", hip);
+                    i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
+                    startActivity(i);
+                }
             }
         });
      }
@@ -476,9 +487,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         //Al no ser premium no deja interactuar con los graficos
                         grafico.setAlpha(0.1f); //Hace que el grafico se vea menos
                         grafico.setEnabled(false);
-                        btn_grafico_gastos_totales.setAlpha(0.1f);
+                        btn_grafico_gastos_totales.setAlpha(0.8f);
                         btn_grafico_gastos_totales.setEnabled(false);
-                        btn_grafico_intereses_capital.setAlpha(0.1f);
+                        btn_grafico_intereses_capital.setAlpha(0.8f);
                         btn_grafico_intereses_capital.setEnabled(false);
                     }
 
