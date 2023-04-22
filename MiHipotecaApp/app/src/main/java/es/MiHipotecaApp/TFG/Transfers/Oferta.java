@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
+import org.json.JSONArray;
+
 public class Oferta {
     private String banco;
     private String desc;
@@ -12,6 +14,8 @@ public class Oferta {
 
     private String tin_x;
     private String tin_resto;
+    private String vinculaciones;
+
 
 
     public Oferta(String banco, String desc, String tin, String tae, String cuota) {
@@ -29,6 +33,32 @@ public class Oferta {
         this.tae = tae;
         this.cuota_x = cuota_x;
         this.cuota_resto = cuota_resto;
+    }
+    public Oferta(String banco, String desc, String tin, String tae, String cuota, String vinculaciones) {
+        this.banco = banco;
+        this.desc = desc;
+        this.tin = tin;
+        this.tae = tae;
+        this.cuota = cuota;
+        this.vinculaciones = vinculaciones;
+    }
+    public Oferta(String banco, String desc, String tin_x, String tin_resto, String tae, String cuota_x,String cuota_resto,String vinculaciones) {
+        this.banco = banco;
+        this.desc = desc;
+        this.tin_x = tin_x;
+        this.tin_resto = tin_resto;
+        this.tae = tae;
+        this.cuota_x = cuota_x;
+        this.cuota_resto = cuota_resto;
+        this.vinculaciones = vinculaciones;
+    }
+
+    public String getVinculaciones() {
+        return vinculaciones;
+    }
+
+    public void setVinculaciones(String vinculaciones) {
+        this.vinculaciones = vinculaciones;
     }
 
     public String getCuota_x() {

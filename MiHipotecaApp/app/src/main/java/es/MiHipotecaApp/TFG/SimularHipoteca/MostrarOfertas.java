@@ -14,8 +14,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,6 +53,14 @@ public class MostrarOfertas extends AppCompatActivity {
     private Button btn_varMix;
     private TextView tvEspera;
     private JSONObject datos;
+    private  boolean detalles;
+
+    private Spinner sp_bancos;
+    private TextView txt_filtrarBancos;
+    private Switch switchBusqueda;
+    private boolean fija = true;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,41 +86,123 @@ public class MostrarOfertas extends AppCompatActivity {
         Intent intent = getIntent();
         String jsonStr = intent.getStringExtra("datos");
         datos = new JSONObject(jsonStr);
-        
+        detalles = datos.getBoolean("detalles");
+        sp_bancos = findViewById(R.id.sp_bancos);
+        txt_filtrarBancos = findViewById(R.id.txt_filtrarBancos);
+        switchBusqueda = findViewById(R.id.switchBusqueda);
 
     }
     private void eventos(){
         btn_fijas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter = new RecyclerAdapter(lista_fija,"fija");
+                adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
+                String[] bancosFija = bancosDiferentes(lista_fija);
+                ArrayAdapter<String> adapterSpinner_fija = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosFija);
+                sp_bancos.setAdapter(adapterSpinner_fija);
+                fija = true;
             }
         });
 
         btn_varMix.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter = new RecyclerAdapter(lista_varMix,"varMix");
+                adapter = new RecyclerAdapter(lista_varMix,"varMix",detalles);
+
+                String[] bancosVarMixt = bancosDiferentes(lista_varMix);
+                ArrayAdapter<String> adapterSpinner_varMix = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosVarMixt);
+                sp_bancos.setAdapter(adapterSpinner_varMix);
+                rvLista.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+                fija = false;
+            }
+        });
+        switchBusqueda.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                //Aquí es donde puedes hacer algo con el estado del switch
+                if (isChecked) {
+                    //el switch está activado
+                    if(fija){
+                        String[] bancosFija = bancosDiferentes(lista_fija);
+                        ArrayAdapter<String> adapterSpinner_fija = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosFija);
+                        sp_bancos.setAdapter(adapterSpinner_fija);
+                    }
+                    else{
+                        String[] bancosVarMixt = bancosDiferentes(lista_varMix);
+                        ArrayAdapter<String> adapterSpinner_varMix = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosVarMixt);
+                        sp_bancos.setAdapter(adapterSpinner_varMix);
+                    }
+                    sp_bancos.setVisibility(View.VISIBLE);
+
+                } else {
+                    sp_bancos.setVisibility(View.GONE);
+                    if (fija){
+                        adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
+                        rvLista.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }else{
+                        adapter = new RecyclerAdapter(lista_varMix,"varMix",detalles);
+                        rvLista.setAdapter(adapter);
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+            }
+        });
+        sp_bancos.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                List<Oferta> cuentasFiltradas = new ArrayList<>();
+                String bancoSeleccionado = (String) adapterView.getItemAtPosition(i);
+                if (fija) {
+                    for(Oferta o : lista_fija){
+                        if (o.getBanco().equals(bancoSeleccionado)) cuentasFiltradas.add(o);
+                    }
+                    adapter = new RecyclerAdapter(cuentasFiltradas,"fija",detalles);
+                }
+                else{
+                    for(Oferta o : lista_varMix){
+                        if (o.getBanco().equals(bancoSeleccionado)) cuentasFiltradas.add(o);
+                    }
+                    adapter = new RecyclerAdapter(cuentasFiltradas,"varMix",detalles);
+                }
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
             }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
         });
+
     }
-    private void initValues(){
+    private void initValues() {
         LinearLayoutManager manager = new LinearLayoutManager(MostrarOfertas.this);
         rvLista.setLayoutManager(manager);
         try {
             obtenerDatosBancos();
-        }catch (Exception e){
-
-        }
-
-        adapter = new RecyclerAdapter(lista_fija,"fija");
+        }catch (Exception e){}
+        Log.d("DETALLES", String.valueOf(detalles));
+        if(detalles) adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
+        else  adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
         rvLista.setAdapter(adapter);
 
 
+    }
+    private String[] bancosDiferentes(List<Oferta> lista){
+        List<String> bancos = new ArrayList<>();
+        String[] bancosFinal;
+        for (int i = 0; i < lista.size(); i++){
+            if (bancos.isEmpty()) bancos.add(lista.get(i).getBanco());
+            else{
+                if (!bancos.contains(lista.get(i).getBanco()))bancos.add(lista.get(i).getBanco());
+            }
+        }
+        bancosFinal = bancos.toArray(new String[bancos.size()]);
+        return bancosFinal;
     }
 
     private void obtenerDatosBancos() {
@@ -138,8 +233,17 @@ public class MostrarOfertas extends AppCompatActivity {
                                 String tin = jsonObject.getString("tin");
                                 String tae = jsonObject.getString("tae");
                                 String cuota = jsonObject.getString("cuota");
-                                Oferta oferta = new Oferta(banco,desc,tin,tae,cuota);
-                                lista_fija.add(oferta);
+
+                                if(detalles){
+                                    String vinculaciones = jsonObject.getString("vinculaciones");
+                                    Oferta oferta = new Oferta(banco,desc,tin,tae,cuota,vinculaciones);
+                                    lista_fija.add(oferta);
+                                }
+                                else{
+                                    Oferta oferta = new Oferta(banco,desc,tin,tae,cuota);
+                                    lista_fija.add(oferta);
+                                }
+
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
@@ -161,18 +265,31 @@ public class MostrarOfertas extends AppCompatActivity {
                                 String tae = jsonObject.getString("tae");
                                 String cuota_x_anios = jsonObject.getString("cuota_x_anios");
                                 String cuota_resto = jsonObject.getString("cuota_resto");
-                                Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto);
-                                lista_varMix.add(oferta);
+                                if(detalles){
+                                    String vinculaciones = jsonObject.getString("vinculaciones");
+                                    Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto,vinculaciones);
+                                    lista_varMix.add(oferta);
+                                }
+                                else{
+                                    Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto);
+                                    lista_varMix.add(oferta);
+                                }
+
+
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
 
                         }
+
                         adapter.notifyDataSetChanged();
+                        //sp_bancos.setVisibility(View.VISIBLE);
+                        txt_filtrarBancos.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                         btn_fijas.setVisibility(View.VISIBLE);
                         btn_varMix.setVisibility(View.VISIBLE);
                         tvEspera.setVisibility(View.GONE);
+                        switchBusqueda.setVisibility(View.VISIBLE);
 
                     }
 
@@ -245,28 +362,3 @@ public class MostrarOfertas extends AppCompatActivity {
 
 
 
-/**
- private void obtenerDatosBancos() {
- String url = "http://10.0.2.2:5000/pruebaArray";
- Log.d("PETICION", "Botón pulsado");
- JsonObjectRequest request = new JsonObjectRequest(
- Request.Method.GET,
- url,
- null,
- new Response.Listener<JSONObject>() {
-@Override
-public void onResponse(JSONObject response) {
-Log.d("PETICION_1", "Terminada");
-latch.countDown();
-}
-
-}, new Response.ErrorListener() {
-@Override
-public void onErrorResponse(VolleyError error) {
-latch.countDown();
-}
-}
- );
- requestQueue.add(request);
- }
- **/

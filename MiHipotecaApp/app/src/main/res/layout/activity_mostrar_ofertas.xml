@@ -36,6 +36,47 @@ tools:context=".SimularHipoteca.MostrarOfertas">
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/txt_filtrarBancos"
+                android:layout_width="120dp"
+                android:layout_height="wrap_content"
+                android:text="Filtrar por bancos"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                />
+            <Switch
+                android:id="@+id/switchBusqueda"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:visibility="invisible"
+                />
+
+        </LinearLayout>
+
+        <Spinner
+            android:id="@+id/sp_bancos"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:layout_marginStart="15dp"
+            android:visibility="invisible"
+            />
+
+    </LinearLayout>
+
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"

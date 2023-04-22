@@ -3,7 +3,9 @@ package es.MiHipotecaApp.TFG.SimularHipoteca;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,9 +20,12 @@ import es.MiHipotecaApp.TFG.Transfers.Oferta;
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     private List<Oferta> lista;
     private String tipo;
-    public RecyclerAdapter(List<Oferta> lista,String tipo) {
+    private Boolean detalles;
+    public Boolean estado = false;
+    public RecyclerAdapter(List<Oferta> lista,String tipo,Boolean detalles) {
         this.lista = lista;
         this.tipo = tipo;
+        this.detalles = detalles;
     }
 
     @NonNull
@@ -96,7 +101,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
+
         Oferta oferta = lista.get(position);
+        if(detalles){
+            eventoBtn(holder,oferta);
+        }
+        else{
+            holder.btn_details.setVisibility(View.GONE);
+            holder.txt_detalles.setVisibility(View.GONE);
+        }
+
         holder.tvBanco.setText(oferta.getBanco());
         holder.tvDesc.setText(oferta.getDesc());
         ponerLogoBanco(oferta.getBanco(), holder);
@@ -114,6 +128,55 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
 
     }
+    public void eventoBtn(@NonNull RecyclerHolder holder, Oferta oferta){
+        holder.btn_details.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!estado){
+                    if(tipo.equals("fija")){
+                        holder.tvTin.setVisibility(View.GONE);
+                        holder.tvTae.setText("Vinculaciones");
+                        holder.txtCuota.setVisibility(View.GONE);
+                        holder.tvCuota.setText(oferta.getVinculaciones());
+                        holder.tvCuota.setTextSize(10);
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.tvCuota.getLayoutParams();
+                        params.setMargins(0, 14, 0, 0);
+                        holder.tvCuota.setLayoutParams(params);
+                    }else{
+                        holder.tvTin.setVisibility(View.GONE);
+                        holder.tvTin_resto.setVisibility(View.GONE);
+                        holder.tvTae.setText("Vinculaciones");
+                        holder.tvCuota.setText(oferta.getVinculaciones());
+                        holder.tvCuota.setTextSize(10);
+                        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) holder.tvCuota.getLayoutParams();
+                        params.setMargins(0, 14, 0, 0);
+                        holder.tvCuota.setLayoutParams(params);
+                        holder.txtCuota.setVisibility(View.GONE);
+                        holder.tvCuota_resto.setVisibility(View.GONE);
+                    }
+                }else {
+                    if(tipo.equals("fija")){
+                        holder.tvTin.setVisibility(View.VISIBLE);
+                        holder.txtCuota.setVisibility(View.VISIBLE);
+                        holder.tvTae.setText("TAE " + oferta.getTae());
+                        holder.tvCuota.setText(oferta.getCuota());
+                        holder.tvCuota.setTextSize(12);
+                    }else{
+                        holder.tvTin.setVisibility(View.VISIBLE);
+                        holder.tvTin_resto.setVisibility(View.VISIBLE);
+                        holder.tvTae.setText("TAE " + oferta.getTae());
+                        holder.tvCuota.setText(oferta.getCuota_x());
+                        holder.tvCuota.setTextSize(12);
+                        holder.txtCuota.setVisibility(View.VISIBLE);
+                        holder.tvCuota_resto.setVisibility(View.VISIBLE);
+                    }
+                }
+
+                if(estado) estado = false;
+                else estado = true;
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {
@@ -129,6 +192,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         private TextView tvTae;
         private TextView tvCuota;
         private TextView tvCuota_resto;
+        private TextView txtCuota;
+
+        private Button btn_details;
+        private TextView txt_detalles;
+
 
 
         public RecyclerHolder(@NonNull View itemView){
@@ -140,7 +208,10 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             tvTin_resto = itemView.findViewById(R.id.tvTin_resto);
             tvTae = itemView.findViewById(R.id.tvTae);
             tvCuota = itemView.findViewById(R.id.tvCuota);
+            txtCuota = itemView.findViewById(R.id.txt_cuota);
             tvCuota_resto = itemView.findViewById(R.id.tvCuota_resto);
+            btn_details = itemView.findViewById(R.id.btnArrow);
+            txt_detalles = itemView.findViewById(R.id.txt_detalles);
 
         }
 

@@ -52,7 +52,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         tipoVivienda.setAdapter(adapter);
 
         comunidadComp = findViewById(R.id.sp_comunidad_comparador);
-        String[] comunidades = {"Alava", "Albacete", "Alicante", "Almeria", "Avila", "Badajoz", " Illes Balears ", "Barcelona", "Burgos", "Caceres", "Cadiz", "Castellon", "Ciudad Real", "Cordoba", "A Coruña", "Cuenca", "Girona", "Granada", "Guadalajara", "Guipuzcoa", "Huelva", "Huesca", "Jaen", "Leon", "LLeida", "La Rioja", "Lugo", "Madrid", "Malaga", "Murcia", "Navarra", "Ourense", "Asturias", "Palencia", "Palmas", "Pontevedra", "Salamanca", "Santa Cruz De Tenerife", "Cantabria", "Segovia", "Sevilla", "Soria", "Tarragona", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"};
+        String[] comunidades = {"Alava", "Albacete", "Alicante", "Almeria", "Avila", "Badajoz", "Illes Balears ", "Barcelona", "Burgos", "Caceres", "Cadiz", "Castellon", "Ciudad Real", "Cordoba", "A Coruña", "Cuenca", "Girona", "Granada", "Guadalajara", "Guipuzcoa", "Huelva", "Huesca", "Jaen", "Leon", "LLeida", "La Rioja", "Lugo", "Madrid", "Malaga", "Murcia", "Navarra", "Ourense", "Asturias", "Palencia", "Palmas", "Pontevedra", "Salamanca", "Santa Cruz De Tenerife", "Cantabria", "Segovia", "Sevilla", "Soria", "Tarragona", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza", "Ceuta", "Melilla"};
         ArrayAdapter<String> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
         comunidadComp.setAdapter(adapter2);
 
