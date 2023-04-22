@@ -297,7 +297,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     }
                     else{
                         double cantidad_pendiente_con_amortizacion = cantidad_pendiente - capital_a_amortizar;
-                        double cuota_nueva = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente_con_amortizacion, numero_cuotas_restantes, amortizaciones_hip);
+                        double cuota_nueva = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente_con_amortizacion, numero_cuotas_restantes);
                         cuota_plazo_nueva_valor.setText(formato.format(cuota_nueva) +"€");
                         cantidad_capital_amortizado.setText("Cantidad a amortizar: " + edit_dinero_a_amortizar.getText().toString() + "€");
                         double capital_pdte_nuevo = capital_pendiente_actual - capital_a_amortizar;

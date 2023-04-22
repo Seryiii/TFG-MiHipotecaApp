@@ -2,17 +2,12 @@ package es.MiHipotecaApp.TFG.Transfers;
 
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.io.Serializable;
@@ -82,7 +77,7 @@ public class HipotecaSeguimiento implements Serializable {
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
-    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes, HashMap<Integer, List<Object>> amortizaciones){
+    public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes){
 
         //Este bucle sirve para que la cuota no cambie cuando se reducen meses amortizando anticipadamente
         /*int cuotasReducidas = 0;
@@ -215,7 +210,7 @@ public class HipotecaSeguimiento implements Serializable {
     public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0;}
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){ return null; }
 
-    public double getPorcentajePorCuota(int numCuota){ return 0; }
+    public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0; }
 
     //GETTERS Y SETTERS SOBREESCRITOS
     public double getPorcentaje_fijo() {
@@ -356,9 +351,49 @@ public class HipotecaSeguimiento implements Serializable {
 
     //Calcula el euribor que hubo correspondiente a un numero de pago
 
-    public double getEuriborPasado(int numPago){
+    public double getEuriborPasado(int numPago, HashMap<Integer, List<Object>> amortizaciones){
+        List<Object> anioMes = getAnioYMesDeUnPago(numPago, amortizaciones);
 
-        //Si el numero de pago no se ha hecho devolver euribor actual
-        return 3.018;
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference usersRef = db.collection("euribor");
+        Query query = usersRef.whereEqualTo("anio", anioMes.get(0)).whereEqualTo("mes", anioMes.get(1));
+        Task<QuerySnapshot> task = query.get();
+
+        try {
+            // Esperamos hasta que la tarea se complete
+            QuerySnapshot snapshot = Tasks.await(task);
+            // Obtenemos el primer documento (en caso de haber más de uno)
+            DocumentSnapshot doc = snapshot.getDocuments().get(0);
+            // Obtenemos el valor del campo "edad" y lo devolvemos como entero
+            double edad = doc.getDouble("valor");
+            return edad;
+        } catch (Exception e) {
+            //Log.e(/*TAG, */"Error al obtener la edad: ", e);
+            return -1;
+        }
+
+
+    }
+
+    public List<Object> getAnioYMesDeUnPago(int numPago, HashMap<Integer, List<Object>> amortizaciones){
+        List<Object> anioMes = new ArrayList<>();
+        String[] mesesNombre = new String[]{"Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
+
+        Calendar inicio = Calendar.getInstance();
+
+        inicio.setTime(fecha_inicio);
+        if(numPago <= getPlazoActual(amortizaciones)){
+            int meses = inicio.get(Calendar.MONTH) + numPago - 1;
+            int anio = inicio.get(Calendar.YEAR);
+            while(meses > 11){
+                anio++;
+                meses -= 12;
+            }
+            anioMes.add(anio);
+            anioMes.add(mesesNombre[meses]);
+        }
+
+        return anioMes;
     }
 }

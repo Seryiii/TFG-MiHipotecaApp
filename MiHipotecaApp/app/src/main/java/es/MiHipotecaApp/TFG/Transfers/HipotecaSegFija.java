@@ -1,9 +1,5 @@
 package es.MiHipotecaApp.TFG.Transfers;
 
-import android.util.Log;
-
-import org.checkerframework.checker.units.qual.A;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,7 +23,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
         int cuotasRestantes = getPlazoActual(amortizaciones) - numPago;
         double capPendiente = getCapitalPendienteTotalActual(numPago, amortizaciones);
-        return getCuotaMensual(porcentaje_fijo, capPendiente, getPlazoActual(amortizaciones), amortizaciones) * cuotasRestantes;
+        return getCuotaMensual(porcentaje_fijo, capPendiente, getPlazoActual(amortizaciones)) * cuotasRestantes;
     }
 
     /** Esta funcion devuelve el capital pendiente total por amortizar**/
@@ -35,14 +31,14 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         int plazoActual = plazo_anios * 12;
-        double cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual, amortizaciones);
+        double cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual);
 
         for (int i = 1; i <= numero_pago; i++){
             if(amortizaciones.containsKey(i)){
                 if(amortizaciones.get(i).get(0).equals("total")) return 0;
                 else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
                     capital_pendiente -= (Double) amortizaciones.get(i).get(1);
-                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual, amortizaciones);
+                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual);
                 }
                 else {
                     capital_pendiente -= (Double) amortizaciones.get(i).get(1);
@@ -62,14 +58,14 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         double interesesTotales = 0;
         double capPendiente = precio_vivienda - cantidad_abonada;
         int plazoActual = plazo_anios * 12;
-        double cuota_mensual = getCuotaMensual(getPorcentaje_fijo(), capPendiente, plazoActual, amortizaciones);
+        double cuota_mensual = getCuotaMensual(getPorcentaje_fijo(), capPendiente, plazoActual);
 
         for (int i = 1; i <= num_pago; i++) {
             if(amortizaciones.containsKey(i)){
                 if(amortizaciones.get(i).get(0).equals("total")) return 0;
                 else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
                     capPendiente -= (Double) amortizaciones.get(i).get(1);
-                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capPendiente, plazoActual, amortizaciones);
+                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capPendiente, plazoActual);
                 }
                 else {
                     capPendiente -= (Double) amortizaciones.get(i).get(1);
@@ -89,7 +85,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         ArrayList<Double> valores = new ArrayList<>();
         double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
         double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
-        double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1, amortizaciones);
+        double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1);
 
         valores.add(cuota);
         valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo));
@@ -103,7 +99,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
 
         double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
-        double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1, amortizaciones);
+        double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1);
         double capitalCuota = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
         return capitalCuota;
     }
@@ -151,7 +147,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
     /** Esta funcion devuelve el porcentaje que se aplica para un determinado numero de cuota**/
     @Override
-    public double getPorcentajePorCuota(int numCuota){ return porcentaje_fijo; }
+    public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return porcentaje_fijo; }
 
     /** Getters y Setters*/
     @Override

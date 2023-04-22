@@ -181,6 +181,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                             List<Object> lista = (List<Object>) amortizaciones.get(clave);
                             amortizaciones_anticipadas.put(claveInt, lista);
                         }
+                        hip.getEuriborPasado(1, amortizaciones_anticipadas);
                         rellenarUI();
                         eventos();
                         construirGraficoAportadoVsAFinanciar();
@@ -239,7 +240,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             info_cuota.setVisibility(View.GONE);
         }
         //la cuota se calcula mal
-        double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes, amortizaciones_anticipadas);
+        double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
         //SI HAY AMORTIZACION EN LA SIGUIENTE CUOTA
         if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)){
             double amortizacion_ant = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
