@@ -212,6 +212,8 @@ public class HipotecaSeguimiento implements Serializable {
 
     public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0; }
 
+    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones){return 0;}
+
     //GETTERS Y SETTERS SOBREESCRITOS
     public double getPorcentaje_fijo() {
         return 0;

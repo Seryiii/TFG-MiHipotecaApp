@@ -96,6 +96,9 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     /** Funcion a la que se llama cuando el textView que marca el año mostrado en el calendario cambia, ya sea
         por alguno de los botones laterales o por el uso de la seekBar **/
     public void actualizarTablaMeses(int anio){
+
+        // ADAPTARLO A QUE PARE CUANDO CAP PENDIENTE SEA 0
+
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         //Obtiene el numero de cuota de enero del año mostrado en el textView
@@ -110,7 +113,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            if(numCuotaEnero + i > 0 && numCuotaEnero + i <= hip.getPlazoActual(amortizaciones_hip)) {
+            double capPdteCuota = hip.getCapitalPendienteTotalActual(numCuotaEnero + i, amortizaciones_hip);
+            double cuota_actual = hip.cogerCuotaActual(numCuotaEnero + i, amortizaciones_hip);
+
+            if(numCuotaEnero + i > 0) {
 
                 TextView numCuota = new TextView(this);
                 numCuota.setText(Integer.toString(numCuotaEnero + i));
@@ -122,34 +128,48 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 nombreMes.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(nombreMes);
 
-
-                // CUOTA, CAPITAL, INTERESES, CAPITAL PDTE
                 ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i, amortizaciones_hip);
 
                 TextView cuota = new TextView(this);
-                cuota.setText(formato.format(valores.get(0)));
                 cuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                tableRow.addView(cuota);
 
                 TextView capital = new TextView(this);
-                capital.setText(formato.format(valores.get(1)));
                 capital.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                tableRow.addView(capital);
 
                 TextView interes = new TextView(this);
-                interes.setText(formato.format(valores.get(2)));
                 interes.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                tableRow.addView(interes);
 
                 TextView pendiente = new TextView(this);
-                pendiente.setText(formato.format(valores.get(3)));
                 pendiente.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
-                tableRow.addView(pendiente);
+
+                //Cuota normal
+                if (capPdteCuota > cuota_actual){
+                    // CUOTA, CAPITAL, INTERESES, CAPITAL PDTE
+                    cuota.setText(formato.format(valores.get(0)));
+                    capital.setText(formato.format(valores.get(1)));
+                    interes.setText(formato.format(valores.get(2)));
+                    pendiente.setText(formato.format(valores.get(3)));
+                    tableRow.addView(cuota);
+                    tableRow.addView(capital);
+                    tableRow.addView(interes);
+                    tableRow.addView(pendiente);
+                }
+                //Ultima cuota
+                else {
+                    //TODO CAMBIAR PORCENTAJES Y ADAPTARLO PARA TODAS LAS HIPOTECAS
+                    cuota.setText(formato.format(capPdteCuota));
+                    capital.setText(formato.format(hip.getCapitalAmortizadoMensual(capPdteCuota, capPdteCuota, hip.getPorcentaje_fijo())));
+                    interes.setText(formato.format(hip.getInteresMensual(capPdteCuota, hip.getPorcentaje_fijo())));
+                    pendiente.setText("0");
+                    tableRow.addView(cuota);
+                    tableRow.addView(capital);
+                    tableRow.addView(interes);
+                    tableRow.addView(pendiente);
+                    break;
+                }
+
             }
-
         }
-
-
 
     }
 

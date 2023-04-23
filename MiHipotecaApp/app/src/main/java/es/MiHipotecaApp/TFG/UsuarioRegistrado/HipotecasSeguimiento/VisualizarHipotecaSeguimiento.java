@@ -239,8 +239,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             numero_cuotas_restantes = 0;
             info_cuota.setVisibility(View.GONE);
         }
-        //la cuota se calcula mal
+
         double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
+        if(hip.getTipo_hipoteca().equals("fija")) cuota_mensual = hip.cogerCuotaActual(numero_cuotas_pagadas, amortizaciones_anticipadas);
         //SI HAY AMORTIZACION EN LA SIGUIENTE CUOTA
         if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)){
             double amortizacion_ant = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
@@ -350,6 +351,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         i.putExtra("hipoteca", hip);
                         i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                         startActivity(i);
+                        finish();
                     }
                 }else Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.no_puede_amortizar), Toast.LENGTH_LONG).show();
 

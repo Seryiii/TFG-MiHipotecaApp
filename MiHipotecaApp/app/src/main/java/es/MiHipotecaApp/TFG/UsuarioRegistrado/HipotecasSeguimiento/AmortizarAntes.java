@@ -356,6 +356,10 @@ public class AmortizarAntes extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 finish();
+                                Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
+                                i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                                i.putExtra("hipoteca", hip);
+                                startActivity(i);
                             }
                         })
                         .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
@@ -471,11 +475,6 @@ public class AmortizarAntes extends AppCompatActivity {
                             // actualizar el documento con los nuevos valores
                             hipotecasRef.document(document2.getId()).update(nuevosDatos2);
                         }
-
-                        Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
-                        i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
-                        i.putExtra("hipoteca", hip);
-                        startActivity(i);
                     } else {
                         Log.e("ERROR", " getting documents");
                     }
@@ -485,4 +484,12 @@ public class AmortizarAntes extends AppCompatActivity {
         finish();
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent i = new Intent(AmortizarAntes.this, VisualizarHipotecaSeguimiento.class);
+        i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+        i.putExtra("hipoteca", hip);
+        startActivity(i);
+        finish();
+    }
 }

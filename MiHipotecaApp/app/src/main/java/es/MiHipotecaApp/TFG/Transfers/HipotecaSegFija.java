@@ -37,12 +37,12 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
             if(amortizaciones.containsKey(i)){
                 if(amortizaciones.get(i).get(0).equals("total")) return 0;
                 else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
-                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
-                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual);
+                    capital_pendiente = capital_pendiente - (Double) amortizaciones.get(i).get(1);
+                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazoActual - i + 1);
                 }
                 else {
                     capital_pendiente -= (Double) amortizaciones.get(i).get(1);
-                    plazoActual -= (Long) amortizaciones.get(i).get(2);
+                    //plazoActual -= (Long) amortizaciones.get(i).get(2);
                 }
             }
             double cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo);
@@ -65,11 +65,11 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
                 if(amortizaciones.get(i).get(0).equals("total")) return 0;
                 else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
                     capPendiente -= (Double) amortizaciones.get(i).get(1);
-                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capPendiente, plazoActual);
+                    cuota_mensual = getCuotaMensual(porcentaje_fijo, capPendiente, plazoActual - i + 1);
                 }
                 else {
                     capPendiente -= (Double) amortizaciones.get(i).get(1);
-                    plazoActual -= (Long) amortizaciones.get(i).get(2);
+                    //plazoActual -= (Long) amortizaciones.get(i).get(2);
                 }
             }
             interesesTotales += getInteresMensual(capPendiente, porcentaje_fijo);
@@ -85,13 +85,53 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         ArrayList<Double> valores = new ArrayList<>();
         double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones);
         double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
-        double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1);
+
+        // Restamos al capital pendiente la amortizacion para sacar la nueva cuota
+        if(amortizaciones.containsKey(numCuota)) capPdte -= (Double) amortizaciones.get(numCuota).get(1);
+
+
+        //double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1);
+        double cuota = cogerCuotaActual(numCuota, amortizaciones);
+
+        double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
+        // Este if es para mostrar la cuota con la amortizacion
+        if(amortizaciones.containsKey(numCuota)){
+            cuota += (Double) amortizaciones.get(numCuota).get(1);
+            capAmortMensual += (Double) amortizaciones.get(numCuota).get(1);
+            if(amortizaciones.get(numCuota).get(0).equals("total")){
+                cuota = (Double) amortizaciones.get(numCuota).get(1);
+                capAmortMensual = (Double) amortizaciones.get(numCuota).get(1);
+            }
+        }
 
         valores.add(cuota);
-        valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo));
+        valores.add(capAmortMensual);
         valores.add(getInteresMensual(capPdte, porcentaje_fijo));
         valores.add(capPdteCuota);
         return valores;
+    }
+
+
+    // funcion (numero cuota) calcule la cuota para ese num cuota
+    @Override
+    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones){
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        double cuota = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazo_anios * 12);
+
+        //Ver si hay reducción de cuota
+        for (int i = 1; i <= num_cuota; i++) {
+            if(amortizaciones.containsKey(i)){
+                if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                    capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                    cuota = getCuotaMensual(porcentaje_fijo, capital_pendiente, (plazo_anios * 12) - i + 1);
+                }
+                // Si hay reducción de plazo da igual porque la cuota es la misma
+            }
+            double cantidad_capital = getCapitalAmortizadoMensual(cuota, capital_pendiente, porcentaje_fijo);
+            capital_pendiente = capital_pendiente - cantidad_capital;
+        }
+        return cuota;
     }
 
     /** Esta funcion devuelve el capital del numero de cuota pasado **/
