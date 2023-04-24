@@ -44,10 +44,7 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
     public void onBindViewHolder(@NonNull AdaptadorHipotecasSeguimiento.ViewHolderHipotecasSeguimiento holder, int position) {
         if(position == hipotecasSeg.size() - 1) {
             holder.fotoHipoteca.setImageResource(R.drawable.boton_anadir_hipoteca_seg);
-            holder.grid_info_hip.setVisibility(View.GONE);
             holder.titulo_tarjeta_hipoteca.setText("Añadir hipoteca nueva");
-            holder.cuotas_restantes.setVisibility(View.GONE);
-            holder.dinero_pagado.setVisibility(View.GONE);
             holder.tipo_hipoteca.setVisibility(View.GONE);
 
         }
@@ -56,10 +53,6 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
             String resourceName = ponerLogoBanco(hipotecasSeg.get(position).getBanco_asociado());
             int resId = holder.itemView.getContext().getResources().getIdentifier(resourceName, "drawable", holder.itemView.getContext().getPackageName());
             holder.fotoHipoteca.setImageResource(resId);
-            int numPago = 0;
-            //holder.cuotas_restantes.setText(hipotecasSeg.get(position).getNumeroCuotaActual(null) + "/" + hipotecasSeg.get(position).getPlazoActual(null));
-            //holder.dinero_pagado.setText((hipotecasSeg.get(position).getPrecio_vivienda() - hipotecasSeg.get(position).getCantidad_abonada()) - hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null);
-            //holder.dinero_pendiente.setText(Double.toString(hipotecasSeg.get(position).getCapitalPendienteTotalActual(numPago, null)));
             holder.tipo_hipoteca.setText("Tipo: " + hipotecasSeg.get(position).getTipo_hipoteca());
         }
 
@@ -134,22 +127,14 @@ public class AdaptadorHipotecasSeguimiento extends RecyclerView.Adapter<Adaptado
 
         TextView tituloHipoteca;
         ImageView fotoHipoteca;
-        GridLayout grid_info_hip;
         TextView titulo_tarjeta_hipoteca;
-        TextView cuotas_restantes;
-        TextView dinero_pagado;
-        TextView dinero_pendiente;
         TextView tipo_hipoteca;
 
         public ViewHolderHipotecasSeguimiento(@NonNull View itemView) {
             super(itemView);
             tituloHipoteca = itemView.findViewById(R.id.titulo_tarjeta_hipoteca);
             fotoHipoteca   = itemView.findViewById(R.id.logo_banco_tarjeta);
-            grid_info_hip = itemView.findViewById(R.id.grid_info_hip);
             titulo_tarjeta_hipoteca = itemView.findViewById(R.id.titulo_tarjeta_hipoteca);
-            cuotas_restantes = itemView.findViewById(R.id.cuotas_restantes);
-            dinero_pagado = itemView.findViewById(R.id.dinero_pagado);
-            dinero_pendiente = itemView.findViewById(R.id.dinero_pendiente);
             tipo_hipoteca = itemView.findViewById(R.id.tipo_hipoteca);
 
         }

@@ -113,7 +113,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            double capPdteCuota = hip.getCapitalPendienteTotalActual(numCuotaEnero + i, amortizaciones_hip);
+            double capPdteCuota = hip.getCapitalPendienteTotalActual(numCuotaEnero + i - 1, amortizaciones_hip);
             double cuota_actual = hip.cogerCuotaActual(numCuotaEnero + i, amortizaciones_hip);
 
             if(numCuotaEnero + i > 0) {
