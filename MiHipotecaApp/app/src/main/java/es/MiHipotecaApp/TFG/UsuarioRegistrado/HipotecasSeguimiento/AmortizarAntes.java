@@ -89,6 +89,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private String cuota_mensual_actual;
     private int plazo_actual;
     private double cantidad_amortizada;
+    int meses_reducidos;
 
     DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
     private final String TAG = "AmortizarAntes";
@@ -109,7 +110,7 @@ public class AmortizarAntes extends AppCompatActivity {
         capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_hip), amortizaciones_hip);
         capital_pendiente_actual_formateado = formato.format(capital_pendiente_actual) + "€";
         plazo_actual = hip.getPlazoActual(amortizaciones_hip);
-
+        meses_reducidos = 0;
         //Como empieza marcada la casilla de amortizacion total, se pone en capital amortizado el capital pendiente actual
 
         cantidad_capital_amortizado.setText("Cantidad a amortizar: " +  capital_pendiente_actual_formateado);
@@ -214,7 +215,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     label_info_amort_parcial.setVisibility(View.VISIBLE);
                     layout_amort_parcial.setVisibility(View.VISIBLE);
                     layout_cuotaplazo_antigua_vs_nueva.setVisibility(View.VISIBLE);
-                    cantidad_capital_amortizado.setText("Cantidad a amortizar: 0€");
+                    cantidad_capital_amortizado.setVisibility(View.GONE);
                     capital_pendiente_antiguo.setText("Capital pdte anterior: " + capital_pendiente_actual_formateado);
                     capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual_formateado);
                     if(check_reducir_cuota.isChecked()){
@@ -247,7 +248,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     cuota_plazo_nueva_valor.setText(cuota_mensual_actual);
                     edit_reduccion_plazo_meses.setText("");
                     edit_dinero_a_amortizar.setText("");
-                    cantidad_capital_amortizado.setText("Cantidad a amortizar: 0€");
+                    cantidad_capital_amortizado.setVisibility(View.GONE);
                     capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual_formateado);
                 }else{
                     if (!check_reducir_plazo.isChecked()) check_reducir_cuota.setChecked(true);
@@ -264,6 +265,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     layout_reducir_cuota.setVisibility(View.GONE);
                     cuota_plazo_antigua_tv.setText("Plazo Antiguo");
                     cuota_plazo_nueva_tv.setText("Plazo Nuevo");
+
 
                     cuota_plazo_antigua_valor.setText(plazo_actual + " meses");
                     cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
@@ -292,14 +294,13 @@ public class AmortizarAntes extends AppCompatActivity {
                     double capital_a_amortizar = Double.parseDouble(s.toString());
                     if (capital_a_amortizar > capital_pendiente_actual){
                         edit_dinero_a_amortizar.setError("El capital a amortizar no puede ser mayor que el capital pendiente");
-                        cantidad_capital_amortizado.setText("Cantidad no válida");
                         capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual_formateado);
                     }
                     else{
                         double cantidad_pendiente_con_amortizacion = cantidad_pendiente - capital_a_amortizar;
                         double cuota_nueva = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente_con_amortizacion, numero_cuotas_restantes);
                         cuota_plazo_nueva_valor.setText(formato.format(cuota_nueva) +"€");
-                        cantidad_capital_amortizado.setText("Cantidad a amortizar: " + edit_dinero_a_amortizar.getText().toString() + "€");
+                        cantidad_capital_amortizado.setVisibility(View.GONE);
                         double capital_pdte_nuevo = capital_pendiente_actual - capital_a_amortizar;
                         String cap_formateado = "Capital pdte nuevo: " + formato.format(capital_pdte_nuevo)  + "€";
                         capital_pendiente_nuevo.setText(cap_formateado);
@@ -327,15 +328,21 @@ public class AmortizarAntes extends AppCompatActivity {
 
                 if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                 else{
-                    int meses_reducir = Integer.parseInt(s.toString());
-                    if(meses_reducir >= plazo_actual) {
-                        edit_reduccion_plazo_meses.setError("Como máximo puedes reducir " + plazo_actual + " meses");
+                    cantidad_amortizada = Double.parseDouble(s.toString());
+                    if(cantidad_amortizada > capital_pendiente_actual) {
+                        edit_reduccion_plazo_meses.setError("Como máximo puedes aportar " + capital_pendiente_actual_formateado + " de capital");
                         cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                     }else{
-                        cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducir) + " meses");
-                        //todo CALCULAR CANTIDAD AMORTIZADA
-                        cantidad_amortizada = hip.getAmortizarAlReducirMeses(meses_reducir, amortizaciones_hip);
-                        cantidad_capital_amortizado.setText("Cantidad a amortizar: " + formato.format(cantidad_amortizada) + "€");
+                        //calcular los meses a reducir
+                        meses_reducidos = 0;
+                        double capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - 1, amortizaciones_hip);
+                        while(cantidad_amortizada >= capUltimaCuota){
+                            meses_reducidos++;
+                            capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - meses_reducidos, amortizaciones_hip) - capUltimaCuota;
+                        }
+
+                        cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducidos) + " meses");
+
                         capital_pendiente_nuevo.setText("Capital pdte nuevo: " + formato.format(capital_pendiente_actual - cantidad_amortizada) + "€");
                     }
                 }
@@ -403,7 +410,7 @@ public class AmortizarAntes extends AppCompatActivity {
             else{
                 amortizacion.add("parcial_plazo");
                 amortizacion.add(cantidad_amortizada);
-                amortizacion.add(Integer.parseInt(edit_reduccion_plazo_meses.getText().toString()));
+                amortizacion.add(meses_reducidos);
             }
         }
         registrar_amortizacion(num_cuota_amortizacion, amortizacion, total_comision);

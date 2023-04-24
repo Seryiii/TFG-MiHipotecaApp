@@ -250,12 +250,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             double amortizacion_ant = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
             layout_amortizacion_anticipada.setVisibility(View.VISIBLE);
             if(amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(0).equals("total")) {
-                plazoTotalActual = numero_cuotas_pagadas + 1;
+                //plazoTotalActual = numero_cuotas_pagadas + 1;
                 layout_cuota_seguimiento.setVisibility(View.GONE);
                 layout_capital_intereses1.setVisibility(View.GONE);
                 layout_capital_intereses2.setVisibility(View.GONE);
-            }else if(amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(0).equals("parcial_plazo")){
-                plazoTotalActual -= (Long) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(2);
             }
             amortizacion_anticipada_valor.setText(formato.format(amortizacion_ant) + "€");
         }else layout_amortizacion_anticipada.setVisibility(View.GONE);

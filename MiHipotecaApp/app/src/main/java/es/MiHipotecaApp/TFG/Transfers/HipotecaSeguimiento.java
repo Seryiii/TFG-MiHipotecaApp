@@ -63,13 +63,14 @@ public class HipotecaSeguimiento implements Serializable {
      *  anticapadas realizadas (afectarían las parciales reduciendo el plazo solo) **/
     public int getPlazoActual(HashMap<Integer, List<Object>> amortizaciones){
         int plazoTotalActual = plazo_anios * 12;
-        int cuotaActual = getNumeroCuotaActual(amortizaciones);
+
+        //int cuotaActual = getNumeroCuotaActual(amortizaciones);
 
         for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
-            if(entry.getKey() <= cuotaActual){
+            //if(entry.getKey() <= cuotaActual){
                 if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
                 else if (entry.getValue().get(0).equals("total")) plazoTotalActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
-            }
+            //}
         }
         return plazoTotalActual;
     }
@@ -196,6 +197,21 @@ public class HipotecaSeguimiento implements Serializable {
         for(int i = plazoReducido; i < plazoActual; i++) cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones);
 
         return cantAmortizar;
+    }
+
+    public int aniosActualesHipoteca(int plazoActual){
+        int aniosHipoteca = 0;
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        plazoActual -= (12 + getNumeroCuotaEnEnero(inicio.get(Calendar.YEAR)) - 1);
+        int aniosCompletos = 0;
+        while(plazoActual >= 12){
+            plazoActual -= 12;
+            aniosCompletos++;
+        }
+        aniosHipoteca = plazoActual == 0 ? aniosCompletos + 1 : aniosCompletos + 2;
+
+        return aniosHipoteca;
     }
 
     //FUNCIONES SOBREESCRITAS

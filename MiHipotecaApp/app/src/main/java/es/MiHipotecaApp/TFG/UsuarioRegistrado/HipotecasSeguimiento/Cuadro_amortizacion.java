@@ -257,7 +257,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             public void onClick(View view) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(hip.getFecha_inicio());
-                if(Integer.parseInt(String.valueOf(year_of_calendar.getText())) + 1 <= calendar.get(Calendar.YEAR) + hip.getPlazo_anios()) {
+                int aniosActuales = hip.aniosActualesHipoteca(hip.getPlazoActual(amortizaciones_hip));
+                if(Integer.parseInt(String.valueOf(year_of_calendar.getText())) + 1 < calendar.get(Calendar.YEAR) + aniosActuales) {
                     year_of_calendar.setText(Integer.toString(Integer.parseInt(String.valueOf(year_of_calendar.getText())) + 1));
                     actualizarTablaMeses(Integer.parseInt((String) year_of_calendar.getText()));
                 }
