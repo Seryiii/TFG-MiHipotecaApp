@@ -45,6 +45,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -56,7 +57,8 @@ import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos.graf
 
 public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements NuevaVinculacionAnualFragment.NuevoAnioHipotecaListener {
     private final String TAG = "VIS_HIP_ACTIVITY";
-
+    
+    private CircleImageView close_icon_seg;
     private TextView nombre_hipoteca;
     private TextView tipo_hipoteca_seg;
     private ImageView logo_banco_seg;
@@ -120,6 +122,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     }
 
     private void initUI(){
+        close_icon_seg            = findViewById(R.id.close_icon_seguimiento);
         dinero_restante_a_pagar   = findViewById(R.id.label_cantidad_pendiente_seguimiento_hip);
         nombre_hipoteca           = findViewById(R.id.nombre_seguimiento_hipoteca);
         tipo_hipoteca_seg         = findViewById(R.id.tipo_hipoteca_seguimiento);
@@ -181,7 +184,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                             List<Object> lista = (List<Object>) amortizaciones.get(clave);
                             amortizaciones_anticipadas.put(claveInt, lista);
                         }
-                        hip.getEuriborPasado(1, amortizaciones_anticipadas);
+                        //hip.getEuriborPasado(1, amortizaciones_anticipadas);
                         rellenarUI();
                         eventos();
                         construirGraficoAportadoVsAFinanciar();
@@ -320,6 +323,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         compruebaSiVinculacionAnual();
 
+        close_icon_seg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { finish(); }
+        });
         btn_cuadro_amortizacion.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
