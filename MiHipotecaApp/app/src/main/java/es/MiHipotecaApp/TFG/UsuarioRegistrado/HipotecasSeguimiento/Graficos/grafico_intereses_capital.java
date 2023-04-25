@@ -36,6 +36,8 @@ public class grafico_intereses_capital extends AppCompatActivity {
 
     private HashMap<Integer, List<Object>> amortizaciones_hip;
 
+    private List<Double> euribors;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +53,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
-
+        euribors = (List<Double>) getIntent().getSerializableExtra("euribors");
         closeIcon = findViewById(R.id.close_icon_graf_int);
     }
 
@@ -68,7 +70,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
 
 
         for(int i = 1; i <= hip.getPlazo_anios(); i++){
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip, euribors);
 
             capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(1)))));
             interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(2)))));

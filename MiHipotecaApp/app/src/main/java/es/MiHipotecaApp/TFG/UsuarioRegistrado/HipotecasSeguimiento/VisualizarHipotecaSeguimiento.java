@@ -21,10 +21,13 @@ import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
@@ -43,6 +46,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -82,6 +86,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private HipotecaSeguimiento hip;
     private HashMap<Integer, List<Object>> amortizaciones_anticipadas;
+
+    private List<Double> euribors;
     private Button btn_cuadro_amortizacion;
     private Button btn_amortizar_antes;
 
@@ -105,6 +111,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private double cantidad_pendiente;
 
     private int numero_cuotas_pagadas;
+
+    public int anioInicio;
+    public String mesInicio;
 
     private String[] comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
@@ -184,17 +193,160 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                             List<Object> lista = (List<Object>) amortizaciones.get(clave);
                             amortizaciones_anticipadas.put(claveInt, lista);
                         }
-                        //hip.getEuriborPasado(1, amortizaciones_anticipadas);
-                        rellenarUI();
-                        eventos();
-                        construirGraficoAportadoVsAFinanciar();
+                        if(!hip.getTipo_hipoteca().equals("fija")){
+                            cogerEuribors();
+                        }else{
+                            rellenarUI();
+                            eventos();
+                            construirGraficoAportadoVsAFinanciar();
+                        }
                     }
                 }else Log.e(TAG, "Error al cargar amortizaciones anticipadas", task.getException());
 
             }
         });
 
+    }
 
+    private void cogerEuribors(){
+
+        euribors = new ArrayList<>();
+
+        //Coger todos los euribors para el plazo
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(hip.getFecha_inicio());
+        Calendar fechaActual = Calendar.getInstance();
+        int anioInicio = inicio.get(Calendar.YEAR);
+        final int[] anioInicioPrueba = {anioInicio};
+
+        String mesInicio = inicio.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
+        mesInicio = mesInicio.substring(0, 1).toUpperCase() + mesInicio.substring(1);
+        final String[] mesInicioPrueba = {mesInicio};
+
+        int anioActual = fechaActual.get(Calendar.YEAR);
+        String mesActual = fechaActual.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
+        mesActual = mesActual.substring(0, 1).toUpperCase() + mesActual.substring(1);
+
+        //CASO HIPOTECA FUTURO: array con un solo valor
+        int plazo = hip.getPlazoActual(amortizaciones_anticipadas);
+        int aniosHip = plazo / 12;
+        int mesesHip = plazo % 12;
+        Calendar fechaFin = Calendar.getInstance();
+        fechaFin.setTime(hip.getFecha_inicio());
+        fechaFin.add(Calendar.YEAR, aniosHip);
+        fechaFin.add(Calendar.MONTH, mesesHip);
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference euriborRef = db.collection("euribor");
+        //Caso hipoteca futura
+        if(fechaActual.before(inicio)){
+            //Meter solo el euribor actual
+
+            euriborRef.whereEqualTo("anio", String.valueOf(anioActual)).whereEqualTo("mes", mesActual).get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                            euribors.add(documentSnapshot.getDouble("valor"));
+                            rellenarUI();
+                            eventos();
+                            construirGraficoAportadoVsAFinanciar();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w(TAG, "Error al obtener euribor actual': ", e);
+                        }
+                    });
+
+        }
+
+        else{
+            //Caso fin de hipoteca
+            if (fechaActual.after(fechaFin)) {
+                anioActual = fechaFin.get(Calendar.YEAR);
+                mesActual = fechaFin.getDisplayName(Calendar.MONTH, Calendar.LONG, new Locale("es", "ES"));
+                mesActual = mesActual.substring(0, 1).toUpperCase() + mesActual.substring(1);
+            }
+            //meter desde anioInicio,mesInicio hasta anioActual, mesActual
+            obtenerEuriborRecursivo(euriborRef, anioInicioPrueba, mesInicioPrueba, anioActual, mesActual, euribors);
+
+        }
+    }
+
+    private void obtenerEuriborRecursivo(CollectionReference euriborRef, int[] anioInicioPrueba, String[] mesInicioPrueba, int anioActual, String mesActual, List<Double> euribors) {
+        euriborRef.whereEqualTo("anio", String.valueOf(anioInicioPrueba[0])).whereEqualTo("mes", mesInicioPrueba[0]).get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
+                        euribors.add(documentSnapshot.getDouble("valor"));
+
+                        // Ver si ha llegado al mes y año actual
+                        if (anioInicioPrueba[0] == anioActual && mesInicioPrueba[0].equals(mesActual)) {
+                            // Se han obtenido todos los valores de Euribor
+                            rellenarUI();
+                            eventos();
+                            construirGraficoAportadoVsAFinanciar();
+
+                        } else {
+                            // Incrementar el mes y/o el año y hacer la siguiente consulta recursivamente
+                            mesInicioPrueba[0] = incrementarMes(mesInicioPrueba[0]);
+                            if (mesInicioPrueba[0].equals("Enero")) anioInicioPrueba[0]++;
+                            obtenerEuriborRecursivo(euriborRef, anioInicioPrueba, mesInicioPrueba, anioActual, mesActual, euribors);
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error al obtener euribor actual': ", e);
+                    }
+                });
+    }
+
+
+    private String incrementarMes(String mes){
+        String siguienteMes = "";
+        switch (mes){
+            case "Enero":
+                siguienteMes = "Febrero";
+                break;
+            case "Febrero":
+                siguienteMes = "Marzo";
+                break;
+            case "Marzo":
+                siguienteMes = "Abril";
+                break;
+            case "Abril":
+                siguienteMes = "Mayo";
+            break;
+            case "Mayo":
+                siguienteMes = "Junio";
+            break;
+            case "Junio":
+                siguienteMes = "Julio";
+            break;
+            case "Julio":
+                siguienteMes = "Agosto";
+            break;
+            case "Agosto":
+                siguienteMes = "Septiembre";
+            break;
+            case "Septiembre":
+                siguienteMes = "Octubre";
+            break;
+            case "Octubre":
+                siguienteMes = "Noviembre";
+            break;
+            case "Noviembre":
+                siguienteMes = "Diciembre";
+            break;
+            case "Diciembre":
+                siguienteMes = "Enero";
+            break;
+        }
+        return siguienteMes;
     }
 
     private void rellenarUI(){
@@ -203,7 +355,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         info_cuota.setVisibility(View.GONE);
 
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
-        String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas))  + "€"; // Formatear el número
+        String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas, euribors))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
@@ -220,9 +372,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         mes_actual_cuota.setText(hip.getNombreMesActual(amortizaciones_anticipadas));
         int plazoTotalActual = hip.getPlazoActual(amortizaciones_anticipadas);
 
-
-
-        cantidad_pendiente = hip.getCapitalPendienteTotalActual(numero_cuotas_pagadas,amortizaciones_anticipadas);
+        cantidad_pendiente = hip.getCapitalPendienteTotalActual(numero_cuotas_pagadas,amortizaciones_anticipadas, euribors);
         numero_cuotas_restantes = hip.getPlazoActual(amortizaciones_anticipadas) - numero_cuotas_pagadas;
 
         if(hip.getTipo_hipoteca().equals("fija")) {
@@ -230,10 +380,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             info_dinero_restante.setVisibility(View.GONE);
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
-            porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getDuracion_primer_porcentaje_variable() ? hip.getPrimer_porcentaje_variable() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_variable();
+            porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) < hip.getDuracion_primer_porcentaje_variable() ? hip.getPrimer_porcentaje_variable() : hip.getEuriborActual(euribors) + hip.getPorcentaje_diferencial_variable();
         } else {
             //Si cumple la condicion, esta en la fase fija, en otro en la variable
-            porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPorcentaje_fijo_mixta() : hip.getEuriborActual() + hip.getPorcentaje_diferencial_mixta();
+            porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPorcentaje_fijo_mixta() : hip.getEuriborActual(euribors) + hip.getPorcentaje_diferencial_mixta();
         }
 
         if (hip.siguienteCuotaRevision(amortizaciones_anticipadas)) info_cuota.setVisibility(View.VISIBLE);
@@ -263,7 +413,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);
 
-        double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+        double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, porcentaje_aplicado)) + "€";
         capital_cuota_mensual.setText(capitalFormateado);
 
@@ -332,6 +482,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 i.putExtra("hipoteca", hip);
                 i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                 i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
+                i.putExtra("euribors", (Serializable) euribors);
                 startActivity(i);
             }
         });
@@ -355,6 +506,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         i.putExtra("amortizaciones_anticipadas", (Serializable) amortizaciones_anticipadas);
                         i.putExtra("hipoteca", hip);
                         i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
+                        i.putExtra("euribors", (Serializable) euribors);
                         startActivity(i);
                         finish();
                     }
@@ -441,6 +593,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                     i.putExtra("tipo_hipoteca", hip.getTipo_hipoteca());
                     i.putExtra("hipoteca", hip);
                     i.putExtra("amortizaciones_anticipadas", amortizaciones_anticipadas);
+                    i.putExtra("euribors", (Serializable) euribors);
                     startActivity(i);
                 }
             }
@@ -452,11 +605,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         titulo_grafico.setText("Aportado vs a financiar");
-        double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+        double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
 
-        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazo_anios() * 12, amortizaciones_anticipadas);
-        double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas);
+        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazo_anios() * 12, amortizaciones_anticipadas, euribors);
+        double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double interesesPendientes = interesesTotales - interesesPagados;
 
         Pie pie = AnyChart.pie();

@@ -84,6 +84,8 @@ public class AmortizarAntes extends AppCompatActivity {
     private HipotecaSeguimiento hip;
     private HashMap<Integer, List<Object>> amortizaciones_hip;
 
+    private List<Double> euribors;
+
     private double capital_pendiente_actual;
     private String capital_pendiente_actual_formateado;
     private String cuota_mensual_actual;
@@ -107,7 +109,8 @@ public class AmortizarAntes extends AppCompatActivity {
 
         cuota_mensual_actual = getIntent().getStringExtra("cuota_actual");
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
-        capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_hip), amortizaciones_hip);
+        euribors = (List<Double>) getIntent().getSerializableExtra("euribors");
+        capital_pendiente_actual = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_hip), amortizaciones_hip, euribors);
         capital_pendiente_actual_formateado = formato.format(capital_pendiente_actual) + "€";
         plazo_actual = hip.getPlazoActual(amortizaciones_hip);
         meses_reducidos = 0;
@@ -335,10 +338,10 @@ public class AmortizarAntes extends AppCompatActivity {
                     }else{
                         //calcular los meses a reducir
                         meses_reducidos = 0;
-                        double capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - 1, amortizaciones_hip);
+                        double capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - 1, amortizaciones_hip, euribors);
                         while(cantidad_amortizada >= capUltimaCuota){
                             meses_reducidos++;
-                            capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - meses_reducidos, amortizaciones_hip) - capUltimaCuota;
+                            capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - meses_reducidos, amortizaciones_hip, euribors) - capUltimaCuota;
                         }
 
                         cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducidos) + " meses");

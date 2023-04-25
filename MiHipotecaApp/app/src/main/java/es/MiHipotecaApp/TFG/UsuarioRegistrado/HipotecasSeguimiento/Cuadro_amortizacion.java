@@ -49,6 +49,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
     private HashMap<Integer, List<Object>> amortizaciones_hip;
 
+    private List<Double> euribors;
+
 
 
     @Override
@@ -78,6 +80,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
 
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
+        euribors = (List<Double>) getIntent().getSerializableExtra("euribors");
+
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(hip.getFecha_inicio());
         /** Da valor al TextView del año mostrado en el calendario, si la hipoteca ya ha empezado, muestra el año actual
@@ -113,7 +117,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tabla_cuadro_amortizacion.addView(tableRow);
 
             //Solo crea las filas si existe ese numero de cuota
-            double capPdteCuota = hip.getCapitalPendienteTotalActual(numCuotaEnero + i - 1, amortizaciones_hip);
+            double capPdteCuota = hip.getCapitalPendienteTotalActual(numCuotaEnero + i - 1, amortizaciones_hip, euribors);
             double cuota_actual = hip.cogerCuotaActual(numCuotaEnero + i, amortizaciones_hip);
 
             if(numCuotaEnero + i > 0) {
@@ -128,7 +132,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 nombreMes.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
                 tableRow.addView(nombreMes);
 
-                ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i, amortizaciones_hip);
+                ArrayList<Double> valores = hip.getFilaCuadroAmortizacionMensual(numCuotaEnero + i, amortizaciones_hip, euribors);
 
                 TextView cuota = new TextView(this);
                 cuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
@@ -183,7 +187,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         for (int i = 1; i <= hip.getPlazo_anios(); i++) {
 
             // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
-            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip);
+            ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip, euribors);
             if(valores.get(3) <= 0) break;
 
             // Crear una nueva fila y agregarla al TableLayout

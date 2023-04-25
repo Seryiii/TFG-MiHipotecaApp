@@ -25,7 +25,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
     /** Esta funcion devuelve el capital pendiente total por amortizar**/
     @Override
-    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
+    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         int plazoActual = plazo_anios * 12;
         double cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazoActual);
@@ -54,7 +54,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         int revision = 6;
         while(j < numero_pago){
             if(isRevision_anual()) revision = 12;
-            double euribor = getEuriborPasado(j, amortizaciones);
+            double euribor = getEuriborPasado(j, euribors);
             cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente, plazoActual - j);
             for(int h = 0; h < revision && j < numero_pago; h++){
                 if(amortizaciones.containsKey(j + h)){
@@ -81,7 +81,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
     /** Esta funcion devuelve la cantidad de intereses hasta el numero de pago pasado**/
     @Override
-    public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
+    public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         double intereses_totales = 0;
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         double cuota_mensual = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazo_anios * 12);
@@ -110,7 +110,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         int revision = 6;
         while(j < numero_pago){
             if(isRevision_anual()) revision = 12;
-            double euribor = getEuriborPasado(j, amortizaciones);
+            double euribor = getEuriborPasado(j, euribors);
             cuota_mensual = getCuotaMensual(porcentaje_diferencial_variable + euribor, capital_pendiente,  plazoActual - j);
             for(int h = 0; h < revision && j < numero_pago; h++){
                 if(amortizaciones.containsKey(j + h)){
@@ -139,14 +139,14 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar, simulando que el euribor se mantiene fijo
      *  durante los años restantes. (Se utiliza el euribor del mes actual) **/
     @Override
-    public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones){
+    public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
 
         // Si estas en primer porcentaje, tienes que acabar la fase fija y luego estimar con el euribor actual
         // Si estas en la fase variable, simular lo que queda en funcion del euribor actual
 
         int cuotasRestantes = getPlazoActual(amortizaciones) - numPago;
-        double capital_pendiente = getCapitalPendienteTotalActual(numPago, amortizaciones);
-        double porcentaje_aplicado  = numPago < duracion_primer_porcentaje_variable ? primer_porcentaje_variable : getEuriborActual() + porcentaje_diferencial_variable;
+        double capital_pendiente = getCapitalPendienteTotalActual(numPago, amortizaciones, euribors);
+        double porcentaje_aplicado  = numPago < duracion_primer_porcentaje_variable ? primer_porcentaje_variable : getEuriborActual(euribors) + porcentaje_diferencial_variable;
         double cuota_mensual = getCuotaMensual(porcentaje_aplicado, capital_pendiente, cuotasRestantes);
 
         //ESTAS EN EL PRIMER PORCENTAJE
@@ -155,7 +155,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         if(numPago < duracion_primer_porcentaje_variable){
             int cuotas_pdte_primer_porcentaje = duracion_primer_porcentaje_variable - numPago;
             dinero_restante = cuota_mensual * cuotas_pdte_primer_porcentaje;
-            porcentaje_aplicado = getEuriborActual() + porcentaje_diferencial_variable;
+            porcentaje_aplicado = getEuriborActual(euribors) + porcentaje_diferencial_variable;
             cuotasRestantes = cuotasRestantes - cuotas_pdte_primer_porcentaje;
         }
         // coger euribor actual
@@ -177,32 +177,32 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
 
     /** Esta funcion devuelve el porcentaje que se aplica para un determinado numero de cuota**/
     @Override
-    public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
+    public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         if (numCuota <= duracion_primer_porcentaje_variable) return primer_porcentaje_variable;
-        return getEuriborPasado(numCuota, amortizaciones) + porcentaje_diferencial_variable;
+        return getEuriborPasado(numCuota, euribors) + porcentaje_diferencial_variable;
     }
 
     /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/
     @Override
-    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         ArrayList<Double> valores = new ArrayList<>();
 
-        double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones);
-        double capPdte = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
+        double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones, euribors);
+        double capPdte = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
         double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , getPlazoActual(amortizaciones)  - numCuota + 1);
         valores.add(cuota);
         valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado));
         valores.add(getInteresMensual(capPdte, porcentaje_aplicado));
-        double capitalPdte = getCapitalPendienteTotalActual(numCuota, amortizaciones);
+        double capitalPdte = getCapitalPendienteTotalActual(numCuota, amortizaciones, euribors);
         valores.add(capitalPdte);
         return valores;
     }
 
     /** Esta funcion devuelve el capital del numero de cuota pasado **/
     @Override
-    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){
-        double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones);
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones);
+    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
+        double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones, euribors);
+        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
 
         double cuota   = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota + 1);
         double capitalCuota = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
@@ -213,7 +213,7 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
     //TODO FALTA ARREGLAR ESTA FUNCION
     @Override
-    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
 
 
         /*ArrayList<Double> valores = new ArrayList<>();

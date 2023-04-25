@@ -67,10 +67,10 @@ public class HipotecaSeguimiento implements Serializable {
         //int cuotaActual = getNumeroCuotaActual(amortizaciones);
 
         for (Map.Entry<Integer, List<Object>> entry: amortizaciones.entrySet()) {
-            //if(entry.getKey() <= cuotaActual){
-                if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
-                else if (entry.getValue().get(0).equals("total")) plazoTotalActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
-            //}
+
+            if(entry.getValue().get(0).equals("parcial_plazo")) plazoTotalActual -= (Long) entry.getValue().get(2); //Campo con los meses reducidos
+            else if (entry.getValue().get(0).equals("total")) plazoTotalActual = entry.getKey(); //Pones el plazo actual al pago donde se hizo la amortizacion total
+
         }
         return plazoTotalActual;
     }
@@ -79,14 +79,6 @@ public class HipotecaSeguimiento implements Serializable {
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
     public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes){
-
-        //Este bucle sirve para que la cuota no cambie cuando se reducen meses amortizando anticipadamente
-        /*int cuotasReducidas = 0;
-        for (Map.Entry<Integer, List<Object>> entry : amortizaciones.entrySet()) {
-            if (entry.getValue().get(0).equals("parcial_plazo"))
-                cuotasReducidas += (Long) entry.getValue().get(2); //Campo con los meses reducidos
-
-        }*/
 
         if (num_cuotas_restantes <= 0) return 0;
         double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes); //+ cuotasReducidas);
@@ -189,12 +181,12 @@ public class HipotecaSeguimiento implements Serializable {
     }
 
     /** Devuelve la cantidad que el usuario deberá de amortizar en funcion de los meses pasados **/
-    public double getAmortizarAlReducirMeses(int meses_reducir, HashMap<Integer, List<Object>> amortizaciones){
+    public double getAmortizarAlReducirMeses(int meses_reducir, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         double cantAmortizar = 0;
         int plazoActual = getPlazoActual(amortizaciones);
         int plazoReducido = plazoActual - meses_reducir;
 
-        for(int i = plazoReducido; i < plazoActual; i++) cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones);
+        for(int i = plazoReducido; i < plazoActual; i++) cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones, euribors);
 
         return cantAmortizar;
     }
@@ -215,18 +207,18 @@ public class HipotecaSeguimiento implements Serializable {
     }
 
     //FUNCIONES SOBREESCRITAS
-    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){
+    public double getCapitalPendienteTotalActual(int numero_pago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         return 0;
     }
 
-    public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones){ return 0; }
+    public double getInteresesHastaNumPago(int numero_pago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0; }
     public boolean siguienteCuotaRevision(HashMap<Integer, List<Object>> amortizaciones){ return false; }
 
-    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return null; }
-    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0;}
-    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones){ return null; }
+    public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return null; }
+    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0;}
+    public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return null; }
 
-    public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones){ return 0; }
+    public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0; }
 
     public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones){return 0;}
 
@@ -361,36 +353,17 @@ public class HipotecaSeguimiento implements Serializable {
         this.banco_asociado = banco_asociado;
     }
 
-    public double getDineroRestanteActual(int i, HashMap<Integer, List<Object>> amortizaciones) { return 0;}
+    public double getDineroRestanteActual(int i, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors) { return 0;}
 
 
-    /** FUNCIONES DE PRUEBA PARA HACER MAS FUNCIONALIDADES, CAMBIAR POR WEB SCRAPING O SIMILARES*/
-    public double getEuriborActual(){ return 3.018; }
+
+    public double getEuriborActual(List<Double> euribors){ return euribors.get(euribors.size() - 1); }
 
     //Calcula el euribor que hubo correspondiente a un numero de pago
 
-    public double getEuriborPasado(int numPago, HashMap<Integer, List<Object>> amortizaciones){
-        List<Object> anioMes = getAnioYMesDeUnPago(numPago, amortizaciones);
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference usersRef = db.collection("euribor");
-        Query query = usersRef.whereEqualTo("anio", anioMes.get(0)).whereEqualTo("mes", anioMes.get(1));
-        Task<QuerySnapshot> task = query.get();
-
-        try {
-            // Esperamos hasta que la tarea se complete
-            QuerySnapshot snapshot = Tasks.await(task);
-            // Obtenemos el primer documento (en caso de haber más de uno)
-            DocumentSnapshot doc = snapshot.getDocuments().get(0);
-            // Obtenemos el valor del campo "edad" y lo devolvemos como entero
-            double edad = doc.getDouble("valor");
-            return edad;
-        } catch (Exception e) {
-            //Log.e(/*TAG, */"Error al obtener la edad: ", e);
-            return -1;
-        }
-
-
+    public double getEuriborPasado(int numPago, List<Double> euribors){
+        if (numPago == 0) numPago = 1;
+        return euribors.get(numPago - 1);
     }
 
     public List<Object> getAnioYMesDeUnPago(int numPago, HashMap<Integer, List<Object>> amortizaciones){
