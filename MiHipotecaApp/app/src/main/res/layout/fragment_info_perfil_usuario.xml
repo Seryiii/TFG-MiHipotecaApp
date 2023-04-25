@@ -225,45 +225,13 @@
         />
 
   </LinearLayout>
+
   <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:orientation="horizontal"
       android:gravity="center"
       android:layout_marginTop="16dp">
-    <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
-        android:src="@drawable/eliminar_cuenta"
-        />
-
-    <TextView
-        android:layout_width="0dp"
-        android:layout_weight="4"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:text="@string/label_eliminar_usuario"
-        android:textSize="28dp"
-        />
-
-    <Button
-        android:id="@+id/eliminar_cuenta"
-        android:layout_width="0dp"
-        android:layout_weight="1"
-        android:layout_height="48dp"
-        android:layout_marginEnd="32dp"
-        android:background="@drawable/baseline_arrow_forward_ios_24"
-        />
-  </LinearLayout>
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:orientation="horizontal"
-      android:gravity="center"
-      android:layout_marginTop="16dp"
-      android:layout_marginBottom="16dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -290,6 +258,41 @@
         />
 
   </LinearLayout>
+
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      android:gravity="center"
+      android:layout_marginTop="16dp"
+      android:layout_marginBottom="16dp">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:src="@drawable/eliminar_cuenta"
+        />
+
+    <TextView
+        android:layout_width="0dp"
+        android:layout_weight="4"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="@string/label_eliminar_usuario"
+        android:textSize="28dp"
+        />
+
+    <Button
+        android:id="@+id/eliminar_cuenta"
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="48dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/baseline_arrow_forward_ios_24"
+        />
+  </LinearLayout>
+
 
     </LinearLayout>
 </ScrollView>

@@ -172,6 +172,30 @@
     <string name="amortizacion_anticipada_exito">Amortización anticipada creada con éxito!</string>
     <string name="usuario_borrado_exito">Usuario borrado con éxito!</string>
 
+    <string name="label_texto_acerca_de">¡Bienvenido/a a nuestra aplicación de seguimiento y comparación de hipotecas! Aquí en MiHipotecaApp, entendemos que la compra de una vivienda es una de las decisiones financieras más importantes que tomarás en la vida, por lo que queremos ayudarte a tomar la mejor decisión posible.\n
+
+Nuestra aplicación es una herramienta de comparación de hipotecas que te permite comparar las tasas de interés y los términos de diferentes prestamistas para que puedas encontrar la hipoteca que mejor se adapte a tus necesidades. Con nuestra aplicación, puedes ahorrar tiempo y esfuerzo al evitar tener que visitar a cada prestamista individualmente y rellenar múltiples solicitudes.\n
+
+Nos enorgullece ofrecer una plataforma fácil de usar que te ayuda a comparar diferentes hipotecas y encontrar la que mejor se adapte a tus necesidades financieras. En MiHipotecaApp, nuestra misión es proporcionarte las herramientas y la información que necesitas para tomar la mejor decisión financiera para ti y tu familia. Queremos ayudarte a navegar por el complejo mundo de las hipotecas
+y hacer que el proceso de compra de una vivienda sea lo más sencillo posible. Gracias por confiar en nosotros para ayudarte en tu búsqueda de la hipoteca perfecta. Si tienes alguna pregunta, no dudes en ponerte en contacto con nuestro equipo de soporte en cualquier momento. Estamos aquí para ayudarte.</string>
+    <string name="label_texto_pol_privacidad">En MiHipotecaApp, nos tomamos muy en serio la privacidad de nuestros usuarios. Creemos que la transparencia es clave para construir una relación de confianza con nuestros clientes. Por eso, queremos explicar en detalle cómo manejamos y protegemos tus datos personales.\n
+
+Recopilación y uso de información personal:\n
+Cuando te registras en nuestra aplicación, solicitamos información personal que puede incluir tu nombre, dirección de correo electrónico y otra información relevante. Esta información se utiliza para crear una cuenta de usuario y para proporcionarte servicios personalizados. Nunca compartiremos tu información personal con terceros sin tu consentimiento expreso.\n
+
+Seguridad de los datos:\n
+Tomamos medidas de seguridad para proteger tus datos personales de cualquier acceso no autorizado, pérdida o divulgación. Utilizamos medidas de seguridad físicas, electrónicas y administrativas para proteger tus datos personales. Sin embargo, ningún método de transmisión de datos a través de internet o almacenamiento electrónico es 100% seguro, por lo que no podemos garantizar la seguridad absoluta de tus datos personales.\n
+
+Tus derechos de privacidad:\n
+Tienes derecho a acceder, modificar, corregir y eliminar tus datos personales en cualquier momento. También puedes solicitar que dejemos de utilizar tus datos personales para fines publicitarios. Si deseas ejercer cualquiera de estos derechos, ponte en contacto con nuestro equipo de soporte.\n
+
+Cambios en la política de privacidad:\n
+Nos reservamos el derecho de actualizar esta política de privacidad en cualquier momento. Te recomendamos que revises esta página periódicamente para estar al tanto de cualquier cambio.\n
+
+En MiHipotecaApp, nos tomamos en serio la protección de tu privacidad y nos comprometemos a proteger tus datos personales. Si tienes alguna pregunta o preocupación sobre nuestra política de privacidad, no dudes en ponerte en contacto con nuestro equipo de soporte.</string>
+
+
+
     <!-- PRIMER EJEMPLO MORALES -->
     <string name="txt_correo">Correo</string>
     <string name="txt_pass">Contraseña</string>

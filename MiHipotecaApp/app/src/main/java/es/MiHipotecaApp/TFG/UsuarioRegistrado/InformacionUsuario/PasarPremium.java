@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewFlipper;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,13 +21,20 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.EditarHipotecaSeguimiento;
 
 public class PasarPremium extends AppCompatActivity {
     private final String TAG = "OBTENICION PREMIUM";
@@ -40,6 +48,8 @@ public class PasarPremium extends AppCompatActivity {
     private LinearLayout linear_layout_precio;
     private FirebaseAuth currentUser;
     private FirebaseFirestore db;
+
+    private boolean premium;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +65,7 @@ public class PasarPremium extends AppCompatActivity {
         linear_layout_precio = findViewById(R.id.linear_layout_precio);
         vf_1 = findViewById(R.id.view_flipper);
         vf_2 = findViewById(R.id.view_flipper2);
+        premium = false;
 
         initUI();
 
@@ -76,8 +87,29 @@ public class PasarPremium extends AppCompatActivity {
                         .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                //Tema tarjeta de credito y cambiar el campo "premium" de la base de datos a true
-                            }
+                                Map<String, Object> nuevosDatos = new HashMap<>();
+                                nuevosDatos.put("premium", !premium);
+
+                                CollectionReference usuariosRef = db.collection("usuarios");
+
+                                Query query = usuariosRef.whereEqualTo("correo", currentUser.getCurrentUser().getEmail());
+
+                                // ejecutar la consulta
+                                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                // actualizar el documento con los nuevos valores
+                                                usuariosRef.document(document.getId()).update(nuevosDatos);
+                                                Toast.makeText(PasarPremium.this, "Su plan ha sido actualizado con éxito", Toast.LENGTH_LONG).show();
+                                                finish();
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents: ", task.getException());
+                                        }
+                                    }
+                                });                            }
                         })
                         .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
                             @Override
@@ -105,6 +137,7 @@ public class PasarPremium extends AppCompatActivity {
                         btn_pasar_premium.setText("CANCELAR SUSCRIPCIÓN");
                         titulo_actividad.setText("Tu plan premium");
                         linear_layout_precio.setVisibility(View.INVISIBLE);
+                        premium = true;
                     }
 
                 } else {

@@ -46,7 +46,8 @@ public class InfoPerfilUsuario extends Fragment {
     private Button modificar_datos;
     private Button informar_problema;
     private Button pasar_a_premium;
-
+    private Button pol_privacidad;
+    private Button acerca_de;
     private Button cerrar_sesion;
     private FirebaseAuth firebaseAuth;
     private CircleImageView imagen_perfil;
@@ -79,7 +80,8 @@ public class InfoPerfilUsuario extends Fragment {
         pasar_a_premium = view.findViewById(R.id.btn_pasar_a_premium);
         cerrar_sesion = view.findViewById(R.id.cerrar_sesion);
         imagen_perfil = view.findViewById(R.id.imagen_perfil_usuario);
-
+        pol_privacidad = view.findViewById(R.id.btn_pol_privacidad);
+        acerca_de = view.findViewById(R.id.btn_acercaDe);
         eliminar_cuenta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,6 +135,21 @@ public class InfoPerfilUsuario extends Fragment {
                 Intent i = new Intent(getActivity().getApplicationContext(), MainActivity.class);
                 startActivity(i);
                 getActivity().finish();
+            }
+        });
+
+        pol_privacidad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity().getApplicationContext(), PoliticaPrivacidad.class);
+                startActivity(i);
+            }
+        });
+        acerca_de.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(getActivity().getApplicationContext(), AcercaDe.class);
+                startActivity(i);
             }
         });
     }

@@ -8,14 +8,20 @@
 
     <application
         android:allowBackup="true"
-        android:usesCleartextTraffic="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.MiHipotecaApp"
+        android:usesCleartextTraffic="true"
         tools:targetApi="31">
+        <activity
+            android:name=".UsuarioRegistrado.InformacionUsuario.PoliticaPrivacidad"
+            android:exported="false" />
+        <activity
+            android:name=".UsuarioRegistrado.InformacionUsuario.AcercaDe"
+            android:exported="false" />
         <activity
             android:name=".SimularHipoteca.MostrarOfertas"
             android:exported="false" />
@@ -86,13 +92,14 @@
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
-        <receiver android:name=".AlarmReceiver"
+
+        <receiver
+            android:name=".AlarmReceiver"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
     </application>
 
 </manifest>
