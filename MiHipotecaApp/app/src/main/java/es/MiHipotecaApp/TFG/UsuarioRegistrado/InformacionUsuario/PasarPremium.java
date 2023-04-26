@@ -50,6 +50,9 @@ public class PasarPremium extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private boolean premium;
+
+    private String pasate = "PASAR A PREMIUM";
+    private String mejorar = "¿Desea mejorar su plan a premium?";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,6 +83,33 @@ public class PasarPremium extends AppCompatActivity {
 
         //Tacha el precio no rebajado
         coste_premium_tachado.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+
+
+        String userMail = currentUser.getCurrentUser().getEmail();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                    if(document.getBoolean("premium")) {
+                        plan_actual.setText("MiHipotecaApp Premium");
+                        btn_pasar_premium.setText("CANCELAR SUSCRIPCIÓN");
+                        titulo_actividad.setText("Tu plan premium");
+                        linear_layout_precio.setVisibility(View.INVISIBLE);
+                        premium = true;
+                        pasate = "Volver a MiHipotecaApp Free";
+                        mejorar = "¿Desea volver a MiHipotecaApp Free?";
+                    }
+
+                } else {
+                    Log.d(TAG, "Error getting documents: ", task.getException());
+                }
+            }
+        });
         btn_pasar_premium.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -117,34 +147,12 @@ public class PasarPremium extends AppCompatActivity {
 
                             }
                         })
-                        .setTitle("PASAR A PREMIUM").setMessage("¿Desea mejorar su plan a premium?").create();
+                        .setTitle(pasate).setMessage(mejorar).create();
                 dialogo.show();
             }
         });
+        //ESTABA AQUI
 
-        String userMail = currentUser.getCurrentUser().getEmail();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
-
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    DocumentSnapshot document = querySnapshot.getDocuments().get(0);
-                    if(document.getBoolean("premium")) {
-                        plan_actual.setText("MiHipotecaApp Premium");
-                        btn_pasar_premium.setText("CANCELAR SUSCRIPCIÓN");
-                        titulo_actividad.setText("Tu plan premium");
-                        linear_layout_precio.setVisibility(View.INVISIBLE);
-                        premium = true;
-                    }
-
-                } else {
-                    Log.d(TAG, "Error getting documents: ", task.getException());
-                }
-            }
-        });
     }
     public void previousView(View v){
         vf_1.showPrevious();

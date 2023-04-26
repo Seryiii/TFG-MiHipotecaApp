@@ -28,7 +28,7 @@
                 android:layout_marginTop="44dp"
                 android:fontFamily="@font/allerta"
                 android:text="@string/titulo_actividad_principal"
-                android:gravity="right"
+                android:gravity="center"
                 android:textSize="28dp"
                 app:layout_constraintEnd_toStartOf="@+id/foto_perfil_pag_principal"
                 app:layout_constraintHorizontal_bias="0.662"
@@ -46,6 +46,30 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:layout_width="110dp"
+                android:layout_height="wrap_content"
+                android:text="Tus ofertas"
+                android:textSize="18dp"
+                android:layout_gravity="center"
+                android:gravity="center"
+                />
+            <ImageView
+                android:id="@+id/btn_verOfertas"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_gravity="center"
+                android:background="@drawable/save"
+                />
+    </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recycler_hipotecas_seguimiento"

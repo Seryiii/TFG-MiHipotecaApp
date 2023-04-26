@@ -206,6 +206,8 @@ public class MostrarOfertas extends AppCompatActivity {
     }
 
     private void obtenerDatosBancos() {
+        //10.0.2.2
+        //147.96.81.245
         String url = "http://10.0.2.2:5000/pruebaArray";
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);

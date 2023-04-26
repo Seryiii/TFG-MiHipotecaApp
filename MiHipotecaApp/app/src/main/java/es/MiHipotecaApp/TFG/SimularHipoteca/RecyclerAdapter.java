@@ -1,5 +1,6 @@
 package es.MiHipotecaApp.TFG.SimularHipoteca;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -7,12 +8,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
@@ -22,10 +33,18 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private String tipo;
     private Boolean detalles;
     public Boolean estado = false;
+
+    private FirebaseFirestore db;
+
+    private FirebaseAuth auth;
+    private FirebaseUser user;
     public RecyclerAdapter(List<Oferta> lista,String tipo,Boolean detalles) {
         this.lista = lista;
         this.tipo = tipo;
         this.detalles = detalles;
+        db   = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
     }
 
     @NonNull
@@ -103,10 +122,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
 
         Oferta oferta = lista.get(position);
-        if(detalles){
-            eventoBtn(holder,oferta);
-        }
-        else{
+        eventoBtn(holder,oferta);
+        if(!detalles){
             holder.btn_details.setVisibility(View.GONE);
             holder.txt_detalles.setVisibility(View.GONE);
         }
@@ -176,6 +193,48 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                 else estado = true;
             }
         });
+        holder.btn_guardar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String uid = user.getUid();
+                Map<String, Object> o = new HashMap<>();
+                o.put("idUser", uid);
+                o.put("banco", oferta.getBanco());
+                o.put("desc", oferta.getDesc());
+                o.put("tae", oferta.getTae());
+
+                if(tipo.equals("fija")){
+                    o.put("tin", oferta.getTin());
+                    o.put("cuota", oferta.getCuota());
+                    o.put("tipo","fija");
+                }
+                else{
+                    o.put("tipo","varMixta");
+                    o.put("tin_x_anios", oferta.getTin_x());
+                    o.put("tin_resto", oferta.getTin_resto());
+                    o.put("couta_x", oferta.getCuota_x());
+                    o.put("cuota_resto", oferta.getCuota_resto());
+                }
+                if(detalles){
+                    o.put("vinculaciones", oferta.getVinculaciones());
+                }
+                else o.put("vinculaciones" , "");
+                db.collection("ofertas_guardadas").add(o).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        //Toast.makeText(MostrarOfertas., "Oferta guardada correctamente!", Toast.LENGTH_LONG).show();
+                        Log.w("GUARDAR","Exito al guardar");
+                        holder.btn_guardar.setVisibility(View.GONE);
+                    }
+
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("GUARDAR","Error al guardar oferta en Firestore: ");
+                    }
+                });
+            }
+        });
     }
 
     @Override
@@ -197,6 +256,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         private Button btn_details;
         private TextView txt_detalles;
 
+        private Button btn_guardar;
 
 
         public RecyclerHolder(@NonNull View itemView){
@@ -212,7 +272,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             tvCuota_resto = itemView.findViewById(R.id.tvCuota_resto);
             btn_details = itemView.findViewById(R.id.btnArrow);
             txt_detalles = itemView.findViewById(R.id.txt_detalles);
-
+            btn_guardar = itemView.findViewById(R.id.btn_guardar);
         }
 
     }

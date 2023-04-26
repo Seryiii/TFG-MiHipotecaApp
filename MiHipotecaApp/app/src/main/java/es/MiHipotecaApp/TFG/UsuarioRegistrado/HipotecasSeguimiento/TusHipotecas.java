@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -55,6 +57,8 @@ public class TusHipotecas extends Fragment {
     private FirebaseAuth firebaseAuth;
     private HipotecaSeguimiento hip;
 
+    private ImageView btn_verOfertas;
+
     private final String TAG = "Tus Hipotecas";
 
     @Nullable
@@ -63,8 +67,9 @@ public class TusHipotecas extends Fragment {
 
         View view = inflater.inflate(R.layout.fragment_tus_hipotecas, container, false);
         recyclerHipotecas = view.findViewById(R.id.recycler_hipotecas_seguimiento);
+        btn_verOfertas = view.findViewById(R.id.btn_verOfertas);
         firebaseAuth = FirebaseAuth.getInstance();
-
+        eventoOfertas();
         imagen_perfil = view.findViewById(R.id.foto_perfil_pag_principal);
         recyclerHipotecas.addItemDecoration(new VerticalSpaceItemDecoration(40));
         recyclerHipotecas.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext(), LinearLayoutManager.VERTICAL,false));
@@ -81,7 +86,14 @@ public class TusHipotecas extends Fragment {
         super.onResume();
         getAvatar();
     }
-
+    private void eventoOfertas(){
+        btn_verOfertas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Intent intent = new Intent(TusHipotecas.class,)
+            }
+        });
+    }
     private void cargarHipotecasUsuario(){
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
