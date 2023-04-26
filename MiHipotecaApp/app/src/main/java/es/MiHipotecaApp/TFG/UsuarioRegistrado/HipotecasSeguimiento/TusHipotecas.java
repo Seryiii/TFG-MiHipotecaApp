@@ -41,6 +41,7 @@ import java.util.List;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.SimularHipoteca.MostrarOfertas;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
@@ -90,7 +91,8 @@ public class TusHipotecas extends Fragment {
         btn_verOfertas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Intent intent = new Intent(TusHipotecas.class,)
+                Intent intent = new Intent(getActivity(), MostrarOfertas.class);
+                startActivity(intent);
             }
         });
     }

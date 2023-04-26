@@ -113,6 +113,7 @@ public class PaginaPrincipal extends AppCompatActivity implements BottomNavigati
                 getSupportFragmentManager().beginTransaction().replace(R.id.container, infoPerfilUsuarioFragment).commit();
                 return true;
 
+
         }
         return false;
     }

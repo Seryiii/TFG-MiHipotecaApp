@@ -123,7 +123,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
         Oferta oferta = lista.get(position);
         eventoBtn(holder,oferta);
-        if(!detalles){
+        if(!detalles&&!oferta.getVinculaciones().equals("")){
             holder.btn_details.setVisibility(View.GONE);
             holder.txt_detalles.setVisibility(View.GONE);
         }
