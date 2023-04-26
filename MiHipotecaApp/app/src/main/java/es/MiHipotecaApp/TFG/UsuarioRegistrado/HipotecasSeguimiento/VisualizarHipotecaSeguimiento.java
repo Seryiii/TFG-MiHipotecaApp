@@ -145,7 +145,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         numero_cuota_actual       = findViewById(R.id.numero_cuota_actual_hip);
         layout_amortizacion_anticipada = findViewById(R.id.layout_amortizacion_anticipada);
         amortizacion_anticipada_valor = findViewById(R.id.amortizacion_anticipada_valor);
-        layout_cuota_seguimiento = findViewById(R.id.layout_cuota_seguimiento);
+        layout_cuota_seguimiento  = findViewById(R.id.layout_cuota_seguimiento);
+        layout_capital_intereses1 = findViewById(R.id.layout_capital_intereses1);
+        layout_capital_intereses2 = findViewById(R.id.layout_capital_intereses2);
 
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
         btn_amortizar_antes                  = findViewById(R.id.btn_amortizar_antes);

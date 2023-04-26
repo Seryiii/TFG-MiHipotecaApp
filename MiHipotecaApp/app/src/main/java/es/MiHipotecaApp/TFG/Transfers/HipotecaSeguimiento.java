@@ -176,7 +176,7 @@ public class HipotecaSeguimiento implements Serializable {
 
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(cal.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
-
+        if(inicio.get(Calendar.DAY_OF_YEAR) == 1) return numeroPagoActual;
         return numeroPagoActual + 1;
     }
 
@@ -355,7 +355,7 @@ public class HipotecaSeguimiento implements Serializable {
 
     public double getDineroRestanteActual(int i, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors) { return 0;}
 
-
+    public double getPorcentajeUltimaCuota(HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0; }
 
     public double getEuriborActual(List<Double> euribors){ return euribors.get(euribors.size() - 1); }
 
@@ -363,7 +363,14 @@ public class HipotecaSeguimiento implements Serializable {
 
     public double getEuriborPasado(int numPago, List<Double> euribors){
         if (numPago == 0) numPago = 1;
-        return euribors.get(numPago - 1);
+        if (numPago > euribors.size()) return euribors.get(euribors.size() - 1);
+        int mesesRevision = isRevision_anual() ? 12 : 6;
+
+        int pago = numPago - 1;
+        if (numPago % mesesRevision == 0)  pago = numPago - mesesRevision;
+        else pago = numPago - numPago % mesesRevision;
+
+        return euribors.get(pago);
     }
 
     public List<Object> getAnioYMesDeUnPago(int numPago, HashMap<Integer, List<Object>> amortizaciones){

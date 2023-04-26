@@ -161,9 +161,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 //Ultima cuota
                 else {
                     //TODO CAMBIAR PORCENTAJES Y ADAPTARLO PARA TODAS LAS HIPOTECAS
-                    cuota.setText(formato.format(capPdteCuota));
-                    capital.setText(formato.format(hip.getCapitalAmortizadoMensual(capPdteCuota, capPdteCuota, hip.getPorcentaje_fijo())));
-                    interes.setText(formato.format(hip.getInteresMensual(capPdteCuota, hip.getPorcentaje_fijo())));
+
+                    cuota.setText(formato.format(valores.get(0)));
+                    capital.setText(formato.format(hip.getCapitalAmortizadoMensual(valores.get(0), capPdteCuota, hip.getPorcentajeUltimaCuota(amortizaciones_hip, euribors))));
+                    interes.setText(formato.format(hip.getInteresMensual(capPdteCuota, hip.getPorcentajeUltimaCuota(amortizaciones_hip, euribors))));
                     pendiente.setText("0");
                     tableRow.addView(cuota);
                     tableRow.addView(capital);
@@ -178,7 +179,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     }
 
     public void actualizarTablaAnios(){
-        if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
+        /*if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         Calendar calendar = Calendar.getInstance();
@@ -227,7 +228,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tableRow.addView(pendiente);
 
 
-        }
+        }*/
     }
 
     public void eventos(){

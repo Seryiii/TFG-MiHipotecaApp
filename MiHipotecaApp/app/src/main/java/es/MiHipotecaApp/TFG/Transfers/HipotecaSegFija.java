@@ -42,7 +42,6 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
                 }
                 else {
                     capital_pendiente -= (Double) amortizaciones.get(i).get(1);
-                    //plazoActual -= (Long) amortizaciones.get(i).get(2);
                 }
             }
             double cantidad_capital = getCapitalAmortizadoMensual(cuota_mensual, capital_pendiente, porcentaje_fijo);
@@ -85,17 +84,13 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         ArrayList<Double> valores = new ArrayList<>();
         double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones,euribors);
         double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
+        double cuota = cogerCuotaActual(numCuota, amortizaciones);
+        double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
 
         // Restamos al capital pendiente la amortizacion para sacar la nueva cuota
-        if(amortizaciones.containsKey(numCuota)) capPdte -= (Double) amortizaciones.get(numCuota).get(1);
-
-
-        //double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1);
-        double cuota = cogerCuotaActual(numCuota, amortizaciones);
-
-        double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
         // Este if es para mostrar la cuota con la amortizacion
         if(amortizaciones.containsKey(numCuota)){
+            capPdte -= (Double) amortizaciones.get(numCuota).get(1);
             cuota += (Double) amortizaciones.get(numCuota).get(1);
             capAmortMensual += (Double) amortizaciones.get(numCuota).get(1);
             if(amortizaciones.get(numCuota).get(0).equals("total")){
@@ -108,6 +103,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         valores.add(capAmortMensual);
         valores.add(getInteresMensual(capPdte, porcentaje_fijo));
         valores.add(capPdteCuota);
+
         return valores;
     }
 
@@ -184,6 +180,9 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         return valores;
     }
 
+    @Override
+    public double getPorcentajeUltimaCuota(HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return porcentaje_fijo; }
+
 
     /** Esta funcion devuelve el porcentaje que se aplica para un determinado numero de cuota**/
     @Override
@@ -199,4 +198,5 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     public void setPorcentaje_fijo(double porcentaje_fijo) {
         this.porcentaje_fijo = porcentaje_fijo;
     }
+
 }

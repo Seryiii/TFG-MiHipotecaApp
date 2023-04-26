@@ -338,10 +338,12 @@ public class AmortizarAntes extends AppCompatActivity {
                     }else{
                         //calcular los meses a reducir
                         meses_reducidos = 0;
+                        double cant_amort = cantidad_amortizada;
                         double capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - 1, amortizaciones_hip, euribors);
-                        while(cantidad_amortizada >= capUltimaCuota){
+                        while(cant_amort >= capUltimaCuota){
                             meses_reducidos++;
-                            capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - meses_reducidos, amortizaciones_hip, euribors) - capUltimaCuota;
+                            capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - meses_reducidos -1, amortizaciones_hip, euribors) - capUltimaCuota;
+                            cant_amort -= capUltimaCuota;
                         }
 
                         cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducidos) + " meses");
