@@ -220,7 +220,7 @@ public class HipotecaSeguimiento implements Serializable {
 
     public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0; }
 
-    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones){return 0;}
+    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){return 0;}
 
     //GETTERS Y SETTERS SOBREESCRITOS
     public double getPorcentaje_fijo() {
@@ -363,13 +363,13 @@ public class HipotecaSeguimiento implements Serializable {
 
     public double getEuriborPasado(int numPago, List<Double> euribors){
         if (numPago == 0) numPago = 1;
-        if (numPago > euribors.size()) return euribors.get(euribors.size() - 1);
+
         int mesesRevision = isRevision_anual() ? 12 : 6;
 
-        int pago = numPago - 1;
+        int pago;
         if (numPago % mesesRevision == 0)  pago = numPago - mesesRevision;
         else pago = numPago - numPago % mesesRevision;
-
+        if (pago > euribors.size()) return euribors.get(euribors.size() - 1);
         return euribors.get(pago);
     }
 

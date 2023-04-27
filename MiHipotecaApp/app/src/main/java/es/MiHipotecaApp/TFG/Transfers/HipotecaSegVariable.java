@@ -215,6 +215,62 @@ public class HipotecaSegVariable extends HipotecaSeguimiento implements Serializ
         return capitalCuota;
     }
 
+    //TODO esta funcion
+    @Override
+    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
+
+        // si el numero de cuota es mayor al plazo actual la cuota es 0
+        if (num_cuota > getPlazoActual(amortizaciones)) return 0;
+
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        double cuota = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, plazo_anios * 12);
+
+        // estoy en el primer porcentaje
+        if(num_cuota <= duracion_primer_porcentaje_variable){
+            //Ver si hay reducción de cuota
+            for (int i = 1; i <= num_cuota; i++) {
+                if(amortizaciones.containsKey(i)){
+                    if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                        cuota = getCuotaMensual(primer_porcentaje_variable, capital_pendiente, (plazo_anios * 12) - i + 1);
+                    }
+                    // Si hay reducción de plazo da igual porque la cuota es la misma
+                }
+                double cantidad_capital = getCapitalAmortizadoMensual(cuota, capital_pendiente, primer_porcentaje_variable);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+            }
+        }
+        //caso cuota esta en la parte variable
+        else{
+            int revision = isRevision_anual() ? 12 : 6;
+            int numCuotaRevisionAnterior = 1;
+            if (num_cuota % revision == 0)  numCuotaRevisionAnterior += num_cuota - revision;
+            else numCuotaRevisionAnterior += num_cuota - num_cuota % revision;
+
+            capital_pendiente = getCapitalPendienteTotalActual(numCuotaRevisionAnterior - 1, amortizaciones, euribors);
+            double porcentaje_aplicado = getEuriborPasado(num_cuota, euribors) + porcentaje_diferencial_variable;
+            cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, getPlazoActual(amortizaciones) - numCuotaRevisionAnterior + 1);
+
+            //Comprobar si hay reduccion de cuota
+            for (int i = numCuotaRevisionAnterior; i <= num_cuota; i++) {
+                if(amortizaciones.containsKey(i)){
+                    if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                        porcentaje_aplicado = getEuriborPasado(i, euribors) + porcentaje_diferencial_variable;
+                        cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, getPlazoActual(amortizaciones) - i + 1);
+                    }
+                    // Si hay reducción de plazo da igual porque la cuota es la misma
+                }
+                double cantidad_capital = getCapitalAmortizadoMensual(cuota, capital_pendiente, primer_porcentaje_variable);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+            }
+        }
+        return cuota;
+    }
+
+
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
     //TODO FALTA ARREGLAR ESTA FUNCION
     @Override

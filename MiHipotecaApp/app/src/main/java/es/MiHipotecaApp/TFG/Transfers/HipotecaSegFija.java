@@ -84,7 +84,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         ArrayList<Double> valores = new ArrayList<>();
         double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones,euribors);
         double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
-        double cuota = cogerCuotaActual(numCuota, amortizaciones);
+        double cuota = cogerCuotaActual(numCuota, amortizaciones, euribors);
         double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
 
         // Restamos al capital pendiente la amortizacion para sacar la nueva cuota
@@ -110,9 +110,12 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
 
     // funcion (numero cuota) calcule la cuota para ese num cuota
     @Override
-    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones){
+    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         double capital_pendiente = precio_vivienda - cantidad_abonada;
         double cuota = getCuotaMensual(porcentaje_fijo, capital_pendiente, plazo_anios * 12);
+
+        // si el numero de cuota es mayor al plazo actual la cuota es 0
+        if (num_cuota > getPlazoActual(amortizaciones)) return 0;
 
         //Ver si hay reducción de cuota
         for (int i = 1; i <= num_cuota; i++) {

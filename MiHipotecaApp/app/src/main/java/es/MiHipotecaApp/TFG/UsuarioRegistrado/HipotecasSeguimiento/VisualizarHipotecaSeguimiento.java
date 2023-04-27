@@ -395,8 +395,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             info_cuota.setVisibility(View.GONE);
         }
 
-        double cuota_mensual = hip.getCuotaMensual(porcentaje_aplicado, cantidad_pendiente, numero_cuotas_restantes);
-        if(hip.getTipo_hipoteca().equals("fija")) cuota_mensual = hip.cogerCuotaActual(numero_cuotas_pagadas, amortizaciones_anticipadas);
+        //todo cambiar a cuota mensual = cogercuotaactual
+        double cuota_mensual = hip.cogerCuotaActual(numero_cuotas_pagadas + 1, amortizaciones_anticipadas, euribors);
         //SI HAY AMORTIZACION EN LA SIGUIENTE CUOTA
         if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)){
             double amortizacion_ant = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);

@@ -118,7 +118,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
             //Solo crea las filas si existe ese numero de cuota
             double capPdteCuota = hip.getCapitalPendienteTotalActual(numCuotaEnero + i - 1, amortizaciones_hip, euribors);
-            double cuota_actual = hip.cogerCuotaActual(numCuotaEnero + i, amortizaciones_hip);
+            double cuota_actual = hip.cogerCuotaActual(numCuotaEnero + i, amortizaciones_hip, euribors);
 
             if(numCuotaEnero + i > 0) {
 
@@ -160,8 +160,6 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 }
                 //Ultima cuota
                 else {
-                    //TODO CAMBIAR PORCENTAJES Y ADAPTARLO PARA TODAS LAS HIPOTECAS
-
                     cuota.setText(formato.format(valores.get(0)));
                     capital.setText(formato.format(hip.getCapitalAmortizadoMensual(valores.get(0), capPdteCuota, hip.getPorcentajeUltimaCuota(amortizaciones_hip, euribors))));
                     interes.setText(formato.format(hip.getInteresMensual(capPdteCuota, hip.getPorcentajeUltimaCuota(amortizaciones_hip, euribors))));

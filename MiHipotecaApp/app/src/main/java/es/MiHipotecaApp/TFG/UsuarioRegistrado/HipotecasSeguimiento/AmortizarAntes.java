@@ -339,15 +339,24 @@ public class AmortizarAntes extends AppCompatActivity {
                         //calcular los meses a reducir
                         meses_reducidos = 0;
                         double cant_amort = cantidad_amortizada;
-                        double capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - 1, amortizaciones_hip, euribors);
-                        while(cant_amort >= capUltimaCuota){
+                        double capitalPdte = capital_pendiente_actual;
+
+                        int siguienteNumeroCuota = hip.getNumeroCuotaActual(amortizaciones_hip) + 1;
+                        double porcentaje_aplicado_siguiente_cuota = hip.getPorcentajePorCuota(siguienteNumeroCuota, amortizaciones_hip, euribors);
+                        double cuotaSiguiente = hip.cogerCuotaActual(siguienteNumeroCuota, amortizaciones_hip, euribors);
+                        double capSiguienteCuota = hip.getCapitalAmortizadoMensual(cuotaSiguiente, capitalPdte, porcentaje_aplicado_siguiente_cuota);
+
+                        while(cant_amort >= capSiguienteCuota){
                             meses_reducidos++;
-                            capUltimaCuota = hip.getCapitalPendienteTotalActual(plazo_actual - meses_reducidos -1, amortizaciones_hip, euribors) - capUltimaCuota;
-                            cant_amort -= capUltimaCuota;
+                            cant_amort -= capSiguienteCuota;
+                            capitalPdte -= capSiguienteCuota;
+                            porcentaje_aplicado_siguiente_cuota = hip.getPorcentajePorCuota(siguienteNumeroCuota + meses_reducidos, amortizaciones_hip, euribors);
+                            cuotaSiguiente = hip.cogerCuotaActual(siguienteNumeroCuota + meses_reducidos, amortizaciones_hip, euribors);
+                            capSiguienteCuota = hip.getCapitalAmortizadoMensual(cuotaSiguiente, capitalPdte, porcentaje_aplicado_siguiente_cuota);
+
                         }
 
                         cuota_plazo_nueva_valor.setText((plazo_actual - meses_reducidos) + " meses");
-
                         capital_pendiente_nuevo.setText("Capital pdte nuevo: " + formato.format(capital_pendiente_actual - cantidad_amortizada) + "€");
                     }
                 }
