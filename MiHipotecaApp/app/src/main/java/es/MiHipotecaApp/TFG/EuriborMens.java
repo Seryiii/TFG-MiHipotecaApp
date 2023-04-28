@@ -1,16 +1,15 @@
 package es.MiHipotecaApp.TFG;
 
 import android.content.Context;
-import android.content.Intent;
+
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
-import java.util.concurrent.CountDownLatch;
+
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -29,15 +28,14 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import es.MiHipotecaApp.TFG.SimularHipoteca.CompararNuevaHipoteca;
-import es.MiHipotecaApp.TFG.SimularHipoteca.MostrarOfertas;
+
 import es.MiHipotecaApp.TFG.Transfers.Euribor;
 
 public class EuriborMens extends Worker {
 
 
     RequestQueue requestQueue;
-    CountDownLatch latch = new CountDownLatch(1);
+
     private FirebaseFirestore db;
 
     private final String TAG = "EURIBOR ACTIVITY";
@@ -55,7 +53,7 @@ public class EuriborMens extends Worker {
         return Result.success() ;
     }
     private void  ActualizarEuribor(){
-        String url = "http://10.0.2.2:5000/pruebaArray";
+        String url = "http://147.96.81.245:5000/EuriborMensual";
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,

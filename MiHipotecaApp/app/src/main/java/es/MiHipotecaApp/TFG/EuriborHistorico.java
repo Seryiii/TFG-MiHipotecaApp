@@ -1,9 +1,8 @@
 package es.MiHipotecaApp.TFG;
 
 import android.content.Context;
-import android.os.Bundle;
+
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,13 +24,13 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.concurrent.CountDownLatch;
+
 
 import es.MiHipotecaApp.TFG.Transfers.Euribor;
 
 public class EuriborHistorico extends AppCompatActivity {
     RequestQueue requestQueue;
-    CountDownLatch latch = new CountDownLatch(1);
+
     Context context;
 
     private FirebaseFirestore db;
@@ -46,7 +45,7 @@ public class EuriborHistorico extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue( this.context,new HurlStack());
     }
     protected void ActualizarEuribor() {
-        String url = "http://10.0.2.2:5000/Euribor";
+        String url = "http://147.96.81.245:5000/EuriborHistorico";
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
