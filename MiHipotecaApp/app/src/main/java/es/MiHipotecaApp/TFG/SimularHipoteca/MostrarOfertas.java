@@ -6,6 +6,7 @@ import android.os.Bundle;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -65,7 +66,7 @@ public class MostrarOfertas extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_ofertas);
-        context = this;
+        context = this.getApplicationContext();
         requestQueue = Volley.newRequestQueue(this,new HurlStack());
         try {
             initGUI();
@@ -96,7 +97,7 @@ public class MostrarOfertas extends AppCompatActivity {
         btn_fijas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
+                adapter = new RecyclerAdapter(lista_fija,"fija",detalles,getSupportFragmentManager());
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 String[] bancosFija = bancosDiferentes(lista_fija);
@@ -109,7 +110,7 @@ public class MostrarOfertas extends AppCompatActivity {
         btn_varMix.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                adapter = new RecyclerAdapter(lista_varMix,"varMix",detalles);
+                adapter = new RecyclerAdapter(lista_varMix,"varMix",detalles,getSupportFragmentManager());
 
                 String[] bancosVarMixt = bancosDiferentes(lista_varMix);
                 ArrayAdapter<String> adapterSpinner_varMix = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosVarMixt);
@@ -140,11 +141,11 @@ public class MostrarOfertas extends AppCompatActivity {
                 } else {
                     sp_bancos.setVisibility(View.GONE);
                     if (fija){
-                        adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
+                        adapter = new RecyclerAdapter(lista_fija,"fija",detalles,getSupportFragmentManager());
                         rvLista.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }else{
-                        adapter = new RecyclerAdapter(lista_varMix,"varMix",detalles);
+                        adapter = new RecyclerAdapter(lista_varMix,"varMix",detalles,getSupportFragmentManager());
                         rvLista.setAdapter(adapter);
                         adapter.notifyDataSetChanged();
                     }
@@ -160,13 +161,13 @@ public class MostrarOfertas extends AppCompatActivity {
                     for(Oferta o : lista_fija){
                         if (o.getBanco().equals(bancoSeleccionado)) cuentasFiltradas.add(o);
                     }
-                    adapter = new RecyclerAdapter(cuentasFiltradas,"fija",detalles);
+                    adapter = new RecyclerAdapter(cuentasFiltradas,"fija",detalles,getSupportFragmentManager());
                 }
                 else{
                     for(Oferta o : lista_varMix){
                         if (o.getBanco().equals(bancoSeleccionado)) cuentasFiltradas.add(o);
                     }
-                    adapter = new RecyclerAdapter(cuentasFiltradas,"varMix",detalles);
+                    adapter = new RecyclerAdapter(cuentasFiltradas,"varMix",detalles,getSupportFragmentManager());
                 }
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
@@ -186,8 +187,8 @@ public class MostrarOfertas extends AppCompatActivity {
             obtenerDatosBancos();
         }catch (Exception e){}
         Log.d("DETALLES", String.valueOf(detalles));
-        if(detalles) adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
-        else  adapter = new RecyclerAdapter(lista_fija,"fija",detalles);
+        if(detalles) adapter = new RecyclerAdapter(lista_fija,"fija",detalles,getSupportFragmentManager());
+        else  adapter = new RecyclerAdapter(lista_fija,"fija",detalles,getSupportFragmentManager());
         rvLista.setAdapter(adapter);
 
 
@@ -359,6 +360,7 @@ public class MostrarOfertas extends AppCompatActivity {
 // Agregar solicitud a la RequestQueue
         requestQueue.add(request);
     }
+
 
 }
 

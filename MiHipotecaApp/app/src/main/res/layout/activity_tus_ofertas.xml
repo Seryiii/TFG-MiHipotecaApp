@@ -20,7 +20,7 @@
             android:background="@drawable/button_background"
             android:text="Fijas"
             android:textColor="#FFFFFF"
-            android:visibility="invisible"/>
+            />
 
         <Button
             android:id="@+id/buttonVariablesMixta"
@@ -30,7 +30,7 @@
             android:background="@drawable/button_background"
             android:text="Variables/Mixta"
             android:textColor="#FFFFFF"
-            android:visibility="invisible"/>
+            />
 
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView

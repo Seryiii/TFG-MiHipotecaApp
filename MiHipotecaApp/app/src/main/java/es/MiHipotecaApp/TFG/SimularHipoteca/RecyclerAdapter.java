@@ -1,16 +1,21 @@
 package es.MiHipotecaApp.TFG.SimularHipoteca;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
@@ -27,6 +32,8 @@ import java.util.Map;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevaVinculacionAnualFragment;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
     private List<Oferta> lista;
@@ -38,10 +45,24 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     private FirebaseAuth auth;
     private FirebaseUser user;
-    public RecyclerAdapter(List<Oferta> lista,String tipo,Boolean detalles) {
+    private String tipoBtn;
+    private FragmentManager fragmentManager;
+    private String nombreOferta;
+    public RecyclerAdapter(List<Oferta> lista, String tipo, Boolean detalles, FragmentManager fragmentManager) {
         this.lista = lista;
         this.tipo = tipo;
         this.detalles = detalles;
+        db   = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
+        tipoBtn = "guardar";
+        this.fragmentManager = fragmentManager;
+
+    }
+    public RecyclerAdapter(List<Oferta> lista,String tipo) {
+        this.lista = lista;
+        this.tipo = tipo;
+        tipoBtn = "eliminar";
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -118,16 +139,25 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         }
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
-
+        if(tipoBtn.equals("guardar"))holder.btn_eliminar.setVisibility(View.GONE);
+        else holder.btn_guardar.setVisibility(View.GONE);
         Oferta oferta = lista.get(position);
         eventoBtn(holder,oferta);
-        if(!detalles&&!oferta.getVinculaciones().equals("")){
-            holder.btn_details.setVisibility(View.GONE);
-            holder.txt_detalles.setVisibility(View.GONE);
-        }
+        if(detalles == null){
+            if(oferta.getVinculaciones().equals("")){
+                holder.btn_details.setVisibility(View.GONE);
+                holder.txt_detalles.setVisibility(View.GONE);
+            }
+        }else{
+            if(!detalles){
+                holder.btn_details.setVisibility(View.GONE);
+                holder.txt_detalles.setVisibility(View.GONE);
+            }
 
+        }
         holder.tvBanco.setText(oferta.getBanco());
         holder.tvDesc.setText(oferta.getDesc());
         ponerLogoBanco(oferta.getBanco(), holder);
@@ -196,13 +226,17 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.btn_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //HACER ESTA NOCHE
+                custom_dialog_oferta fragment = new custom_dialog_oferta(oferta);
+                fragment.show(fragmentManager, "Nombre oferta fragment");
+
                 String uid = user.getUid();
                 Map<String, Object> o = new HashMap<>();
                 o.put("idUser", uid);
                 o.put("banco", oferta.getBanco());
                 o.put("desc", oferta.getDesc());
                 o.put("tae", oferta.getTae());
-
+                o.put("nombreOferta" , nombreOferta);
                 if(tipo.equals("fija")){
                     o.put("tin", oferta.getTin());
                     o.put("cuota", oferta.getCuota());
@@ -233,6 +267,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                         Log.w("GUARDAR","Error al guardar oferta en Firestore: ");
                     }
                 });
+
+                // Guardar nombreOferta en la colección de ofertas_guardadas
+                    }
+                });
+        holder.btn_eliminar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
             }
         });
     }
@@ -257,10 +299,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         private TextView txt_detalles;
 
         private Button btn_guardar;
+        private Button btn_eliminar;
+        private Context contexto;
 
 
         public RecyclerHolder(@NonNull View itemView){
             super(itemView);
+            contexto = itemView.getContext();
             img = itemView.findViewById(R.id.imgItem);
             tvBanco = itemView.findViewById(R.id.tvBanco);
             tvDesc = itemView.findViewById(R.id.tvDesc);
@@ -273,6 +318,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             btn_details = itemView.findViewById(R.id.btnArrow);
             txt_detalles = itemView.findViewById(R.id.txt_detalles);
             btn_guardar = itemView.findViewById(R.id.btn_guardar);
+            btn_eliminar = itemView.findViewById(R.id.btn_eliminar);
         }
 
     }

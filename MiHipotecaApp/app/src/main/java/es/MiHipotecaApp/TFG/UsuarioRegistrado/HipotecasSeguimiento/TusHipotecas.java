@@ -91,7 +91,7 @@ public class TusHipotecas extends Fragment {
         btn_verOfertas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getActivity(), MostrarOfertas.class);
+                Intent intent = new Intent(getActivity().getApplicationContext(), TusOfertas.class);
                 startActivity(intent);
             }
         });

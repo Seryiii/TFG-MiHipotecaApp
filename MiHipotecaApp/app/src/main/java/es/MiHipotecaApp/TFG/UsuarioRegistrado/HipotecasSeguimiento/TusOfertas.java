@@ -6,6 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -42,19 +43,21 @@ public class TusOfertas extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         cargarOfertas();
-    }
-    private void cargarOfertas() {
         LinearLayoutManager manager = new LinearLayoutManager(TusOfertas.this);
         rvLista.setLayoutManager(manager);
-        //Crear el adapter con los parametros vacios
+        adapter = new RecyclerAdapter(ofertasFija,"fija");
+        rvLista.setAdapter(adapter);
+    }
+    private void cargarOfertas() {
         String uid = user.getUid();
         CollectionReference ofertasRef = db.collection("ofertas_guardadas");
         // Crear una consulta para obtener los documentos con el UID del usuario
-        Query query = ofertasRef.whereEqualTo("uid", uid);
+        Query query = ofertasRef.whereEqualTo("idUser", uid);
         query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
             public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                 for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()){
+                    Log.d("DETALLES", "entra");
                     String banco = documentSnapshot.getString("banco");
                     String desc = documentSnapshot.getString("desc");
                     String tipo = documentSnapshot.getString("tipo");
@@ -64,11 +67,7 @@ public class TusOfertas extends AppCompatActivity {
                     if(tipo.equals("fija")){
                         String cuota = documentSnapshot.getString("cuota");
                         String tin = documentSnapshot.getString("tin");
-                        if (vinculaciones.equals("")){
-                            o = new Oferta(banco,desc,tin,tae,cuota);
-                        }else {
-                            o = new Oferta(banco,desc,tin,tae,cuota,vinculaciones);
-                        }
+                        o = new Oferta(banco,desc,tin,tae,cuota,vinculaciones);
                         ofertasFija.add(o);
                     }
                     else{
@@ -76,16 +75,12 @@ public class TusOfertas extends AppCompatActivity {
                         String cuota_resto = documentSnapshot.getString("cuota_resto");
                         String tin_x = documentSnapshot.getString("tin_x");
                         String tin_resto = documentSnapshot.getString("tin_resto");
-                        if (vinculaciones.equals("")){
-                            o = new Oferta(banco,desc,tin_x,tin_resto,tae,cuota_x,cuota_resto);
-                        }else {
-                            o = new Oferta(banco,desc,tin_x,tin_resto,tae,cuota_x,cuota_resto,vinculaciones);
-                        }
+                        o = new Oferta(banco,desc,tin_x,tin_resto,tae,cuota_x,cuota_resto,vinculaciones);
                         ofertasVarMix.add(o);
                     }
 
-
                 }
+
                 adapter.notifyDataSetChanged();
             }
         }).addOnFailureListener(new OnFailureListener() {
