@@ -75,6 +75,19 @@ public class HipotecaSeguimiento implements Serializable {
         return plazoTotalActual;
     }
 
+    /** Esta funcion devuelve el plazo en un numero de pago**/
+    public int getPlazoNumPago(int numPago, HashMap<Integer, List<Object>> amortizaciones){
+        int plazo = plazo_anios * 12;
+
+        for(int i = 1; i <= numPago; i++){
+            if(amortizaciones.containsKey(i)){
+                if(amortizaciones.get(i).get(0).equals("parcial_plazo")) plazo -= (Long) amortizaciones.get(i).get(2);
+            }
+        }
+
+        return plazo;
+    }
+
 
     /** Esta funcion devuelve la cuota mensual de una hipoteca en funcion del porcentaje aplicado
      *  y de la cantidad pendiente del prestamo **/
@@ -176,7 +189,7 @@ public class HipotecaSeguimiento implements Serializable {
 
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(cal.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
-        if(inicio.get(Calendar.DAY_OF_YEAR) == 1) return numeroPagoActual;
+        if(inicio.get(Calendar.DAY_OF_MONTH) == 1) return numeroPagoActual;
         return numeroPagoActual + 1;
     }
 
@@ -289,7 +302,7 @@ public class HipotecaSeguimiento implements Serializable {
     public List<Double> getArrayVinculacionesAnual(){ return arrayVinculacionesAnual; }
 
     public Double getPosArrayVinculacionesAnual(int i) {
-        return arrayVinculacionesAnual.get(i);
+        return Double.parseDouble(String.valueOf(arrayVinculacionesAnual.get(i)));
     }
 
     public String getIdUsuario() {
@@ -369,7 +382,7 @@ public class HipotecaSeguimiento implements Serializable {
         int pago;
         if (numPago % mesesRevision == 0)  pago = numPago - mesesRevision;
         else pago = numPago - numPago % mesesRevision;
-        if (pago > euribors.size()) return euribors.get(euribors.size() - 1);
+        if (pago >= euribors.size()) return euribors.get(euribors.size() - 1);
         return euribors.get(pago);
     }
 

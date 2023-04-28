@@ -291,8 +291,8 @@ public class AmortizarAntes extends AppCompatActivity {
 
                 if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(cuota_mensual_actual);
                 else{
-                    double porcentaje_aplicado  = getIntent().getDoubleExtra("porcentaje_aplicado", -1);
-                    int numero_cuotas_restantes = getIntent().getIntExtra("cuotas_pendientes", -1);
+                    double porcentaje_aplicado  = hip.getPorcentajePorCuota(hip.getNumeroCuotaActual(amortizaciones_hip) + 1, amortizaciones_hip, euribors);//getIntent().getDoubleExtra("porcentaje_aplicado", -1);
+                    int numero_cuotas_restantes = hip.getPlazoNumPago(hip.getNumeroCuotaActual(amortizaciones_hip) + 1, amortizaciones_hip); //getIntent().getIntExtra("cuotas_pendientes", -1);
                     double cantidad_pendiente = getIntent().getDoubleExtra("cantidad_pendiente", -1);
                     double capital_a_amortizar = Double.parseDouble(s.toString());
                     if (capital_a_amortizar > capital_pendiente_actual){
