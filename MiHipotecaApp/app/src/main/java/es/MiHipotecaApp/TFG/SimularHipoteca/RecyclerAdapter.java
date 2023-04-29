@@ -21,21 +21,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevaVinculacionAnualFragment;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
 
-public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder>{
     private List<Oferta> lista;
     private String tipo;
     private Boolean detalles;
@@ -227,54 +234,38 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             @Override
             public void onClick(View view) {
                 //HACER ESTA NOCHE
-                custom_dialog_oferta fragment = new custom_dialog_oferta(oferta);
+                custom_dialog_oferta fragment = new custom_dialog_oferta(oferta,holder,tipo);
                 fragment.show(fragmentManager, "Nombre oferta fragment");
-
-                String uid = user.getUid();
-                Map<String, Object> o = new HashMap<>();
-                o.put("idUser", uid);
-                o.put("banco", oferta.getBanco());
-                o.put("desc", oferta.getDesc());
-                o.put("tae", oferta.getTae());
-                o.put("nombreOferta" , nombreOferta);
-                if(tipo.equals("fija")){
-                    o.put("tin", oferta.getTin());
-                    o.put("cuota", oferta.getCuota());
-                    o.put("tipo","fija");
-                }
-                else{
-                    o.put("tipo","varMixta");
-                    o.put("tin_x_anios", oferta.getTin_x());
-                    o.put("tin_resto", oferta.getTin_resto());
-                    o.put("couta_x", oferta.getCuota_x());
-                    o.put("cuota_resto", oferta.getCuota_resto());
-                }
-                if(detalles){
-                    o.put("vinculaciones", oferta.getVinculaciones());
-                }
-                else o.put("vinculaciones" , "");
-                db.collection("ofertas_guardadas").add(o).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        //Toast.makeText(MostrarOfertas., "Oferta guardada correctamente!", Toast.LENGTH_LONG).show();
-                        Log.w("GUARDAR","Exito al guardar");
-                        holder.btn_guardar.setVisibility(View.GONE);
-                    }
-
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("GUARDAR","Error al guardar oferta en Firestore: ");
-                    }
-                });
-
                 // Guardar nombreOferta en la colección de ofertas_guardadas
                     }
                 });
         holder.btn_eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                CollectionReference ofertasRef = db.collection("ofertas_guardadas");
+                Query query = ofertasRef.whereEqualTo("nombreOferta" , oferta.getNombre());
 
+                query.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot querySnapshot) {
+                        for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
+                            String documentId = documentSnapshot.getId();
+                            db.collection("ofertas_guardadas").document(documentId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Eliminar", "DocumentSnapshot successfully deleted!");
+                                            holder.btn_eliminar.setVisibility(View.GONE);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Eliminar", "Error deleting document", e);
+                                        }
+                                    });;
+                        }
+                    }
+                });
             }
         });
     }
@@ -283,6 +274,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public int getItemCount() {
         return lista.size();
     }
+
+
 
     public static class RecyclerHolder extends RecyclerView.ViewHolder{
         private ImageView img;
@@ -298,7 +291,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         private Button btn_details;
         private TextView txt_detalles;
 
-        private Button btn_guardar;
+        public Button btn_guardar;
         private Button btn_eliminar;
         private Context contexto;
 

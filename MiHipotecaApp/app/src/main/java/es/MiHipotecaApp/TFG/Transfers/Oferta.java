@@ -15,6 +15,7 @@ public class Oferta {
     private String tin_x;
     private String tin_resto;
     private String vinculaciones;
+    private String nombre ;
 
 
 
@@ -61,6 +62,12 @@ public class Oferta {
         this.vinculaciones = vinculaciones;
     }
 
+    public String getNombre() {
+        return nombre;
+    }
+    public void setNombre(String nombre) {
+         this.nombre = nombre;
+    }
     public String getCuota_x() {
         return cuota_x;
     }

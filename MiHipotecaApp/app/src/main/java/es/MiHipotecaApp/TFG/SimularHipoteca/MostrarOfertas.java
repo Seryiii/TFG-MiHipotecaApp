@@ -1,5 +1,6 @@
 package es.MiHipotecaApp.TFG.SimularHipoteca;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
@@ -34,6 +35,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 
 import org.json.JSONArray;
@@ -42,9 +49,11 @@ import org.json.JSONObject;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class MostrarOfertas extends AppCompatActivity {
+public class MostrarOfertas extends AppCompatActivity implements custom_dialog_oferta.pasarDatos {
     RequestQueue requestQueue;
     Context context;
     private RecyclerView rvLista;
@@ -61,7 +70,10 @@ public class MostrarOfertas extends AppCompatActivity {
     private TextView txt_filtrarBancos;
     private Switch switchBusqueda;
     private boolean fija = true;
+    private FirebaseFirestore db;
 
+    private FirebaseAuth auth;
+    private FirebaseUser user;
 
     private Handler handler = new Handler();
     private TextView textView;
@@ -75,6 +87,9 @@ public class MostrarOfertas extends AppCompatActivity {
         setContentView(R.layout.activity_mostrar_ofertas);
         context = this.getApplicationContext();
         requestQueue = Volley.newRequestQueue(this,new HurlStack());
+        db   = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        user = auth.getCurrentUser();
         try {
             initGUI();
         } catch (JSONException e) {
@@ -384,6 +399,46 @@ public class MostrarOfertas extends AppCompatActivity {
     };
 
 
+    @Override
+    public void pasarNombre(String nombre, RecyclerAdapter.RecyclerHolder holder, Oferta oferta,String tipo) {
+        String uid = user.getUid();
+        Map<String, Object> o = new HashMap<>();
+        o.put("idUser", uid);
+        o.put("banco", oferta.getBanco());
+        o.put("desc", oferta.getDesc());
+        o.put("tae", oferta.getTae());
+        o.put("nombreOferta" , nombre);
+        if(tipo.equals("fija")){
+            o.put("tin", oferta.getTin());
+            o.put("cuota", oferta.getCuota());
+            o.put("tipo","fija");
+        }
+        else{
+            o.put("tipo","varMixta");
+            o.put("tin_x_anios", oferta.getTin_x());
+            o.put("tin_resto", oferta.getTin_resto());
+            o.put("couta_x", oferta.getCuota_x());
+            o.put("cuota_resto", oferta.getCuota_resto());
+        }
+        if(detalles){
+            o.put("vinculaciones", oferta.getVinculaciones());
+        }
+        else o.put("vinculaciones" , "");
+        db.collection("ofertas_guardadas").add(o).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+            @Override
+            public void onSuccess(DocumentReference documentReference) {
+                //Toast.makeText(MostrarOfertas., "Oferta guardada correctamente!", Toast.LENGTH_LONG).show();
+                Log.w("GUARDAR","Exito al guardar");
+                holder.btn_guardar.setVisibility(View.GONE);
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("GUARDAR","Error al guardar oferta en Firestore: ");
+            }
+        });
+    }
 }
 
 

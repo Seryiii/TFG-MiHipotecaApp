@@ -63,11 +63,13 @@ public class TusOfertas extends AppCompatActivity {
                     String tipo = documentSnapshot.getString("tipo");
                     String tae = documentSnapshot.getString("tae");
                     String vinculaciones = documentSnapshot.getString("vinculaciones");
+                    String nombre = documentSnapshot.getString("nombreOferta");
                     Oferta o;
                     if(tipo.equals("fija")){
                         String cuota = documentSnapshot.getString("cuota");
                         String tin = documentSnapshot.getString("tin");
                         o = new Oferta(banco,desc,tin,tae,cuota,vinculaciones);
+                        o.setNombre(nombre);
                         ofertasFija.add(o);
                     }
                     else{
@@ -76,6 +78,7 @@ public class TusOfertas extends AppCompatActivity {
                         String tin_x = documentSnapshot.getString("tin_x");
                         String tin_resto = documentSnapshot.getString("tin_resto");
                         o = new Oferta(banco,desc,tin_x,tin_resto,tae,cuota_x,cuota_resto,vinculaciones);
+                        o.setNombre(nombre);
                         ofertasVarMix.add(o);
                     }
 

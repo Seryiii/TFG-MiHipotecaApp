@@ -14,16 +14,26 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.SimularHipoteca.RecyclerAdapter;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevaVinculacionAnualFragment;
 
 public class custom_dialog_oferta  extends AppCompatDialogFragment {
     private Oferta oferta;
     private EditText et_nombre;
+
+    private pasarDatos pasarDatos;
+    private String tipo;
+
+    private RecyclerAdapter.RecyclerHolder holder;
     public custom_dialog_oferta(Oferta oferta){
         this.oferta = oferta;
     }
-
+    public custom_dialog_oferta(Oferta oferta, RecyclerAdapter.RecyclerHolder holder,String tipo){
+        this.holder = holder;
+        this.oferta = oferta;
+        this.tipo = tipo;
+    }
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.oferta_dialog, container, false);
@@ -34,7 +44,7 @@ public class custom_dialog_oferta  extends AppCompatDialogFragment {
             @Override
             public void onClick(View view) {
                 String nombreOferta = et_nombre.getText().toString();
-
+                pasarDatos.pasarNombre(nombreOferta,holder,oferta,tipo);
                 dismiss();
             }
         });
@@ -45,6 +55,9 @@ public class custom_dialog_oferta  extends AppCompatDialogFragment {
             }
         });
         return view;
+    }
+    public interface pasarDatos{
+        void pasarNombre(String nombre,RecyclerAdapter.RecyclerHolder holder,Oferta oferta,String tipo);
     }
 
     @Override
@@ -59,6 +72,7 @@ public class custom_dialog_oferta  extends AppCompatDialogFragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        pasarDatos = (pasarDatos)context;
 
     }
 
