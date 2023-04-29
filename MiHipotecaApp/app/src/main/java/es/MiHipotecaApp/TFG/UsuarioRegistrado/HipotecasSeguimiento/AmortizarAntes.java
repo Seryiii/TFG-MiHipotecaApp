@@ -2,6 +2,7 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -32,6 +33,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.ArrowPositionRules;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -398,6 +404,56 @@ public class AmortizarAntes extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 amortizar();
+            }
+        });
+
+        btn_info_dinero_amort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("La amortizacion se aplicará en la siguiente cuota.")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
+
+                balloon.showAlignTop(btn_info_dinero_amort);
+            }
+        });
+
+        btn_info_reduccion_plazo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("La amortizacion se aplicará en la siguiente cuota.\nEl plazo se reduce en función del capital de las siguientes cuotas.")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
+
+                balloon.showAlignTop(btn_info_reduccion_plazo);
             }
         });
 

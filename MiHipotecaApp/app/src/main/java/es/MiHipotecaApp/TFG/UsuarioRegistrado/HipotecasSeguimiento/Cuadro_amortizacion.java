@@ -177,7 +177,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     }
 
     public void actualizarTablaAnios(){
-        /*if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
+        if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         Calendar calendar = Calendar.getInstance();
@@ -226,7 +226,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tableRow.addView(pendiente);
 
 
-        }*/
+        }
     }
 
     public void eventos(){

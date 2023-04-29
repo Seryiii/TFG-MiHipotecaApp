@@ -36,7 +36,7 @@ public class InformarDeUnProblema extends AppCompatActivity {
                 else {
                     Intent emailIntent = new Intent(Intent.ACTION_SEND);
                     emailIntent.setType("plain/text");
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"csobrado@ucm.es"});
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{"ejemplo@gmail.com"});
                     emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Mejora propuesta por " + FirebaseAuth.getInstance().getCurrentUser().getEmail());
                     emailIntent.putExtra(Intent.EXTRA_TEXT, edit_texto_error.getText().toString());
                     startActivity(Intent.createChooser(emailIntent, "Enviar correo electrónico"));
