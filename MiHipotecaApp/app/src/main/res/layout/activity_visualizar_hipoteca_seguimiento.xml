@@ -28,13 +28,15 @@
                     android:orientation="vertical">
 
                     <TextView
+                    android:id="@+id/titulo_seguimiento_hipoteca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
                     android:text="@string/label_seguimiento"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    android:visibility="invisible"/>
 
                     <TextView
                     android:id="@+id/nombre_seguimiento_hipoteca"
@@ -43,7 +45,8 @@
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
                     android:text="Titulo"
-                    android:textSize="35sp" />
+                    android:textSize="35sp"
+                        android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -65,14 +68,15 @@
             android:gravity="center"
             android:layout_marginTop="15dp">
             <TextView
-                android:id="@+id/tv_tipo_hipoteca_seguimiento"
+                android:id="@+id/txt_tipo_hipoteca_seguimiento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:text="@string/label_tipo_de_hipoteca"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/tipo_hipoteca_seguimiento"
@@ -83,7 +87,8 @@
                 android:gravity="center"
                 android:textColor="@color/black"
                 android:text="Fija"
-                android:textSize="22sp" />
+                android:textSize="22sp"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
@@ -93,6 +98,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/txt_banco_hipoteca"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -101,14 +107,16 @@
                 android:textColor="@color/black"
                 android:text="Banco"
                 android:textAlignment="center"
-                android:textSize="20sp" />
+                android:textSize="20sp"
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/logo_banco_seg"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
-                android:src="@drawable/logo_ing"/>
+                android:src="@drawable/logo_ing"
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -120,6 +128,7 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/txt_com_autonoma_hipoteca"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -129,7 +138,8 @@
                 android:layout_marginEnd="10dp"
                 android:textAlignment="center"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/comunidad_autonoma_seg"
@@ -139,10 +149,18 @@
                 android:layout_marginStart="10dp"
                 android:text="Madrid"
                 android:textColor="@color/black"
-                android:textSize="18sp" />
+                android:textSize="18sp"
+                android:visibility="invisible" />
 
 
         </LinearLayout>
+
+
+        <ProgressBar
+            android:id="@+id/progressBar_visualizar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -151,6 +169,7 @@
             android:layout_marginTop="20dp">
 
             <TextView
+                android:id="@+id/txt_dinero_falta_pagar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -160,9 +179,11 @@
                 android:layout_marginEnd="10dp"
                 android:textColor="@color/black"
                 android:text="@string/label_dinero_que_falta_por_pagar"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:visibility="invisible" />
 
             <TextView
+                android:id="@+id/txt_tiempo_restante"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -173,7 +194,8 @@
                 android:layout_marginEnd="10dp"
                 android:textColor="@color/black"
                 android:text="@string/label_tiempo_restante"
-                android:textSize="18sp"/>
+                android:textSize="18sp"
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
@@ -200,7 +222,8 @@
                     android:layout_marginLeft="30dp"
                     android:text="150000"
                     android:textStyle="bold"
-                    android:textSize="22sp"/>
+                    android:textSize="22sp"
+                    android:visibility="invisible"/>
 
                 <ImageButton
                     android:id="@+id/btn_info_dinero_por_pagar"
@@ -208,7 +231,8 @@
                     android:layout_height="wrap_content"
                     android:src="@drawable/info"
                     android:layout_marginLeft="10dp"
-                    android:background="@null"/>
+                    android:background="@null"
+                    android:visibility="invisible"/>
 
             </LinearLayout>
 
@@ -223,7 +247,8 @@
                 android:textColor="@color/black"
                 android:text="20 años"
                 android:textStyle="bold"
-                android:textSize="22sp"/>
+                android:textSize="22sp"
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
@@ -242,7 +267,8 @@
                 android:background="@drawable/btn_bordes_redondos"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:text="@string/txt_btn_cuadro_amortizacion"/>
+                android:text="@string/txt_btn_cuadro_amortizacion"
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/btn_amortizar_antes"
@@ -252,11 +278,14 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:background="@drawable/btn_bordes_redondos"
-                android:text="@string/txt_btn_amortizar_antes"/>
+                android:text="@string/txt_btn_amortizar_antes"
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
+
         <TextView
+            android:id="@+id/txt_cuota_de"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -266,7 +295,8 @@
             android:gravity="center"
             android:textColor="@color/black"
             android:text="@string/label_cuota_de"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/nombre_mes_actual_seguimiento_hip"
@@ -279,16 +309,19 @@
             android:textColor="@color/black"
             android:text="Enero"
             android:textStyle="bold"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:visibility="invisible"/>
 
         <LinearLayout
+            android:id="@+id/layout_info_cuota_hip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             android:orientation="vertical"
-            android:background="@drawable/btn_bordes_redondos">
+            android:background="@drawable/btn_bordes_redondos"
+            android:visibility="invisible">
 
             <LinearLayout
                 android:id="@+id/layout_cuota_seguimiento"
@@ -435,6 +468,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/layout_btns_graficos"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -442,7 +476,8 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:gravity="center"
-            android:background="@drawable/btn_bordes_redondos2">
+            android:background="@drawable/btn_bordes_redondos2"
+            android:visibility="invisible">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -510,16 +545,18 @@
             android:textStyle="bold"
             android:textAlignment="center"
             android:text="Aportado vs a financiar"
-            android:textSize="22sp" />
+            android:textSize="22sp"
+            android:visibility="invisible"/>
 
 
-          <com.anychart.AnyChartView
+        <com.anychart.AnyChartView
             android:id="@+id/grafico_seguimiento"
             android:layout_marginTop="10dp"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
             android:layout_width="match_parent"
-            android:layout_height="450dp"/>
+            android:layout_height="450dp"
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:id="@+id/capital_layout"
@@ -528,7 +565,8 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            android:visibility="invisible">
 
             <TextView
                 android:layout_width="0dp"
@@ -559,7 +597,8 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/capital_amortizado_seguimiento_val"
@@ -593,7 +632,8 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            android:visibility="invisible">
 
             <TextView
                 android:layout_width="0dp"
@@ -624,7 +664,8 @@
             android:orientation="horizontal"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp">
+            android:layout_marginStart="8dp"
+            android:visibility="invisible">
 
             <TextView
                 android:id="@+id/intereses_pagados_seguimiento_val"

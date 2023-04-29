@@ -57,7 +57,7 @@
     <string name="label_año_hipoteca_actual">¿Año de hipoteca actual?</string>
     <string name="label_mes_actual">¿Mes de hipoteca actual?</string>
     <string name="label_informar_problema">Notificar problema</string>
-    <string name="label_has_detectado">¿Has detectado algún fallo que quieras que solucionemos?</string>
+    <string name="label_has_detectado">¿Has detectado algún fallo que quieras que solucionemos o quieres sugerirnos cualquier mejora?</string>
     <string name="label_comentanoslo">¡COMÉNTANOSLO!</string>
     <string name="label_texto_error">Escribe aquí lo que quieras \ndecirnos...</string>
     <string name="label_aniadir_captura">Añade captura (recomendado) </string>

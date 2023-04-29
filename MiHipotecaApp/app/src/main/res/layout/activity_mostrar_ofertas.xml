@@ -92,7 +92,8 @@ tools:context=".SimularHipoteca.MostrarOfertas">
         android:layout_height="match_parent"
         android:layout_centerInParent="true"
         android:layout_gravity="center"
-        android:textSize="14dp"
+        android:textSize="20dp"
+        android:textStyle="bold"
         android:text="Esto podria llevar unos segundos..." />
 
 

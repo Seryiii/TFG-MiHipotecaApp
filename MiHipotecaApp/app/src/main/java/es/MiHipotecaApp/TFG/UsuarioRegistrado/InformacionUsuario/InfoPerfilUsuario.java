@@ -198,37 +198,92 @@ public class InfoPerfilUsuario extends Fragment {
 
     public void eliminarUsuario(){
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        CollectionReference hipotecasRef = db.collection("usuarios");
-        Query query = hipotecasRef.whereEqualTo("correo", firebaseAuth.getCurrentUser().getEmail());
-        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        CollectionReference usuario = db.collection("usuarios");
+        Query query = usuario.whereEqualTo("correo", firebaseAuth.getCurrentUser().getEmail());
+
+
+        CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+        Query query_hipoteca = hipotecasRef.whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+        query_hipoteca.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
             @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    if (!querySnapshot.isEmpty()) {
-                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
-                        documentSnapshot.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        // Documento eliminado correctamente
-                                        //todo no funciona aun!!! HACER
-                                        Toast.makeText(getActivity(), getString(R.string.usuario_borrado_exito), Toast.LENGTH_LONG).show();
-                                        Intent intent = new Intent(getActivity(), MainActivity.class);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        // Error al eliminar el documento
-                                    }
-                                });
-                    }
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                for (DocumentSnapshot document : queryDocumentSnapshots) {
+                    document.getReference().delete();
                 }
+                CollectionReference amortizacionesRef = db.collection("amortizaciones_anticipadas");
+                Query query_amort = amortizacionesRef.whereEqualTo("idUsuario", firebaseAuth.getCurrentUser().getUid());
+                query_amort.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (DocumentSnapshot document : queryDocumentSnapshots) {
+                            document.getReference().delete();
+                        }
+                        CollectionReference ofertasRef = db.collection("ofertas_guardadas");
+                        Query query_ofertas = ofertasRef.whereEqualTo("idUser", firebaseAuth.getCurrentUser().getUid());
+                        query_ofertas.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                for (DocumentSnapshot document : queryDocumentSnapshots) {
+                                    document.getReference().delete();
+                                }
+                                //FirebaseAuth.getInstance().signOut();
+
+                                FirebaseAuth.getInstance().getCurrentUser().delete()
+                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                            @Override
+                                            public void onComplete(@NonNull Task<Void> task) {
+                                                if (task.isSuccessful()) {
+
+
+                                                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                        @Override
+                                                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                            if (task.isSuccessful()) {
+                                                                QuerySnapshot querySnapshot = task.getResult();
+                                                                if (!querySnapshot.isEmpty()) {
+                                                                    DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                                                                    documentSnapshot.getReference().delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                                                @Override
+                                                                                public void onSuccess(Void aVoid) {
+                                                                                    // Documento eliminado correctamente
+                                                                                    Toast.makeText(getActivity(), getString(R.string.usuario_borrado_exito), Toast.LENGTH_LONG).show();
+                                                                                    Intent intent = new Intent(getActivity(), MainActivity.class);
+                                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                                                                    startActivity(intent);
+                                                                                    getActivity().finish();
+                                                                                }
+                                                                            })
+                                                                            .addOnFailureListener(new OnFailureListener() {
+                                                                                @Override
+                                                                                public void onFailure(@NonNull Exception e) {
+                                                                                    // Error al eliminar el documento
+                                                                                    Log.e("ERROR", " al eliminar usuario", e);
+                                                                                }
+                                                                            });
+                                                                }
+                                                            }
+                                                        }
+                                                    });
+                                                }else {
+                                                    Log.e("ERROR", " al eliminar usuario", task.getException());
+
+                                                }
+                                            }
+                                        });
+
+
+
+                            }
+                        });
+                    }
+                });
             }
         });
+
+
+
+
     }
 
 }

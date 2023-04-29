@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -60,6 +61,12 @@ public class MostrarOfertas extends AppCompatActivity {
     private TextView txt_filtrarBancos;
     private Switch switchBusqueda;
     private boolean fija = true;
+
+
+    private Handler handler = new Handler();
+    private TextView textView;
+    private int currentIndex = 0;
+    private String[] options = {"Obteniendo las mejores ofertas personalizadas", "Comparando con millones de posibilidades", "Esto podria llevar unos segundos..."};
 
 
     @Override
@@ -178,6 +185,8 @@ public class MostrarOfertas extends AppCompatActivity {
 
             }
         });
+
+        handler.postDelayed(runnable, 10000);
 
     }
     private void initValues() {
@@ -360,6 +369,19 @@ public class MostrarOfertas extends AppCompatActivity {
 // Agregar solicitud a la RequestQueue
         requestQueue.add(request);
     }
+
+    private Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            // Cambiamos el texto del TextView
+            tvEspera.setText(options[currentIndex]);
+            tvEspera.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            currentIndex = (currentIndex + 1) % options.length;
+
+            // Volvemos a ejecutar la tarea después de 10 segundos
+            handler.postDelayed(this, 7000);
+        }
+    };
 
 
 }

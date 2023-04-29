@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,6 +116,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     public int anioInicio;
     public String mesInicio;
 
+    private ProgressBar progressBar;
+
+    private TextView titulo_seguimiento_hipoteca, txt_tipo_hipoteca_seguimiento, txt_banco_hipoteca, txt_com_autonoma_hipoteca, txt_dinero_falta_pagar, txt_tiempo_restante, txt_cuota_de;
+    private LinearLayout layout_info_cuota_hip, layout_btns_graficos;
+
     private String[] comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
@@ -169,6 +175,17 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         btn_grafico_gastos_totales           = findViewById(R.id.btn_grafico_gastos_totales);
         btn_grafico_intereses_capital        = findViewById(R.id.btn_grafico_intereses_capital);
 
+        progressBar                          = findViewById(R.id.progressBar_visualizar);
+
+        titulo_seguimiento_hipoteca          = findViewById(R.id.titulo_seguimiento_hipoteca);
+        txt_tipo_hipoteca_seguimiento        = findViewById(R.id.txt_tipo_hipoteca_seguimiento);
+        txt_banco_hipoteca                   = findViewById(R.id.txt_banco_hipoteca);
+        txt_com_autonoma_hipoteca            = findViewById(R.id.txt_com_autonoma_hipoteca);
+        txt_dinero_falta_pagar               = findViewById(R.id.txt_dinero_falta_pagar);
+        txt_tiempo_restante                  = findViewById(R.id.txt_tiempo_restante);
+        txt_cuota_de                         = findViewById(R.id.txt_cuota_de);
+        layout_info_cuota_hip                = findViewById(R.id.layout_info_cuota_hip);
+        layout_btns_graficos                 = findViewById(R.id.layout_btns_graficos);
     }
 
     private void cogerAmortizaciones(){
@@ -421,6 +438,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, porcentaje_aplicado)) + "€";
         intereses_cuota_mensual.setText(interesesFormateado);
+        setVisbility(View.VISIBLE);
+        progressBar.setVisibility(View.GONE);
+
     }
 
     private void ponerLogoBanco(){
@@ -750,5 +770,58 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         return numeroPagoActual;
 
     }
+
+
+    public void setVisbility(int visibility){
+        dinero_restante_a_pagar.setVisibility(visibility);
+        nombre_hipoteca.setVisibility(visibility);
+        tipo_hipoteca_seg.setVisibility(visibility);
+        logo_banco_seg.setVisibility(visibility);
+        comunidad_autonoma_seg.setVisibility(visibility);
+        anios_restantes_hipoteca.setVisibility(visibility);
+        mes_actual_cuota.setVisibility(visibility);
+        cuota_mensual_seguimiento.setVisibility(visibility);
+        capital_cuota_mensual.setVisibility(visibility);
+        intereses_cuota_mensual.setVisibility(visibility);
+        numero_cuota_actual.setVisibility(visibility);
+        layout_amortizacion_anticipada.setVisibility(visibility);
+        amortizacion_anticipada_valor.setVisibility(visibility);
+        layout_cuota_seguimiento.setVisibility(visibility);
+        layout_capital_intereses1.setVisibility(visibility);
+        layout_capital_intereses2.setVisibility(visibility);
+
+        btn_cuadro_amortizacion.setVisibility(visibility);
+        btn_amortizar_antes.setVisibility(visibility);
+        info_dinero_restante.setVisibility(visibility);
+        info_cuota.setVisibility(visibility);
+
+        //GRÁFICOS
+        titulo_grafico.setVisibility(visibility);
+        grafico.setVisibility(visibility);
+        capital_amortizado.setVisibility(visibility);
+        capital_pendiente.setVisibility(visibility);
+        intereses_pagados.setVisibility(visibility);
+        intereses_pendientes.setVisibility(visibility);
+        capital_layout.setVisibility(visibility);
+        capital_layout_valor.setVisibility(visibility);
+        intereses_layout.setVisibility(visibility);
+        intereses_layout_valor.setVisibility(visibility);
+
+        btn_grafico_gastos_totales.setVisibility(visibility);
+        btn_grafico_intereses_capital.setVisibility(visibility);
+
+
+        titulo_seguimiento_hipoteca.setVisibility(visibility);
+        txt_tipo_hipoteca_seguimiento.setVisibility(visibility);
+        txt_banco_hipoteca.setVisibility(visibility);
+        txt_com_autonoma_hipoteca.setVisibility(visibility);
+        txt_dinero_falta_pagar.setVisibility(visibility);
+        txt_tiempo_restante.setVisibility(visibility);
+        txt_cuota_de.setVisibility(visibility);
+        layout_info_cuota_hip.setVisibility(visibility);
+        layout_btns_graficos.setVisibility(visibility);
+    }
 }
+
+
 
