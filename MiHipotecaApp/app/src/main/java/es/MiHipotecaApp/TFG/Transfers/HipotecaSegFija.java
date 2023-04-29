@@ -153,11 +153,15 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fecha_inicio);
         int cuotasAnuales;
-
+        boolean ultimoAnio = false;
         //si es el primer año de hipoteca
         if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
-        else if(calendar.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
+        else if(calendar.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) {
+            cuotasAnuales = getPlazoActual(amortizaciones) - (getNumeroCuotaEnEnero(anio) - 1);
+            ultimoAnio = true;
+        }
         else cuotasAnuales = 12;
+
 
         Calendar inicio = Calendar.getInstance();
         inicio.setTime(fecha_inicio);
@@ -166,12 +170,13 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         int cuotasPagadas = num_anio > 1 ? cuotasPrimerAnio + (num_anio - 2) * 12 + cuotasAnuales : cuotasAnuales;
 
         // Capital pendiente para diciembre de este año
-        double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones, euribors);
+        double capPdteUltimo = ultimoAnio ? 0 : getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones, euribors);
         // Capital pendiente para diciembre del año anterior
         double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
+
         double totalCapitalAnual = capPdteAnterior - capPdteUltimo;
 
-        double interesesAnteriores = cuotasAnuales < 12 ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
+        double interesesAnteriores = cuotasAnuales < 12 && !ultimoAnio ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
         double interesesSiguientes = getInteresesHastaNumPago(cuotasPagadas, amortizaciones, euribors);
         double totalInteresesAnio = interesesSiguientes - interesesAnteriores;
 

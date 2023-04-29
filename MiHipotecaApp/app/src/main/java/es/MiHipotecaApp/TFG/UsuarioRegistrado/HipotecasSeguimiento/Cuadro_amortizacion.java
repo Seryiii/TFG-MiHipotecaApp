@@ -46,6 +46,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private View primeraColumna1;
     private View primeraColumna2;
     private boolean primeraTablaVisible;
+    private boolean segundaTablaVisible;
 
     private HashMap<Integer, List<Object>> amortizaciones_hip;
 
@@ -71,9 +72,11 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         btn_fade_out_1 = findViewById(R.id.btn_fade_out_1);
         btn_fade_out_1.setImageResource(R.drawable.drop_up);
         btn_fade_out_2 = findViewById(R.id.btn_fade_out_2);
+        btn_fade_out_2.setImageResource(R.drawable.drop_up);
         primeraColumna1 = null;
         primeraColumna2 = null;
         primeraTablaVisible = true;
+        segundaTablaVisible = true;
         //Obtenemos la hipoteca de la que vamos a sacar el cuadro de amortización
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
@@ -94,7 +97,6 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         actualizarTablaAnios();
         eventos();
 
-        contraeTabla2();
     }
 
     /** Funcion a la que se llama cuando el textView que marca el año mostrado en el calendario cambia, ya sea
@@ -183,11 +185,14 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(hip.getFecha_inicio());
 
-        for (int i = 1; i <= hip.getPlazo_anios(); i++) {
+        //AJUSTAR EL PLAZO
+        int aniosActuales = hip.aniosActualesHipoteca(hip.getPlazoActual(amortizaciones_hip));
+
+
+        for (int i = 1; i <= aniosActuales; i++) {
 
             // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
             ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(calendar.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip, euribors);
-            if(valores.get(3) <= 0) break;
 
             // Crear una nueva fila y agregarla al TableLayout
             TableRow tableRow = new TableRow(this);
@@ -221,10 +226,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             tableRow.addView(interesAnual);
 
             TextView pendiente = new TextView(this);
-            pendiente.setText(formato.format(valores.get(3)));
+            if(i == aniosActuales) pendiente.setText("0");
+            else pendiente.setText(formato.format(valores.get(3)));
             pendiente.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(pendiente);
-
 
         }
     }
@@ -274,10 +279,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                 if (!primeraTablaVisible) {
                     // Agregar filas al TableLayout
                     actualizarTablaMeses(Integer.parseInt((String) year_of_calendar.getText()));
-                    contraeTabla2();
                     primeraTablaVisible = true;
                     btn_fade_out_1.setImageResource(R.drawable.drop_up);
-                    btn_fade_out_2.setImageResource(R.drawable.drop_down);
                     next_year.setEnabled(true);
                     before_year.setEnabled(true);
                     choose_year.setEnabled(true);
@@ -285,6 +288,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                     // Animar el TableLayout
                     Animation animation = AnimationUtils.loadAnimation(Cuadro_amortizacion.this, android.R.anim.fade_in);
                     tabla_cuadro_amortizacion.startAnimation(animation);
+                }else{
+                    btn_fade_out_1.setImageResource(R.drawable.drop_down);
+                    primeraTablaVisible = false;
+                    contraeTabla1();
                 }
             }
         });
@@ -292,13 +299,11 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         btn_fade_out_2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (primeraTablaVisible) {
+                if (!segundaTablaVisible) {
                     // Agregar filas al TableLayout
                     actualizarTablaAnios();
-                    contraeTabla1();
-                    primeraTablaVisible = false;
+                    segundaTablaVisible = true;
                     btn_fade_out_2.setImageResource(R.drawable.drop_up);
-                    btn_fade_out_1.setImageResource(R.drawable.drop_down);
                     next_year.setEnabled(false);
                     before_year.setEnabled(false);
                     choose_year.setEnabled(false);
@@ -306,7 +311,12 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                     // Animar el TableLayout
                     Animation animation = AnimationUtils.loadAnimation(Cuadro_amortizacion.this, android.R.anim.fade_in);
                     tabla_cuadro_amortizacion_anual.startAnimation(animation);
+                }else {
+                    btn_fade_out_2.setImageResource(R.drawable.drop_down);
+                    segundaTablaVisible = false;
+                    contraeTabla2();
                 }
+
             }
         });
     }
