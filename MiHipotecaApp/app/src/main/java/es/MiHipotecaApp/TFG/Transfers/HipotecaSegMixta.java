@@ -2,6 +2,7 @@ package es.MiHipotecaApp.TFG.Transfers;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -48,11 +49,9 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         }
 
         int j = aux;
-        int revision = 6;
         while(j < numero_pago){
-            if(isRevision_anual()) revision = 12;
-            double euribor = getEuriborPasado(j, euribors);
-            cuota_mensual = getCuotaMensual(porcentaje_diferencial_mixta + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            double euribor = getEuriborPasado(j + 1, euribors);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_mixta + euribor, capital_pendiente, plazoActual - j);
 
             if(amortizaciones.containsKey(j)){
                 if(amortizaciones.get(j).get(0).equals("total")) return 0;
@@ -101,11 +100,9 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         }
 
         int j = aux;
-        int revision = 6;
         while(j < numero_pago){
-            if(isRevision_anual()) revision = 12;
-            double euribor = getEuriborPasado(j, euribors);
-            cuota_mensual = getCuotaMensual(porcentaje_diferencial_mixta + euribor, capital_pendiente, (plazo_anios * 12) - j);
+            double euribor = getEuriborPasado(j + 1, euribors);
+            cuota_mensual = getCuotaMensual(porcentaje_diferencial_mixta + euribor, capital_pendiente, plazoActual - j);
 
             if(amortizaciones.containsKey(j)){
                 if(amortizaciones.get(j).get(0).equals("total")) return 0;
@@ -178,22 +175,34 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
     /** Esta funcion devuelve la cuota, capital, intereses y capital pendiente del numero de cuota pasado **/
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
+
         ArrayList<Double> valores = new ArrayList<>();
         double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones,euribors);
-
+        double capitalPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones, euribors);
         double capPdte = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
+        double cuota = cogerCuotaActual(numCuota, amortizaciones, euribors);
+        double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
 
-        double capitalPdte = getCapitalPendienteTotalActual(numCuota, amortizaciones, euribors);
-        double cuota = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota + 1);
+        if(amortizaciones.containsKey(numCuota)){
+            capPdte -= (Double) amortizaciones.get(numCuota).get(1);
+            cuota += (Double) amortizaciones.get(numCuota).get(1);
+            capAmortMensual += (Double) amortizaciones.get(numCuota).get(1);
+            if(amortizaciones.get(numCuota).get(0).equals("total")){
+                cuota = (Double) amortizaciones.get(numCuota).get(1);
+                capAmortMensual = (Double) amortizaciones.get(numCuota).get(1);
+            }
+        }
+
+
         valores.add(cuota);
-        valores.add(getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado));
+        valores.add(capAmortMensual);
         valores.add(getInteresMensual(capPdte, porcentaje_aplicado));
-        valores.add(capitalPdte);
+        valores.add(capitalPdteCuota);
         return valores;
     }
 
     /** Esta funcion devuelve el capital del numero de cuota pasado **/
-    @Override
+
     public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones, euribors);
         double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
@@ -204,42 +213,110 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         return capitalCuota;
     }
 
+    //TODO esta funcion
+    @Override
+    public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
+
+        // si el numero de cuota es mayor al plazo actual la cuota es 0
+        if (num_cuota > getPlazoActual(amortizaciones)) return 0;
+
+        double capital_pendiente = precio_vivienda - cantidad_abonada;
+        double cuota = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, plazo_anios * 12);
+
+
+        // estoy en el parte fija
+        if(num_cuota <= anios_fija_mixta * 12){
+            //Ver si hay reducción de cuota
+            for (int i = 1; i <= num_cuota; i++) {
+                if(amortizaciones.containsKey(i)){
+                    if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                        cuota = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, getPlazoNumPago(i, amortizaciones)  - i + 1);
+                        //TODO CREO QUE LO DE ARRIBA ESTARIA BIEN y LA DE ABAJO ES LO QUE TENIAMOS ANTES (REVISAR LINEA DE ARRIBA POR SI PONER getPlazoNumPago o getPlazoActual )
+                        //cuota = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, (plazo_anios * 12) - i + 1);
+                    }
+                    // Si hay reducción de plazo da igual porque la cuota es la misma
+                }
+                double cantidad_capital = getCapitalAmortizadoMensual(cuota, capital_pendiente, porcentaje_fijo_mixta);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+            }
+        }
+        //caso cuota esta en la parte variable
+        else{
+            int revision = isRevision_anual() ? 12 : 6;
+            int numCuotaRevisionAnterior = 1;
+            if (num_cuota % revision == 0)  numCuotaRevisionAnterior += num_cuota - revision;
+            else numCuotaRevisionAnterior += num_cuota - num_cuota % revision;
+
+            capital_pendiente = getCapitalPendienteTotalActual(numCuotaRevisionAnterior - 1, amortizaciones, euribors);
+            double porcentaje_aplicado = getEuriborPasado(num_cuota, euribors) + porcentaje_diferencial_mixta;
+            cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, getPlazoNumPago(numCuotaRevisionAnterior, amortizaciones) - numCuotaRevisionAnterior + 1);
+
+            //Comprobar si hay reduccion de cuota
+            for (int i = numCuotaRevisionAnterior; i <= num_cuota; i++) {
+                if(amortizaciones.containsKey(i)){
+                    if(amortizaciones.get(i).get(0).equals("total")) return 0;
+                    else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
+                        capital_pendiente -= (Double) amortizaciones.get(i).get(1);
+                        porcentaje_aplicado = getEuriborPasado(i, euribors) + porcentaje_diferencial_mixta;
+                        cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, getPlazoNumPago(i, amortizaciones)  - i + 1);
+                        //TODO CREO QUE LO DE ARRIBA ESTARIA BIEN y LA DE ABAJO ES LO QUE TENIAMOS ANTES (REVISAR LINEA DE ARRIBA POR SI PONER getPlazoNumPago o getPlazoActual )
+                        //cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, (plazo_anios * 12) - i + 1);
+                    }
+                    // Si hay reducción de plazo da igual porque la cuota es la misma
+                }
+                double cantidad_capital = getCapitalAmortizadoMensual(cuota, capital_pendiente, porcentaje_diferencial_mixta);
+                capital_pendiente = capital_pendiente - cantidad_capital;
+            }
+        }
+        return cuota;
+    }
+
+
+
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
-   //TODO FALTA ESTA FUNCION
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
 
-
         ArrayList<Double> valores = new ArrayList<>();
-        /*Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha_inicio);
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
         int cuotasAnuales;
+        boolean ultimoAnio = false;
+
         //si es el primer año de hipoteca
-        if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
-        else if(calendar.get(Calendar.YEAR) + plazo_anios == anio) cuotasAnuales = (getNumeroCuotaEnEnero(anio) - 1) - 12;
-        else cuotasAnuales = 12;
-        int cuotasPagadas = num_anio > 1 ? (num_anio - 1) * 12 + cuotasAnuales : cuotasAnuales;
+        if(inicio.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
+        else if(inicio.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) {
+            cuotasAnuales = getPlazoActual(amortizaciones) - (getNumeroCuotaEnEnero(anio) - 1);
+            ultimoAnio = true;
+        }else cuotasAnuales = 12;
+
+
+        int cuotasPrimerAnio = (getNumeroCuotaEnEnero(inicio.get(Calendar.YEAR)) + 12) - 1;
+
+        int cuotasPagadas = num_anio > 1 ?  cuotasPrimerAnio + (num_anio - 2) * 12 + cuotasAnuales : cuotasAnuales;
+
         // Capital pendiente para diciembre de este año
-        double capPdteUltimo = getCapitalPendienteTotalActual(cuotasPagadas);
+        double capPdteUltimo = ultimoAnio ? 0 : getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones, euribors);
         // Capital pendiente para diciembre del año anterior
-        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales);
+        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
 
-        double interesesTotalesUltimo = getInteresesHastaNumPago(cuotasPagadas);
-        // Capital pendiente para diciembre del año anterior
-        double interesesTotalesAnterior = cuotasPagadas < 12 ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales);
+        double totalCapitalAnual = capPdteAnterior - capPdteUltimo;
 
-        double capitalTotal     = Math.round((capPdteAnterior - capPdteUltimo) * 100.0) / 100.0;
-        double interesesTotales = Math.round((interesesTotalesUltimo - interesesTotalesAnterior) * 100.0) / 100.0;
-        valores.add(Math.round((capitalTotal + interesesTotales) * 100.0) / 100.0);
-        valores.add(capitalTotal);
-        valores.add(interesesTotales);
-        valores.add(capPdteUltimo);*/
+        double interesesAnteriores = cuotasAnuales < 12 && !ultimoAnio ? 0 : getInteresesHastaNumPago(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
+        double interesesSiguientes = getInteresesHastaNumPago(cuotasPagadas, amortizaciones, euribors);
+        double totalInteresesAnio = interesesSiguientes - interesesAnteriores;
+
+        valores.add(totalCapitalAnual + totalInteresesAnio);
+        valores.add(totalCapitalAnual);
+        valores.add(totalInteresesAnio);
+        valores.add(capPdteUltimo);
+
         return valores;
 
-        //return null;
     }
 
-    //TODO hacer
     @Override
     public double getPorcentajeUltimaCuota(HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         int ultimaCuota = getPlazoActual(amortizaciones);

@@ -56,7 +56,9 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     public double getInteresesHastaNumPago(int num_pago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors) {
         double interesesTotales = 0;
         double capPendiente = precio_vivienda - cantidad_abonada;
+
         int plazoActual = plazo_anios * 12;
+
         double cuota_mensual = getCuotaMensual(getPorcentaje_fijo(), capPendiente, plazoActual);
 
         for (int i = 1; i <= num_pago; i++) {
@@ -68,7 +70,6 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
                 }
                 else {
                     capPendiente -= (Double) amortizaciones.get(i).get(1);
-                    //plazoActual -= (Long) amortizaciones.get(i).get(2);
                 }
             }
             interesesTotales += getInteresMensual(capPendiente, porcentaje_fijo);
@@ -144,27 +145,23 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     }
 
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
-    //TODO FALTA REVISAR BIEN ESTA FUNCION, ES JODIDA MUY JODIDA
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
 
         // TOTAL_ANUAL, CAPITAL_ANUAL, INTERESES_ANUALES, CAPITAL PDTE
         ArrayList<Double> valores = new ArrayList<>();
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(fecha_inicio);
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
         int cuotasAnuales;
         boolean ultimoAnio = false;
         //si es el primer año de hipoteca
-        if(calendar.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
-        else if(calendar.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) {
+        if(inicio.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
+        else if(inicio.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) {
             cuotasAnuales = getPlazoActual(amortizaciones) - (getNumeroCuotaEnEnero(anio) - 1);
             ultimoAnio = true;
         }
         else cuotasAnuales = 12;
 
-
-        Calendar inicio = Calendar.getInstance();
-        inicio.setTime(fecha_inicio);
         int cuotasPrimerAnio = (getNumeroCuotaEnEnero(inicio.get(Calendar.YEAR)) + 12) - 1;
 
         int cuotasPagadas = num_anio > 1 ? cuotasPrimerAnio + (num_anio - 2) * 12 + cuotasAnuales : cuotasAnuales;

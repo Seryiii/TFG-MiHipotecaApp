@@ -412,14 +412,15 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             info_cuota.setVisibility(View.GONE);
         }
 
-        //todo cambiar a cuota mensual = cogercuotaactual
         double cuota_mensual = hip.cogerCuotaActual(numero_cuotas_pagadas + 1, amortizaciones_anticipadas, euribors);
+        layout_cuota_seguimiento.setVisibility(View.VISIBLE);
+        layout_capital_intereses1.setVisibility(View.VISIBLE);
+        layout_capital_intereses2.setVisibility(View.VISIBLE);
         //SI HAY AMORTIZACION EN LA SIGUIENTE CUOTA
         if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)){
             double amortizacion_ant = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
             layout_amortizacion_anticipada.setVisibility(View.VISIBLE);
             if(amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(0).equals("total")) {
-                //plazoTotalActual = numero_cuotas_pagadas + 1;
                 layout_cuota_seguimiento.setVisibility(View.GONE);
                 layout_capital_intereses1.setVisibility(View.GONE);
                 layout_capital_intereses2.setVisibility(View.GONE);
@@ -438,7 +439,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, porcentaje_aplicado)) + "€";
         intereses_cuota_mensual.setText(interesesFormateado);
-        setVisbility(View.VISIBLE);
+        setVisibility(View.VISIBLE);
+
         progressBar.setVisibility(View.GONE);
 
     }
@@ -630,7 +632,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
 
-        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazo_anios() * 12, amortizaciones_anticipadas, euribors);
+
+        // SERIA HASTA PLAZO ACTUAL? TODO
+        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazoActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double interesesPendientes = interesesTotales - interesesPagados;
 
@@ -764,7 +768,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
         if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
-        //else return numeroPagoActual + 1;
         // Fin de hipoteca
         if (numeroPagoActual >= plazo * 12) numeroPagoActual = plazo * 12;
         return numeroPagoActual;
@@ -772,7 +775,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     }
 
 
-    public void setVisbility(int visibility){
+    public void setVisibility(int visibility){
         dinero_restante_a_pagar.setVisibility(visibility);
         nombre_hipoteca.setVisibility(visibility);
         tipo_hipoteca_seg.setVisibility(visibility);
@@ -784,16 +787,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         capital_cuota_mensual.setVisibility(visibility);
         intereses_cuota_mensual.setVisibility(visibility);
         numero_cuota_actual.setVisibility(visibility);
-        layout_amortizacion_anticipada.setVisibility(visibility);
-        amortizacion_anticipada_valor.setVisibility(visibility);
-        layout_cuota_seguimiento.setVisibility(visibility);
-        layout_capital_intereses1.setVisibility(visibility);
-        layout_capital_intereses2.setVisibility(visibility);
 
         btn_cuadro_amortizacion.setVisibility(visibility);
         btn_amortizar_antes.setVisibility(visibility);
-        info_dinero_restante.setVisibility(visibility);
-        info_cuota.setVisibility(visibility);
 
         //GRÁFICOS
         titulo_grafico.setVisibility(visibility);
