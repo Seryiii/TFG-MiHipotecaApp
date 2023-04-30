@@ -1,6 +1,7 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -15,6 +16,12 @@ import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.ArrowPositionRules;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -36,7 +43,6 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private TextView year_of_calendar;
     private ImageButton before_year;
     private ImageButton next_year;
-    private ImageButton choose_year;
     private TableLayout tabla_cuadro_amortizacion;
     private TableLayout tabla_cuadro_amortizacion_anual;
     private HipotecaSeguimiento hip;
@@ -51,6 +57,9 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private HashMap<Integer, List<Object>> amortizaciones_hip;
 
     private List<Double> euribors;
+    private ImageButton btn_info_cuadro_mensual;
+    private ImageButton btn_info_cuadro_anual;
+
 
 
 
@@ -66,9 +75,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
         before_year = findViewById(R.id.before_year);
         next_year = findViewById(R.id.next_year);
-        choose_year = findViewById(R.id.choose_year);
         tabla_cuadro_amortizacion = findViewById(R.id.tabla_cuadro_amortizacion);
         tabla_cuadro_amortizacion_anual = findViewById(R.id.tabla_cuadro_amortizacion_anual);
+        btn_info_cuadro_anual = findViewById(R.id.btn_info_cuadro_anual);
+        btn_info_cuadro_mensual = findViewById(R.id.btn_info_cuadro_mensual);
         btn_fade_out_1 = findViewById(R.id.btn_fade_out_1);
         btn_fade_out_1.setImageResource(R.drawable.drop_up);
         btn_fade_out_2 = findViewById(R.id.btn_fade_out_2);
@@ -78,9 +88,21 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         primeraTablaVisible = true;
         segundaTablaVisible = true;
         //Obtenemos la hipoteca de la que vamos a sacar el cuadro de amortización
-        if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
-        else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
-        else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+        if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")){
+            hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
+            btn_info_cuadro_mensual.setEnabled(false);
+            btn_info_cuadro_anual.setEnabled(false);
+        }
+        else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")){
+            hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
+            btn_info_cuadro_mensual.setVisibility(View.VISIBLE);
+            btn_info_cuadro_anual.setVisibility(View.VISIBLE);
+        }
+        else {
+            hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
+            btn_info_cuadro_mensual.setVisibility(View.VISIBLE);
+            btn_info_cuadro_anual.setVisibility(View.VISIBLE);
+        }
 
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
         euribors = (List<Double>) getIntent().getSerializableExtra("euribors");
@@ -240,13 +262,6 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
             @Override
             public void onClick(View v) { finish(); }
         });
-        choose_year.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                custom_dialog_anios custom = new custom_dialog_anios(hip);
-                custom.show(getSupportFragmentManager(),"Custom Dialog");
-            }
-        });
 
         before_year.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -283,7 +298,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                     btn_fade_out_1.setImageResource(R.drawable.drop_up);
                     next_year.setEnabled(true);
                     before_year.setEnabled(true);
-                    choose_year.setEnabled(true);
+                    btn_info_cuadro_mensual.setEnabled(true);
 
                     // Animar el TableLayout
                     Animation animation = AnimationUtils.loadAnimation(Cuadro_amortizacion.this, android.R.anim.fade_in);
@@ -306,7 +321,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                     btn_fade_out_2.setImageResource(R.drawable.drop_up);
                     next_year.setEnabled(false);
                     before_year.setEnabled(false);
-                    choose_year.setEnabled(false);
+                    btn_info_cuadro_mensual.setEnabled(false);
 
                     // Animar el TableLayout
                     Animation animation = AnimationUtils.loadAnimation(Cuadro_amortizacion.this, android.R.anim.fade_in);
@@ -317,6 +332,55 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
                     contraeTabla2();
                 }
 
+            }
+        });
+        btn_info_cuadro_mensual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("La informacion de las cuotas futuras es una estimación del valor real, ya que es necesario el valor del euribor del mes correspondiente. Para lo que se ve en pantalla se ha usado el valor actual del euribor.")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
+
+                balloon.showAlignTop(btn_info_cuadro_mensual);
+            }
+        });
+
+        btn_info_cuadro_anual.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("La informacion de los años futuros es una estimación del valor real, ya que es necesario el valor del euribor del mes correspondiente. Para lo que se ve en pantalla se ha usado el valor actual del euribor.")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
+
+                balloon.showAlignTop(btn_info_cuadro_anual);
             }
         });
     }

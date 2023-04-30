@@ -7,6 +7,18 @@
     tools:context=".UsuarioRegistrado.InformacionUsuario.InformarDeUnProblema"
     android:background="@color/background_aplicacion">
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/close_icon_notificar_prob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:padding="10dp"
+        android:src="@drawable/close_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
     <TextView
         android:id="@+id/textView19"
         android:layout_width="wrap_content"

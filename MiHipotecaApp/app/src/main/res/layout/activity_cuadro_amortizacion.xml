@@ -108,11 +108,12 @@
                     android:orientation="horizontal">
 
                     <ImageButton
-                        android:id="@+id/choose_year"
+                        android:id="@+id/btn_info_cuadro_mensual"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/calendar"
-                        android:layout_marginRight="5dp"/>
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/info"
+                        android:visibility="invisible"/>
 
                     <ImageButton
                         android:id="@+id/next_year"
@@ -215,6 +216,7 @@
                     android:id="@+id/btn_fade_out_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:layout_gravity="center_horizontal"
                     android:onClick="onButtonClick"
                     android:src="@drawable/drop_down" />
@@ -222,18 +224,27 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:text="Cuadro de amortización anual"
                     android:textStyle="bold"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginHorizontal="10dp"
                     android:layout_gravity="center"
                     android:textAlignment="center"
                     android:textSize="20dp"/>
+
+                <ImageButton
+                    android:id="@+id/btn_info_cuadro_anual"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/info"
+                    android:visibility="invisible"/>
             </LinearLayout>
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:scrollbarThumbHorizontal="@color/black">
+                android:scrollbarThumbHorizontal="@color/gris_oscuro">
 
                 <ScrollView
                     android:layout_width="match_parent"

@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 
 public class InformarDeUnProblema extends AppCompatActivity {
@@ -20,6 +21,8 @@ public class InformarDeUnProblema extends AppCompatActivity {
     private Button btn_enviar_problema;
 
     private EditText edit_texto_error;
+    private CircleImageView close_icon;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +31,7 @@ public class InformarDeUnProblema extends AppCompatActivity {
 
         edit_texto_error    = findViewById(R.id.edit_texto_error);
         btn_enviar_problema = findViewById(R.id.btn_enviar_problema);
+        close_icon = findViewById(R.id.close_icon_notificar_prob);
 
         btn_enviar_problema.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +46,12 @@ public class InformarDeUnProblema extends AppCompatActivity {
                     startActivity(Intent.createChooser(emailIntent, "Enviar correo electrónico"));
                 }
             }
+        });
+
+
+        close_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { finish(); }
         });
     }
 }

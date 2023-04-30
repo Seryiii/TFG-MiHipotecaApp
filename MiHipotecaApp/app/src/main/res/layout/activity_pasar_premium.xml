@@ -11,13 +11,20 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/close_icon_premium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginTop="25dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/close_icon" />
 
         <TextView
             android:id="@+id/titulo_actividad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="50dp"
             android:text="@string/label_pasate_premium"
             android:textStyle="bold"
             android:textSize="28dp" />

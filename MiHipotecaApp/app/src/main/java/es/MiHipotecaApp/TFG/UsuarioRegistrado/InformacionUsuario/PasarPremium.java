@@ -31,6 +31,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
@@ -48,8 +49,8 @@ public class PasarPremium extends AppCompatActivity {
     private LinearLayout linear_layout_precio;
     private FirebaseAuth currentUser;
     private FirebaseFirestore db;
-
     private boolean premium;
+    private CircleImageView close_icon;
 
     private String pasate = "PASAR A PREMIUM";
     private String mejorar = "¿Desea mejorar su plan a premium?";
@@ -68,6 +69,8 @@ public class PasarPremium extends AppCompatActivity {
         linear_layout_precio = findViewById(R.id.linear_layout_precio);
         vf_1 = findViewById(R.id.view_flipper);
         vf_2 = findViewById(R.id.view_flipper2);
+        close_icon = findViewById(R.id.close_icon_premium);
+
         premium = false;
 
         initUI();
@@ -151,8 +154,12 @@ public class PasarPremium extends AppCompatActivity {
                 dialogo.show();
             }
         });
-        //ESTABA AQUI
 
+
+        close_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { finish(); }
+        });
     }
     public void previousView(View v){
         vf_1.showPrevious();

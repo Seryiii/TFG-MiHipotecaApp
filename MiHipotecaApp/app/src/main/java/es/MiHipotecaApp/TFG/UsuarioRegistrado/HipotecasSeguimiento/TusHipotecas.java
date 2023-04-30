@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.Toast;
 
@@ -21,6 +22,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.anychart.core.annotations.Line;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -58,7 +60,7 @@ public class TusHipotecas extends Fragment {
     private FirebaseAuth firebaseAuth;
     private HipotecaSeguimiento hip;
 
-    private ImageView btn_verOfertas;
+    private LinearLayout btn_verOfertas;
 
     private final String TAG = "Tus Hipotecas";
 

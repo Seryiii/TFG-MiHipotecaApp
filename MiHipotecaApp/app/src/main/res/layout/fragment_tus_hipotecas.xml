@@ -47,6 +47,8 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/btn_verOfertas"
+
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -62,7 +64,6 @@
                 android:gravity="center"
                 />
             <ImageView
-                android:id="@+id/btn_verOfertas"
                 android:layout_width="35dp"
                 android:layout_height="35dp"
                 android:layout_gravity="center"

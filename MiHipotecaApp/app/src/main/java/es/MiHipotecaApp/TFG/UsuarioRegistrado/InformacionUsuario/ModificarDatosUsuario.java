@@ -29,6 +29,7 @@ import com.google.firebase.storage.StorageReference;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.MainActivity;
 import es.MiHipotecaApp.TFG.R;
 
@@ -44,6 +45,8 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
     private TextView correo_usuario;
     private StorageReference storageRefer;
     private Long imgPerfil;
+    private CircleImageView close_icon;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,6 +62,7 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
         btn_aplicar_cambios = findViewById(R.id.btn_aplicar_cambios);
         btn_pasar_a_premium = findViewById(R.id.btn_pasar_a_premium);
         correo_usuario      = findViewById(R.id.correo_electronico_usuario);
+        close_icon = findViewById(R.id.close_icon_mod_perfil);
 
         getInfoUsuario();
         eventos();
@@ -84,6 +88,10 @@ public class ModificarDatosUsuario extends AppCompatActivity implements custom_d
                 Intent i = new Intent(ModificarDatosUsuario.this, PasarPremium.class);
                 startActivity(i);
             }
+        });
+        close_icon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) { finish(); }
         });
     }
     public void modificarUsuarioBD(){

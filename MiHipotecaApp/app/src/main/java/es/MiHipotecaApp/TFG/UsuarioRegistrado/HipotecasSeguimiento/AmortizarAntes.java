@@ -142,7 +142,7 @@ public class AmortizarAntes extends AppCompatActivity {
         check_reducir_plazo = findViewById(R.id.check_reducir_plazo);
         edit_dinero_a_amortizar = findViewById(R.id.edit_dinero_amort);
         edit_reduccion_plazo_meses = findViewById(R.id.edit_reduccion_plazo);
-        //todo Faltan los botones de informacion ponerle funcionalidad
+
         btn_info_dinero_amort = findViewById(R.id.btn_info_dinero_amort);
         btn_info_reduccion_plazo = findViewById(R.id.btn_info_reduccion_plazo);
         layout_cuotaplazo_antigua_vs_nueva = findViewById(R.id.layout_cuotavsnueva);
