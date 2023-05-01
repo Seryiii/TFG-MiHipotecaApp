@@ -61,9 +61,10 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void comprobarEuribor(){
-        db.collection("euribor").get().addOnCompleteListener(task-> {
+        db.collection("euribor_prueba").get().addOnCompleteListener(task-> {
             if(task.isSuccessful()){
                 QuerySnapshot querySnapshot=task.getResult();
+                System.out.println(querySnapshot);
                 if(querySnapshot==null || querySnapshot.isEmpty()){
                     EuriborHistorico hist=new EuriborHistorico(this);
                     hist.ActualizarEuribor();

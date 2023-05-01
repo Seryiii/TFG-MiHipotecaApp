@@ -127,6 +127,7 @@
     <string name="label_ingresos">Ingresos mensuales:</string>
     <string name="label_ofertas_con_detalle">Obtener mejores ofertas con detalle</string>
     <string name="label_cuota">CUOTA</string>
+    <string name="ip">http://147.96.81.245:5000</string>
 
     <!-- MENSAJES DE ERROR -->
     <string name="correo_en_bd">El correo introducido ya está registrado</string>

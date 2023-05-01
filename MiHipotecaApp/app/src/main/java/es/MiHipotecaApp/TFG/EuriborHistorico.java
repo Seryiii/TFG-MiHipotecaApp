@@ -33,7 +33,7 @@ import org.json.JSONObject;
 import es.MiHipotecaApp.TFG.Transfers.Euribor;
 
 public class EuriborHistorico extends AppCompatActivity {
-    RequestQueue requestQueue;
+    //RequestQueue requestQueue;
 
     Context context;
 
@@ -46,12 +46,13 @@ public class EuriborHistorico extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         this.context = context;
-        requestQueue = Volley.newRequestQueue( this.context,new HurlStack());
+        //requestQueue = Volley.newRequestQueue( this.context,new HurlStack());
     }
     protected void ActualizarEuribor() {
         //147.96.81.245:5000
         //http://10.0.2.2:5000
-        String url = "http://147.96.81.245:5000/EuriborHistorico";
+        String ip=context.getString(R.string.ip);
+        String url = ip+"/EuriborHistorico";
         System.out.println("Intenado obtener Euribor");
         Log.w(TAG,"Error al intentar acceder a Euribor : ");
 
@@ -109,7 +110,7 @@ public class EuriborHistorico extends AppCompatActivity {
                                             }
                                         });*/
 
-                                db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
+                                db.collection("euribor_prueba").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
 
 
                                     @Override
@@ -147,7 +148,8 @@ public class EuriborHistorico extends AppCompatActivity {
                 60000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
+        //requestQueue.add(request);
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
 
     }
 }

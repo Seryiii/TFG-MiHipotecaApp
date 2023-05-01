@@ -8,6 +8,7 @@ import android.os.Bundle;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
+import es.MiHipotecaApp.TFG.VolleySingleton;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MostrarOfertas extends AppCompatActivity implements custom_dialog_oferta.pasarDatos {
-    RequestQueue requestQueue;
+    //RequestQueue requestQueue;
     Context context;
     private RecyclerView rvLista;
     private RecyclerAdapter adapter;
@@ -86,7 +87,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_ofertas);
         context = this.getApplicationContext();
-        requestQueue = Volley.newRequestQueue(this,new HurlStack());
+        //requestQueue = Volley.newRequestQueue(this,new HurlStack());
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -233,7 +234,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     private void obtenerDatosBancos() {
         //10.0.2.2
         //147.96.81.245
-        String url = "http://147.96.81.245:5000/pruebaArray";
+        String ip=context.getString(R.string.ip);
+        String url = ip+ "/pruebaArray";
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -334,7 +336,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                 120000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        requestQueue.add(request);
+        //requestQueue.add(request);
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
 
     }
 
@@ -382,7 +385,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         });
 
 // Agregar solicitud a la RequestQueue
-        requestQueue.add(request);
+        //requestQueue.add(request);
+        VolleySingleton.getInstance(context).addToRequestQueue(request);
     }
 
     private Runnable runnable = new Runnable() {

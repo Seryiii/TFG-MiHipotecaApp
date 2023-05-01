@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG;
 
+
+
 import android.content.Context;
 
 import android.util.Log;
@@ -38,12 +40,15 @@ public class EuriborMens extends Worker {
 
     private FirebaseFirestore db;
 
+    Context context;
+
     private final String TAG = "EURIBOR ACTIVITY";
 
     public EuriborMens(@NonNull Context context, @NonNull WorkerParameters workerParams) {
         super(context, workerParams);
         requestQueue = Volley.newRequestQueue( context,new HurlStack());
         db = FirebaseFirestore.getInstance();
+        this.context=context;
     }
 
     @NonNull
@@ -53,7 +58,8 @@ public class EuriborMens extends Worker {
         return Result.success() ;
     }
     private void  ActualizarEuribor(){
-        String url = "http://147.96.81.245:5000/Euribor";
+        String ip= context.getString(R.string.ip);
+        String url = ip +"/Euribor";
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
