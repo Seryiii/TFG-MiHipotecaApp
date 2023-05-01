@@ -287,7 +287,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
 
         //si es el primer año de hipoteca
         if(inicio.get(Calendar.YEAR) == anio) cuotasAnuales = 12 + (getNumeroCuotaEnEnero(anio) - 1);
-        else if(inicio.get(Calendar.YEAR) + (int) Math.ceil(getPlazoActual(amortizaciones) / 12) == anio) {
+        else if(inicio.get(Calendar.YEAR) + aniosActualesHipoteca(getPlazoActual(amortizaciones)) - 1 == anio) {
             cuotasAnuales = getPlazoActual(amortizaciones) - (getNumeroCuotaEnEnero(anio) - 1);
             ultimoAnio = true;
         }else cuotasAnuales = 12;
