@@ -262,7 +262,7 @@
             <Button
                 android:id="@+id/btn_cuadro_amortizacion"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_bordes_redondos"
                 android:layout_marginStart="10dp"
@@ -273,7 +273,7 @@
             <Button
                 android:id="@+id/btn_amortizar_antes"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"

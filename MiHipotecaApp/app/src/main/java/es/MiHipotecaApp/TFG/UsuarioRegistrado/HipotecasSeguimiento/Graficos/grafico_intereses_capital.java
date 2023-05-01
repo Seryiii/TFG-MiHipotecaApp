@@ -68,8 +68,9 @@ public class grafico_intereses_capital extends AppCompatActivity {
         Calendar anio = Calendar.getInstance();
         anio.setTime(hip.getFecha_inicio());
 
+        int aniosActuales = hip.aniosActualesHipoteca(hip.getPlazoActual(amortizaciones_hip));
 
-        for(int i = 1; i <= hip.getPlazo_anios(); i++){
+        for(int i = 1; i <= aniosActuales; i++){
             ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip, euribors);
 
             capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(1)))));
