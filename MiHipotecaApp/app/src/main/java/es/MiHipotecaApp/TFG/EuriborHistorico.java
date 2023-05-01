@@ -83,7 +83,7 @@ public class EuriborHistorico extends AppCompatActivity {
                                 String valor_euribor = jsonObject.getString("valor");
                                 Double valor=Double.parseDouble(valor_euribor);
                                 Euribor eu=new Euribor(anio,mes,valor);
-                                db.collection("euribor")
+                                /* db.collection("euribor")
                                         .whereEqualTo("anio", anio)
                                         .whereEqualTo("mes", mes)
                                         .get()
@@ -107,8 +107,9 @@ public class EuriborHistorico extends AppCompatActivity {
                                             } else {
                                                 Log.w(TAG, "Error al consultar euribor en Firestore", task.getException());
                                             }
-                                        });
-                                /*db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
+                                        });*/
+
+                                db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
 
 
                                     @Override
@@ -126,8 +127,7 @@ public class EuriborHistorico extends AppCompatActivity {
                                     public void onFailure(@NonNull Exception e) {
                                         Log.w(TAG,"Error al registrar euribor en Firestore: ");
                                     }
-                                });*/
-
+                                });
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }

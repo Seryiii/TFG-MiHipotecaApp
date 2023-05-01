@@ -53,7 +53,7 @@ public class EuriborMens extends Worker {
         return Result.success() ;
     }
     private void  ActualizarEuribor(){
-        String url = "http://147.96.81.245:5000/EuriborMensual";
+        String url = "http://147.96.81.245:5000/Euribor";
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,
@@ -64,7 +64,7 @@ public class EuriborMens extends Worker {
 
                         JSONArray mJsonArray = null;
                         try {
-                            mJsonArray = response.getJSONArray("valores");
+                            mJsonArray = response.getJSONArray("Eur_dos_ult_meses");
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
