@@ -25,6 +25,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -82,7 +83,32 @@ public class EuriborMens extends Worker {
                                 String mes = jsonObject.getString("mes");
                                 Double valor = jsonObject.getDouble("valor");
                                 Euribor eu=new Euribor(anio,mes,valor);
-                                db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
+                                db.collection("euribor")
+                                        .whereEqualTo("anio", anio)
+                                        .whereEqualTo("mes", mes)
+                                        .get()
+                                        .addOnCompleteListener(task -> {
+                                            if (task.isSuccessful()) {
+                                                QuerySnapshot querySnapshot = task.getResult();
+                                                if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                                    // El documento ya existe en la base de datos
+                                                    Log.d(TAG, "El documento ya existe en la base de datos");
+                                                } else {
+                                                    // El documento no existe en la base de datos, agrégalo
+                                                    db.collection("euribor_prueba")
+                                                            .add(eu)
+                                                            .addOnSuccessListener(documentReference -> {
+                                                                Log.d(TAG, "euribor registrado con exito en Firestore");
+                                                            })
+                                                            .addOnFailureListener(e -> {
+                                                                Log.w(TAG, "Error al registrar euribor en Firestore", e);
+                                                            });
+                                                }
+                                            } else {
+                                                Log.w(TAG, "Error al consultar euribor en Firestore", task.getException());
+                                            }
+                                        });
+                               /* db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
 
 
                                     @Override
@@ -95,7 +121,7 @@ public class EuriborMens extends Worker {
                                     public void onFailure(@NonNull Exception e) {
                                         Log.w(TAG,"Error al registrar euribor en Firestore: ");
                                     }
-                                });
+                                });*/
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
@@ -114,7 +140,8 @@ public class EuriborMens extends Worker {
                 60000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                requestQueue.add(request);
+                //requestQueue.add(request);
+                VolleySingleton.getInstance(context).addToRequestQueue(request);
                 }
         }
 
