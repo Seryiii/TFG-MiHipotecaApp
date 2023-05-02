@@ -302,6 +302,7 @@ public class HipotecaSeguimiento implements Serializable {
     public List<Double> getArrayVinculacionesAnual(){ return arrayVinculacionesAnual; }
 
     public Double getPosArrayVinculacionesAnual(int i) {
+        if(arrayVinculacionesAnual.size() == 0) return 0.0;
         return Double.parseDouble(String.valueOf(arrayVinculacionesAnual.get(i)));
     }
 

@@ -73,11 +73,12 @@ public class grafico_intereses_capital extends AppCompatActivity {
         for(int i = 1; i <= aniosActuales; i++){
             ArrayList<Double> valores = hip.getFilaCuadroAmortizacionAnual(anio.get(Calendar.YEAR) + i - 1, i, amortizaciones_hip, euribors);
 
-            capitalAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(1)))));
-            interesesAnuales.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(2)))));
-            cuotaAnual.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, Double.parseDouble(formato.format(valores.get(0)))));
-            if(i <= hip.getArrayVinculacionesAnual().size() - 1) vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getPosArrayVinculacionesAnual(i)));
-            else vinculacionesAnules.add(new ValueDataEntry(anio.get(Calendar.YEAR) + i, hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
+            int anioActual = anio.get(Calendar.YEAR) + i - 1;
+            capitalAnual.add(new ValueDataEntry(anioActual, Double.parseDouble(formato.format(valores.get(1)))));
+            interesesAnuales.add(new ValueDataEntry(anioActual, Double.parseDouble(formato.format(valores.get(2)))));
+            cuotaAnual.add(new ValueDataEntry(anioActual, Double.parseDouble(formato.format(valores.get(0)))));
+            if(i <= hip.getArrayVinculacionesAnual().size() - 1) vinculacionesAnules.add(new ValueDataEntry(anioActual, hip.getPosArrayVinculacionesAnual(i)));
+            else vinculacionesAnules.add(new ValueDataEntry(anioActual, hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
         }
 
         Cartesian lineChart = AnyChart.line();

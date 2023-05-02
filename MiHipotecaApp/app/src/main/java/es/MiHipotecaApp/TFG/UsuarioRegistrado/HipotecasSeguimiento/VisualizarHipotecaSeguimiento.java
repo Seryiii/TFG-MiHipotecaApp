@@ -731,7 +731,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     public void compruebaSiVinculacionAnual(){
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(hip.getFecha_inicio());
-        int i = fecha.get(Calendar.DAY_OF_YEAR) + 1; //dia de inicio de la hipoteca + 1
+        int i = fecha.get(Calendar.DAY_OF_YEAR); //dia de inicio de la hipoteca + 1
         if(fecha.get(Calendar.YEAR)%4 == 0 && fecha.get(Calendar.DAY_OF_YEAR) > 59) i = i - 1; //comprueba si año bisiesto
 
         //calculo la variable aniosHastaAhora, que tiene el numero de años + 1  que llevamos de hipoteca

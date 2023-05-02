@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -13,12 +15,14 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,12 +36,19 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.skydoves.balloon.ArrowOrientation;
+import com.skydoves.balloon.ArrowPositionRules;
+import com.skydoves.balloon.Balloon;
+import com.skydoves.balloon.BalloonAnimation;
+import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -54,25 +65,19 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
 
     private HipotecaSeguimiento hip;
     //Campos fijos
+
     private CircleImageView closeIcon;
-    private Spinner sp_comunidad;
-    private CheckBox check_vivienda_general;
-    private CheckBox check_vivienda_poficial;
-    private CheckBox check_vivienda_nueva;
-    private CheckBox check_vivienda_smano;
-    private EditText precio_vivienda;
-    private EditText cantidad_abonada;
-    private EditText plazo;
-    private EditText inicio_hipoteca;
+    private Spinner sp_bancos;
+
     private CheckBox check_parte_fija_variable;
-    private CheckBox check_fija;
-    private CheckBox check_variable;
-    private CheckBox check_mixta;
     private EditText gastos_totales;
 
-    private EditText vinculaciones;
+    private EditText vinculaciones_anio, vinculaciones_valor;
     private EditText nombre_hipoteca;
 
+    private TextView txt_edit_hipoteca, txt_edit_comunidad, txt_edit_tipo_vivienda, txt_edit_antiguedad_vivienda, txt_edit_precio_vivienda, txt_edit_cant_abonada, txt_edit_plazo_hip, txt_edit_inicio_hip, txt_edit_tipo_hip;
+
+    private ImageButton btn_info_vinculaciones;
     //campos variables
     //Hipoteca Fija
     private TextView label_porcentaje_fijo;
@@ -96,25 +101,22 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
     private CheckBox check_seis_meses;
     private CheckBox check_un_anio;
     private Button btn_editar_hipoteca;
-    private Spinner sp_bancos;
 
     //Bases de datos
 
     private FirebaseFirestore db;
 
     private FirebaseAuth auth;
-    private FirebaseUser user;
 
     private String[] comunidades;
     private String[] comunidades_base_datos;
+    private int aniosHastaAhora;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_editar_hipoteca_seguimiento);
-        sp_comunidad = findViewById(R.id.sp_comunidad_edit);
         comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
-        sp_comunidad.setAdapter(adapter);
         comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
         initUI();
@@ -122,27 +124,26 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         Eventos();
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
-        user = auth.getCurrentUser();
     }
 
     private void initUI() {
         //Campos fijos
         closeIcon = findViewById(R.id.close_icon_seg_edit);
-        check_vivienda_general = findViewById(R.id.checkBox_ViviendaRegGeneral_edit);
-        check_vivienda_poficial= findViewById(R.id.checkBox_ViviendaPOficial_edit);
-        check_vivienda_nueva= findViewById(R.id.checkBox_ViviendaNueva_edit);
-        check_vivienda_smano=findViewById(R.id.checkBox_ViviendaSegundaMano_edit);
-        precio_vivienda= findViewById(R.id.edit_precio_vivienda_edit);
-        cantidad_abonada=findViewById(R.id.edit_cant_abonada_comprador_edit);
-        plazo=findViewById(R.id.edit_plazo_pagar_edit);
-        inicio_hipoteca = findViewById(R.id.inicio_hipoteca_edit);
         check_parte_fija_variable=findViewById(R.id.check_parte_fija_variable_edit);
-        check_fija=findViewById(R.id.checkBoxFijaNuevoSeg_edit);
-        check_variable=findViewById(R.id.checkBoxVariableNuevoSeg_edit);
-        check_mixta=findViewById(R.id.checkBoxMixtaNuevoSeg_edit);
         gastos_totales=findViewById(R.id.edit_gastos_totales_edit);
-        vinculaciones=findViewById(R.id.edit_gastos_vinculaciones_edit);
+        vinculaciones_anio=findViewById(R.id.edit_anio_vinculacion);
+        vinculaciones_valor=findViewById(R.id.edit_dinero_vinculacion);
         nombre_hipoteca=findViewById(R.id.edit_nombre_hipoteca_edit);
+        txt_edit_hipoteca = findViewById(R.id.txt_edit_hipoteca);
+        txt_edit_comunidad = findViewById(R.id.txt_edit_comunidad);
+        txt_edit_tipo_vivienda = findViewById(R.id.txt_edit_tipo_vivienda);
+        txt_edit_antiguedad_vivienda = findViewById(R.id.txt_edit_antiguedad_vivienda);
+        txt_edit_precio_vivienda = findViewById(R.id.txt_edit_precio_vivienda);
+        txt_edit_cant_abonada = findViewById(R.id.txt_edit_cant_abonada);
+        txt_edit_plazo_hip = findViewById(R.id.txt_edit_plazo_hip);
+        txt_edit_inicio_hip = findViewById(R.id.txt_edit_inicio_hip);
+        txt_edit_tipo_hip = findViewById(R.id.txt_edit_tipo_hip);
+        btn_info_vinculaciones = findViewById(R.id.btn_info_vinculaciones);
 
         //campos variables
         //Hipoteca Fija
@@ -214,78 +215,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
                 dialogo.show();
             }
         });
-        check_vivienda_general.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) check_vivienda_poficial.setChecked(false);
-                if(!check_vivienda_poficial.isChecked()) check_vivienda_general.setChecked(true);
-            }
-        });
 
-        check_vivienda_poficial.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) check_vivienda_general.setChecked(false);
-                if(!check_vivienda_general.isChecked()) check_vivienda_poficial.setChecked(true);
-            }
-        });
-        check_vivienda_nueva.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) check_vivienda_smano.setChecked(false);
-                if(!check_vivienda_smano.isChecked()) check_vivienda_nueva.setChecked(true);
-            }
-        });
-
-        check_vivienda_smano.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) check_vivienda_nueva.setChecked(false);
-                if(!check_vivienda_nueva.isChecked()) check_vivienda_smano.setChecked(true);
-            }
-        });
-        check_fija.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    check_mixta.setChecked(false);
-                    check_variable.setChecked(false);
-                    ActivarCampos("fija");
-                }
-                if(!check_variable.isChecked() && !check_mixta.isChecked()) {
-                    check_fija.setChecked(true);
-                }
-            }
-        });
-
-        check_variable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-
-                if (isChecked) {
-                    check_mixta.setChecked(false);
-                    check_fija.setChecked(false);
-                    ActivarCampos("variable");
-                }
-                if(!check_fija.isChecked() && !check_mixta.isChecked()) {
-                    check_variable.setChecked(true);
-                }
-            }
-        });
-        check_mixta.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    check_variable.setChecked(false);
-                    check_fija.setChecked(false);
-                    ActivarCampos("mixto");
-                }
-                if(!check_fija.isChecked() && !check_variable.isChecked()) {
-                    check_mixta.setChecked(true);
-                }
-            }
-
-        });
 
         check_seis_meses.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -320,13 +250,6 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
-        inicio_hipoteca.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showDatePickerDialog();
-            }
-        });
-
         btn_editar_hipoteca.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -334,28 +257,50 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             }
         });
 
+        btn_info_vinculaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Balloon balloon = new Balloon.Builder(getApplicationContext())
+                        .setArrowSize(10)
+                        .setArrowOrientation(ArrowOrientation.TOP)
+                        .setArrowPositionRules(ArrowPositionRules.ALIGN_ANCHOR)
+                        .setArrowPosition(0.5f)
+                        .setWidth(BalloonSizeSpec.WRAP)
+                        .setHeight(100)
+                        .setTextSize(15f)
+                        .setCornerRadius(4f)
+                        .setAlpha(0.9f)
+                        .setText("Puedes cambiar el valor desde el año 1 hasta el " + aniosHastaAhora + ".")
+                        .setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.black))
+                        .setTextIsHtml(true)
+                        .setIconDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.info))
+                        .setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.white))
+                        .setBalloonAnimation(BalloonAnimation.FADE)
+                        .build();
 
-    }
-
-    private void showDatePickerDialog() {
-        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
-            // +1 because January is zero
-            final String selectedDate =  twoDigits(day) + "/" + twoDigits(month+1) + "/" + fourDigits(year);
-            inicio_hipoteca.setText(selectedDate);
+                balloon.showAlignTop(btn_info_vinculaciones);
+            }
         });
 
-        newFragment.show(getSupportFragmentManager(), "datePicker");
-    }
+        vinculaciones_anio.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-    private String twoDigits(int n) {
-        return (n<=9) ? ("0"+n) : String.valueOf(n);
-    }
+            }
 
-    private String fourDigits(int n) {
-        if (n<=9)          return ("000" + n);
-        else if (n <= 99)  return ("00" + n);
-        else if (n <= 999) return ("0"  + n);
-        else return String.valueOf(n);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                int anio = s.toString().equals("") ? 0 : Integer.parseInt(s.toString());
+                if(anio > aniosHastaAhora && anio > 0) vinculaciones_anio.setError("El año no puede ser mayor que " + aniosHastaAhora);
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
     }
 
     private void ActivarCampos(String hipoteca){
@@ -414,47 +359,9 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
     private void comprobarCampos(){
 
         boolean camposCorrectos = true;
-        if(TextUtils.isEmpty(precio_vivienda.getText())){
-            precio_vivienda.setError(getString(R.string.precio_vacio));
-            camposCorrectos = false;
-        } else{
-
-            //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
-            double precio_viv = Double.parseDouble(precio_vivienda.getText().toString());
-            if(precio_viv <= 0){
-                precio_vivienda.setError(getString(R.string.cantidad_mayor_igual_cero));
-                camposCorrectos = false;
-            }
-
-            if(TextUtils.isEmpty(cantidad_abonada.getText())){
-                cantidad_abonada.setError(getString(R.string.cantidad_abonada_vacio));
-                camposCorrectos = false;
-            } else {
-                double ahorro_aport = Double.parseDouble(cantidad_abonada.getText().toString());
-                if (ahorro_aport <= 0) {
-                    cantidad_abonada.setError(getString(R.string.cantidad_mayor_igual_cero));
-                    camposCorrectos = false;
-                }
-                double dinero_aport_banco = precio_viv - ahorro_aport;
-                if (dinero_aport_banco > precio_viv * 0.8) {
-                    cantidad_abonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
-                    camposCorrectos = false;
-                }
-            }
-        }
-
-        if(TextUtils.isEmpty(plazo.getText())){
-            plazo.setError(getString(R.string.plazo_vacio));
-            camposCorrectos = false;
-        } else {
-            if (Integer.parseInt(plazo.getText().toString()) <= 0 || Integer.parseInt(plazo.getText().toString()) > 40) {
-                plazo.setError(getString(R.string.plazo_vacio));
-                camposCorrectos = false;
-            }
-        }
 
         //CAMPOS FIJOS
-        if(check_fija.isChecked()){
+        if(hip.getTipo_hipoteca().equals("fija")){
             if(TextUtils.isEmpty(edit_porcentaje_fijo.getText())){
                 edit_porcentaje_fijo.setError(getString(R.string.porcentaje_vacio));
                 camposCorrectos = false;
@@ -465,7 +372,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
                 }
             }
         } //CAMPOS VARIABLES
-        else if(check_variable.isChecked()){
+        else if(hip.getTipo_hipoteca().equals("variable")){
             if(check_parte_fija_variable.isChecked()) {
                 if (TextUtils.isEmpty(edit_duracion_primer_porcentaje.getText())) {
                     edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_vacio));
@@ -474,7 +381,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
                     if (Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) <= 0) {
                         edit_duracion_primer_porcentaje.setError(getString(R.string.duracion_mayor_igual_cero));
                         camposCorrectos = false;
-                    } else if(Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) > (Integer.parseInt(plazo.getText().toString()) - 1) * 12){
+                    } else if(Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) > (hip.getPlazo_anios() - 1) * 12){
                     edit_duracion_primer_porcentaje.setError(getString(R.string.meses_menor_plazo));
                     camposCorrectos = false;
                     }
@@ -507,7 +414,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
                 if (Integer.parseInt(edit_anios_fija.getText().toString()) <= 0) {
                     edit_anios_fija.setError(getString(R.string.anios_mayor_cero));
                     camposCorrectos = false;
-                } else if(Integer.parseInt(edit_anios_fija.getText().toString()) > Integer.parseInt(plazo.getText().toString()) - 1){
+                } else if(Integer.parseInt(edit_anios_fija.getText().toString()) > hip.getPlazo_anios() - 1){
                     edit_anios_fija.setError(getString(R.string.anios_menor_plazo));
                     camposCorrectos = false;
                 }
@@ -545,49 +452,24 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         Map<String, Object> nuevosDatos = new HashMap<>();
 
         nuevosDatos.put("nombre", nombre_hipoteca.getText().toString());
-        nuevosDatos.put("comunidad_autonoma", comunidades_base_datos[sp_comunidad.getSelectedItemPosition()]);
-
-        String tipo_vivienda = "general";
-        if(check_vivienda_poficial.isChecked()) tipo_vivienda = "proteccion_oficial";
-        nuevosDatos.put("tipo_vivienda", tipo_vivienda);
-
-        String antiguedad_vivienda = "nueva";
-        if(check_vivienda_smano.isChecked()) antiguedad_vivienda = "segunda_mano";
-        nuevosDatos.put("tipo_vivienda", tipo_vivienda);
-
-        nuevosDatos.put("precio_vivienda", Double.parseDouble(precio_vivienda.getText().toString()));
-        nuevosDatos.put("cantidad_abonada", Double.parseDouble(cantidad_abonada.getText().toString()));
-        nuevosDatos.put("plazo_anios", Integer.parseInt(plazo.getText().toString()));
-
-        SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy");
-        Date fecha_inicio;
-        try {
-            fecha_inicio = formato.parse(inicio_hipoteca.getText().toString());
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-        nuevosDatos.put("fecha_inicio", fecha_inicio);
 
         double totalGastos, gastos_vin;
         if(TextUtils.isEmpty(gastos_totales.getText())) totalGastos = 0;
         else totalGastos = Double.parseDouble(gastos_totales.getText().toString());
         nuevosDatos.put("totalGastos", totalGastos);
-        if(TextUtils.isEmpty(vinculaciones.getText())) gastos_vin = 0;
-        else gastos_vin = Double.parseDouble(vinculaciones.getText().toString());
 
-        hip.setPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1, gastos_vin);
-        nuevosDatos.put("arrayVinculacionesAnual", hip.getArrayVinculacionesAnual());
+        List<Double> vinculaciones_hip = hip.getArrayVinculacionesAnual();
+        if(!TextUtils.isEmpty(vinculaciones_anio.getText()) && !TextUtils.isEmpty(vinculaciones_valor.getText())) {
+            vinculaciones_hip.set(Integer.parseInt(vinculaciones_anio.getText().toString()) - 1, Double.parseDouble(vinculaciones_valor.getText().toString()));
+        }
+        nuevosDatos.put("arrayVinculacionesAnual", vinculaciones_hip);
 
         nuevosDatos.put("banco_asociado", sp_bancos.getSelectedItem().toString());
-        HipotecaSeguimiento nuevaHip;
         //Hipoteca Fija
-        String tipo_hipoteca = "fija";
-        if(check_fija.isChecked()){
+        if(hip.getTipo_hipoteca().equals("fija")){
             nuevosDatos.put("porcentaje_fijo", Double.parseDouble(edit_porcentaje_fijo.getText().toString()));
-            nuevosDatos.put("tipo_hipoteca", tipo_hipoteca);
 
-        }else if (check_variable.isChecked()){
-            tipo_hipoteca = "variable";
+        }else if (hip.getTipo_hipoteca().equals("variable")){
             int mesesFija = check_parte_fija_variable.isChecked() ? Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) : 0;
             nuevosDatos.put("duracion_primer_porcentaje_variable", mesesFija);
             double primerPorc = check_parte_fija_variable.isChecked() ? Double.parseDouble(edit_primer_porcentaje.getText().toString()) : 0;
@@ -598,9 +480,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             nuevosDatos.put("revision_anual", revision_anual);
             //nuevaHip = new HipotecaSegVariable(nombre, comunidad, tipo_vivienda, antiguedad_vivienda, precio_viv, cant_abonada, plazo_hip, fecha_inicio, tipo_hipoteca, totalGastos, gastos_vin, banco_asociado, duracion_primer_porcentaje, primer_porc_variable, diferencial_variable, revision_anual);
 
-            nuevosDatos.put("tipo_hipoteca", tipo_hipoteca);
         }else{
-            tipo_hipoteca = "mixta";
             boolean revision_anual = true;
             if(check_seis_meses.isChecked()) revision_anual = false;
             nuevosDatos.put("revision_anual", revision_anual);
@@ -608,8 +488,6 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             nuevosDatos.put("anios_fija_mixta", Integer.parseInt(edit_anios_fija.getText().toString()));
             nuevosDatos.put("porcentaje_fijo_mixta", Double.parseDouble(edit_porcentaje_fijo_mix.getText().toString()));
             nuevosDatos.put("porcentaje_diferencial_mixta", Double.parseDouble(edit_diferencial_mixto.getText().toString()));
-
-                nuevosDatos.put("tipo_hipoteca", tipo_hipoteca);
         }
 
         // obtener una referencia a la colección
@@ -649,7 +527,8 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             if(hip.getComunidad_autonoma().equals(comunidades_base_datos[i])) break;
             i++;
         }
-        sp_comunidad.setSelection(i);
+        txt_edit_comunidad.setText("Comunidad autonoma: " + comunidades[i]);
+
 
         String [] bancos = {"ING","SANTANDER","BBVA","CAIXABANK","BANKINTER","EVO BANCO","SABADELL","UNICAJA","DEUTSCHE BANK","OPEN BANK","KUTXA BANK","IBERCAJA","ABANCA"};
         int j = 0;
@@ -659,30 +538,21 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         }
         sp_bancos.setSelection(j);
 
-        if(hip.getTipo_vivienda().equals("general")) {
-            check_vivienda_general.setChecked(false);
-            check_vivienda_poficial.setChecked(true);
-        }
+        txt_edit_tipo_vivienda.setText("Tipo de vivienda: " + hip.getTipo_vivienda());
 
-        if(hip.getAntiguedad_vivienda().equals("nueva")){
-            check_vivienda_nueva.setChecked(false);
-            check_vivienda_smano.setChecked(true);
-        }
+        txt_edit_antiguedad_vivienda.setText("Vivienda " + hip.getAntiguedad_vivienda());
 
-        precio_vivienda.setText(Double.toString(hip.getPrecio_vivienda()));
-        cantidad_abonada.setText(Double.toString(hip.getCantidad_abonada()));
-        plazo.setText(Integer.toString(hip.getPlazo_anios()));
+        txt_edit_precio_vivienda.setText("Precio de la vivienda: " + hip.getPrecio_vivienda() + "€");
+        txt_edit_cant_abonada.setText("Cantidad abonada: " + hip.getCantidad_abonada() + "€");
+        txt_edit_plazo_hip.setText("Plazo hipoteca: " + hip.getPlazo_anios() + " años");
 
         //date
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        inicio_hipoteca.setText(formato.format(hip.getFecha_inicio()));
+        txt_edit_inicio_hip.setText("Inicio hipoteca: " + formato.format(hip.getFecha_inicio()));
 
-
+        txt_edit_tipo_hip.setText("Tipo de hipoteca: " + hip.getTipo_hipoteca());
         if(hip.getTipo_hipoteca().equals("variable")){
             ActivarCampos("variable");
-            check_fija.setChecked(false);
-            check_variable.setChecked(true);
-
 
             edit_duracion_primer_porcentaje.setText(Integer.toString(hip.getDuracion_primer_porcentaje_variable()));
             if(Integer.parseInt(edit_duracion_primer_porcentaje.getText().toString()) != 0){
@@ -706,9 +576,6 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             }
         } else if(hip.getTipo_hipoteca().equals("mixta")){
             ActivarCampos("mixta");
-
-            check_fija.setChecked(false);
-            check_mixta.setChecked(true);
             if(!hip.isRevision_anual()){
                 check_seis_meses.setChecked(true);
                 check_un_anio.setChecked(false);
@@ -721,8 +588,50 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         }
 
         gastos_totales.setText(Double.toString(hip.getTotalGastos()));
-        if(hip.getArrayVinculacionesAnual().size() > 0) vinculaciones.setText(Double.toString(hip.getPosArrayVinculacionesAnual(hip.getArrayVinculacionesAnual().size() - 1)));
+
+        aniosHastaAhora = hip.getPlazo_anios() - getAniosMesesRestantes(hip.getPlazo_anios(), getNumeroCuotaActual(hip.getFecha_inicio(), hip.getPlazo_anios())).get(0);
+        if(aniosHastaAhora <= 0){
+            vinculaciones_anio.setEnabled(false);
+            vinculaciones_valor.setEnabled(false);
+        } else btn_info_vinculaciones.setVisibility(View.VISIBLE);
+        if(hip.getArrayVinculacionesAnual().size() > 0) {
+            vinculaciones_anio.setText(hip.getArrayVinculacionesAnual().size() + "");
+            vinculaciones_valor.setText(Double.toString(hip.getArrayVinculacionesAnual().get(hip.getArrayVinculacionesAnual().size() - 1)));
+        }
+
         nombre_hipoteca.setText(hip.getNombre());
+
+    }
+
+    /** Esta funcion devuelve los años y meses que quedan de hipoteca**/
+    public ArrayList<Integer> getAniosMesesRestantes(int plazo, int cuota){
+
+        ArrayList<Integer> anios_meses = new ArrayList<>();
+        int cuotasRestantes = (plazo * 12) - cuota;
+        int anios = cuotasRestantes / 12;
+        int meses = cuotasRestantes % 12;
+        anios_meses.add(anios);
+        anios_meses.add(meses);
+        return anios_meses;
+    }
+
+    /** Devuelve el numero de cuota por el que va actualmente la hipoteca [1 - plazo_anios * 12 ] **/
+    public int getNumeroCuotaActual(Date fecha_inicio, int plazo){
+        Calendar inicio = Calendar.getInstance();
+        inicio.setTime(fecha_inicio);
+        // Dia actual
+        Calendar actual = Calendar.getInstance();
+        // En caso de que todavia no haya empezado el seguimiento de la hipoteca
+        if(actual.compareTo(inicio) < 0) return 0;
+        int difA = actual.get(Calendar.YEAR) - inicio.get(Calendar.YEAR);
+        int numeroPagoActual = difA * 12 + actual.get(Calendar.MONTH) - inicio.get(Calendar.MONTH);
+
+        // Si el dia es el mismo que el de pago, devuelve como si ya ha pagado esa cuota
+        if(actual.get(Calendar.DAY_OF_MONTH) >= inicio.get(Calendar.DAY_OF_MONTH)) numeroPagoActual = numeroPagoActual + 1; //Se le sumaria 1 debido a que ya ha pasado el dia de pago del mes correspondiente
+        //else return numeroPagoActual + 1;
+        // Fin de hipoteca
+        if (numeroPagoActual >= plazo * 12) numeroPagoActual = plazo * 12;
+        return numeroPagoActual;
 
     }
 
