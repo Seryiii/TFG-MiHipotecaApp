@@ -39,6 +39,7 @@ import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.BalloonSizeSpec;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,6 +69,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private ImageButton btn_info_reduccion_plazo;
 
     private Button amortizar_antes;
+
 
 
     private TextView cantidad_capital_amortizado;
@@ -159,6 +161,11 @@ public class AmortizarAntes extends AppCompatActivity {
         cuota_plazo_nueva_tv = findViewById(R.id.tv_cuota_plazo_nueva);
         amortizar_antes = findViewById(R.id.btn_realizar_amortizacion_anticipada);
         close_icon = findViewById(R.id.close_icon_amort_ant);
+
+        //Para poder registrar una amortizacion anticipada pasada debes llevar al menos una cuota pagada
+        if(hip.getNumeroCuotaActual(amortizaciones_hip) < 1){
+            //Para activar on / off
+        }
 
     }
 
@@ -456,6 +463,8 @@ public class AmortizarAntes extends AppCompatActivity {
                 balloon.showAlignTop(btn_info_reduccion_plazo);
             }
         });
+
+
 
     }
 

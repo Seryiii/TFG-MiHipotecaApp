@@ -379,6 +379,8 @@
             android:layout_marginBottom="20dp"
             android:text="@string/txt_btn_amortizar_antes"/>
 
+
+
     </LinearLayout>
 
 </ScrollView>

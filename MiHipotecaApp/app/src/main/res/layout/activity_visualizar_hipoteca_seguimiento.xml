@@ -360,6 +360,35 @@
                     android:background="@null"/>
 
              </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_porcentaje_aplicado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp">
+
+
+                <ImageView
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:src="@drawable/porcentaje"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/porcentaje_aplicado_valor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1.5%"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/allerta"
+                    android:textColor="@color/black"
+                    android:gravity="center"
+                    android:textSize="22sp" />
+
+            </LinearLayout>
             <LinearLayout
                 android:id="@+id/layout_amortizacion_anticipada"
                 android:layout_width="match_parent"

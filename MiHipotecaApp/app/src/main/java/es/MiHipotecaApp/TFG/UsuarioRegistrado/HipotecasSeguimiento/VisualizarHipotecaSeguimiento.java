@@ -94,6 +94,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private ImageButton info_dinero_restante;
     private ImageView info_cuota;
+
+    private LinearLayout layout_porcentaje_aplicado;
+
+    private TextView porcentaje_aplicado_valor;
     private LinearLayout capital_layout;
     private LinearLayout capital_layout_valor;
     private LinearLayout intereses_layout;
@@ -154,6 +158,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         layout_cuota_seguimiento  = findViewById(R.id.layout_cuota_seguimiento);
         layout_capital_intereses1 = findViewById(R.id.layout_capital_intereses1);
         layout_capital_intereses2 = findViewById(R.id.layout_capital_intereses2);
+        layout_porcentaje_aplicado = findViewById(R.id.layout_porcentaje_aplicado);
+        porcentaje_aplicado_valor = findViewById(R.id.porcentaje_aplicado_valor);
 
         btn_cuadro_amortizacion              = findViewById(R.id.btn_cuadro_amortizacion);
         btn_amortizar_antes                  = findViewById(R.id.btn_amortizar_antes);
@@ -372,6 +378,18 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         numero_cuotas_pagadas = hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         info_cuota.setVisibility(View.GONE);
+        if (numero_cuotas_pagadas >= hip.getPlazoActual(amortizaciones_anticipadas)) layout_porcentaje_aplicado.setVisibility(View.GONE);
+        else{
+            double porcentaje_aplicado = hip.getPorcentajePorCuota(numero_cuotas_pagadas + 1, amortizaciones_anticipadas, euribors);
+            if(hip.getTipo_hipoteca().equals("fija")) porcentaje_aplicado_valor.setText( porcentaje_aplicado+ "%");
+            else if(hip.getTipo_hipoteca().equals("variable")){
+                if(numero_cuotas_pagadas + 1 <= hip.getDuracion_primer_porcentaje_variable()) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
+                else porcentaje_aplicado_valor.setText(porcentaje_aplicado - hip.getPorcentaje_diferencial_variable() + "% + " + hip.getPorcentaje_diferencial_variable() + "%");
+            }else{
+                if(numero_cuotas_pagadas + 1 <= hip.getAnios_fija_mixta() * 12) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
+                else porcentaje_aplicado_valor.setText(porcentaje_aplicado - hip.getPorcentaje_diferencial_mixta() + "% + " + hip.getPorcentaje_diferencial_mixta() + "%");
+            }
+        }
 
         DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
         String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas, euribors))  + "€"; // Formatear el número
