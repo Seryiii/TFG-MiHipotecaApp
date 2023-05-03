@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -26,7 +27,7 @@ import es.MiHipotecaApp.TFG.SimularHipoteca.MostrarOfertas;
 import es.MiHipotecaApp.TFG.SimularHipoteca.RecyclerAdapter;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 
-public class TusOfertas extends AppCompatActivity {
+public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.actualizarInter {
     private RecyclerView rvLista;
     private RecyclerAdapter adapter;
     private List<Oferta> ofertasFija = new ArrayList<>();
@@ -45,7 +46,7 @@ public class TusOfertas extends AppCompatActivity {
         cargarOfertas();
         LinearLayoutManager manager = new LinearLayoutManager(TusOfertas.this);
         rvLista.setLayoutManager(manager);
-        adapter = new RecyclerAdapter(ofertasFija,"fija");
+        adapter = new RecyclerAdapter(ofertasFija,"fija",this);
         rvLista.setAdapter(adapter);
     }
     private void cargarOfertas() {
@@ -93,5 +94,15 @@ public class TusOfertas extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void actualizar() {
+      /**  ofertasFija = new ArrayList<>();
+        ofertasVarMix = new ArrayList<>();
+        cargarOfertas();
+        adapter.notifyDataSetChanged();**/
+        Intent intent = new Intent(this, TusOfertas.class);
+        startActivity(intent);
     }
 }

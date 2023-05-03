@@ -16,6 +16,7 @@ public class Oferta {
     private String tin_resto;
     private String vinculaciones;
     private String nombre ;
+    private boolean guardada;
 
 
 
@@ -25,6 +26,7 @@ public class Oferta {
         this.tin = tin;
         this.tae = tae;
         this.cuota = cuota;
+        this.guardada = false;
     }
     public Oferta(String banco, String desc, String tin_x, String tin_resto, String tae, String cuota_x,String cuota_resto) {
         this.banco = banco;
@@ -34,6 +36,7 @@ public class Oferta {
         this.tae = tae;
         this.cuota_x = cuota_x;
         this.cuota_resto = cuota_resto;
+        this.guardada = false;
     }
     public Oferta(String banco, String desc, String tin, String tae, String cuota, String vinculaciones) {
         this.banco = banco;
@@ -42,6 +45,7 @@ public class Oferta {
         this.tae = tae;
         this.cuota = cuota;
         this.vinculaciones = vinculaciones;
+        this.guardada  = false;
     }
     public Oferta(String banco, String desc, String tin_x, String tin_resto, String tae, String cuota_x,String cuota_resto,String vinculaciones) {
         this.banco = banco;
@@ -52,6 +56,7 @@ public class Oferta {
         this.cuota_x = cuota_x;
         this.cuota_resto = cuota_resto;
         this.vinculaciones = vinculaciones;
+        this.guardada = false;
     }
 
     public String getVinculaciones() {
@@ -60,6 +65,14 @@ public class Oferta {
 
     public void setVinculaciones(String vinculaciones) {
         this.vinculaciones = vinculaciones;
+    }
+
+    public boolean isGuardada() {
+        return guardada;
+    }
+
+    public void setGuardada(boolean guardada) {
+        this.guardada = guardada;
     }
 
     public String getNombre() {

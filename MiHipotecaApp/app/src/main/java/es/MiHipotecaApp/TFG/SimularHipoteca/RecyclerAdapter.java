@@ -53,6 +53,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     private FirebaseAuth auth;
     private FirebaseUser user;
     private String tipoBtn;
+    private actualizarInter actualizarInter;
     private FragmentManager fragmentManager;
     private String nombreOferta;
     public RecyclerAdapter(List<Oferta> lista, String tipo, Boolean detalles, FragmentManager fragmentManager) {
@@ -66,13 +67,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         this.fragmentManager = fragmentManager;
 
     }
-    public RecyclerAdapter(List<Oferta> lista,String tipo) {
+    public RecyclerAdapter(List<Oferta> lista,String tipo,actualizarInter actualizarInter2) {
         this.lista = lista;
         this.tipo = tipo;
         tipoBtn = "eliminar";
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        this.actualizarInter = actualizarInter2;
     }
 
     @NonNull
@@ -149,9 +151,13 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerHolder holder, int position) {
-        if(tipoBtn.equals("guardar"))holder.btn_eliminar.setVisibility(View.GONE);
-        else holder.btn_guardar.setVisibility(View.GONE);
         Oferta oferta = lista.get(position);
+
+        if(tipoBtn.equals("guardar")){
+            holder.btn_eliminar.setVisibility(View.GONE);
+            if(oferta.isGuardada())holder.btn_guardar.setVisibility(View.GONE);
+        }
+        else holder.btn_guardar.setVisibility(View.GONE);
         eventoBtn(holder,oferta);
         if(detalles == null){
             if(oferta.getVinculaciones().equals("")){
@@ -253,8 +259,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                             db.collection("ofertas_guardadas").document(documentId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            Log.d("Eliminar", "DocumentSnapshot successfully deleted!");
+                                            Log.d("Eliminar", "Oferta eliminada correctamente");
                                             holder.btn_eliminar.setVisibility(View.GONE);
+                                            actualizarInter.actualizar();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -274,7 +281,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
     public int getItemCount() {
         return lista.size();
     }
-
+    public interface actualizarInter{
+        void actualizar();
+    }
 
 
     public static class RecyclerHolder extends RecyclerView.ViewHolder{

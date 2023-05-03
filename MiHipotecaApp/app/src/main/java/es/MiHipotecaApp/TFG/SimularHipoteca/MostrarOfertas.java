@@ -40,8 +40,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
 import org.json.JSONArray;
@@ -235,7 +238,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         //10.0.2.2
         //147.96.81.245
         String ip=context.getString(R.string.ip);
-        String url = ip+ "/pruebaArray";
+
+        String url = "http://10.0.2.2:5000"+ "/pruebaArray";
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 
@@ -405,43 +409,62 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
 
     @Override
     public void pasarNombre(String nombre, RecyclerAdapter.RecyclerHolder holder, Oferta oferta,String tipo) {
-        String uid = user.getUid();
-        Map<String, Object> o = new HashMap<>();
-        o.put("idUser", uid);
-        o.put("banco", oferta.getBanco());
-        o.put("desc", oferta.getDesc());
-        o.put("tae", oferta.getTae());
-        o.put("nombreOferta" , nombre);
-        if(tipo.equals("fija")){
-            o.put("tin", oferta.getTin());
-            o.put("cuota", oferta.getCuota());
-            o.put("tipo","fija");
-        }
-        else{
-            o.put("tipo","varMixta");
-            o.put("tin_x_anios", oferta.getTin_x());
-            o.put("tin_resto", oferta.getTin_resto());
-            o.put("couta_x", oferta.getCuota_x());
-            o.put("cuota_resto", oferta.getCuota_resto());
-        }
-        if(detalles){
-            o.put("vinculaciones", oferta.getVinculaciones());
-        }
-        else o.put("vinculaciones" , "");
-        db.collection("ofertas_guardadas").add(o).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                //Toast.makeText(MostrarOfertas., "Oferta guardada correctamente!", Toast.LENGTH_LONG).show();
-                Log.w("GUARDAR","Exito al guardar");
-                holder.btn_guardar.setVisibility(View.GONE);
-            }
+        CollectionReference ofertasRef = db.collection("ofertas_guardadas");
+        Query query = ofertasRef.whereEqualTo("nombreOferta" , nombre);
+        query.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                QuerySnapshot querySnapshot = task.getResult();
+                if (!querySnapshot.isEmpty()) {
+                    Toast.makeText(this,"El nombre de la oferta ya existe" ,Toast.LENGTH_SHORT).show();
+                    System.out.println("El documento existe");
+                    Log.w("GUARDAR","Documento Existente");
+                } else {
+                    String uid = user.getUid();
+                    Map<String, Object> o = new HashMap<>();
+                    o.put("idUser", uid);
+                    o.put("banco", oferta.getBanco());
+                    o.put("desc", oferta.getDesc());
+                    o.put("tae", oferta.getTae());
+                    o.put("nombreOferta" , nombre);
+                    if(tipo.equals("fija")){
+                        o.put("tin", oferta.getTin());
+                        o.put("cuota", oferta.getCuota());
+                        o.put("tipo","fija");
+                    }
+                    else{
+                        o.put("tipo","varMixta");
+                        o.put("tin_x_anios", oferta.getTin_x());
+                        o.put("tin_resto", oferta.getTin_resto());
+                        o.put("couta_x", oferta.getCuota_x());
+                        o.put("cuota_resto", oferta.getCuota_resto());
+                    }
+                    if(detalles){
+                        o.put("vinculaciones", oferta.getVinculaciones());
+                    }
+                    else o.put("vinculaciones" , "");
+                    db.collection("ofertas_guardadas").add(o).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            //Toast.makeText(MostrarOfertas., "Oferta guardada correctamente!", Toast.LENGTH_LONG).show();
+                            Log.w("GUARDAR","Exito al guardar");
+                            oferta.setGuardada(true);
+                            holder.btn_guardar.setVisibility(View.GONE);
+                        }
 
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.w("GUARDAR","Error al guardar oferta en Firestore: ");
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.w("GUARDAR","Error al guardar oferta en Firestore: ");
+                        }
+                    });
+                }
+            } else {
+                // Ha ocurrido un error al intentar acceder a la colección
+                System.out.println("Error al acceder a la colección: " + task.getException());
             }
         });
+
+
     }
 }
 
