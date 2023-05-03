@@ -17,6 +17,10 @@
         android:theme="@style/Theme.MiHipotecaApp"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
+
+        <activity
+            android:name=".UsuarioRegistrado.BlogActivity"
+            android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.TusOfertas"
             android:exported="false" />

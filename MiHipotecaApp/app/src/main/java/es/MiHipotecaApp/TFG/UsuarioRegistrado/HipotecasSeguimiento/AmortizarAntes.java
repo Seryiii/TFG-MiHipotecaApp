@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -18,6 +19,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,6 +103,13 @@ public class AmortizarAntes extends AppCompatActivity {
     private double cantidad_amortizada;
     int meses_reducidos;
 
+    private LinearLayout layout_cuota_amort_antes;
+    private EditText edit_cuota_amort_anterior;
+    private Switch switch_amortizaciones;
+    private TextView mes_anio_cuota_amort;
+    private LinearLayout info_amort_anticipada;
+    private TextView txt_amortizacion_actual;
+    private TextView txt_amortizacion_pasada;
     DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
     private final String TAG = "AmortizarAntes";
 
@@ -161,11 +170,13 @@ public class AmortizarAntes extends AppCompatActivity {
         cuota_plazo_nueva_tv = findViewById(R.id.tv_cuota_plazo_nueva);
         amortizar_antes = findViewById(R.id.btn_realizar_amortizacion_anticipada);
         close_icon = findViewById(R.id.close_icon_amort_ant);
-
-        //Para poder registrar una amortizacion anticipada pasada debes llevar al menos una cuota pagada
-        if(hip.getNumeroCuotaActual(amortizaciones_hip) < 1){
-            //Para activar on / off
-        }
+        layout_cuota_amort_antes = findViewById(R.id.layout_cuota_amort_antes);
+        edit_cuota_amort_anterior = findViewById(R.id.edit_cuota_amort_anterior);
+        switch_amortizaciones = findViewById(R.id.switch_amortizaciones);
+        mes_anio_cuota_amort = findViewById(R.id.mes_anio_cuota_amort);
+        info_amort_anticipada = findViewById(R.id.info_amort_anticipada);
+        txt_amortizacion_actual = findViewById(R.id.txt_amortizacion_actual);
+        txt_amortizacion_pasada = findViewById(R.id.txt_amortizacion_pasada);
 
     }
 
@@ -464,7 +475,36 @@ public class AmortizarAntes extends AppCompatActivity {
             }
         });
 
+        switch_amortizaciones.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Para poder registrar una amortizacion anticipada pasada debes llevar al menos una cuota pagada
+                if(hip.getNumeroCuotaActual(amortizaciones_hip) < 1){
+                    //Para activar on / off
+                }
+            }
+        });
 
+
+        switch_amortizaciones.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean isChecked) {
+                if(isChecked){
+                    if(hip.getNumeroCuotaActual(amortizaciones_hip) < 1){ //off
+                        switch_amortizaciones.setChecked(false);
+                    } else{ //on
+                        activarCamposAmortAnterior(View.VISIBLE, View.GONE);
+                        txt_amortizacion_pasada.setTypeface(null, Typeface.BOLD);
+                        txt_amortizacion_actual.setTypeface(null, Typeface.NORMAL);
+                    }
+                }else{ //off
+                    activarCamposAmortAnterior(View.GONE, View.VISIBLE);
+                    txt_amortizacion_actual.setTypeface(null, Typeface.BOLD);
+                    txt_amortizacion_pasada.setTypeface(null, Typeface.NORMAL);
+
+                }
+            }
+        });
 
     }
 
@@ -577,5 +617,11 @@ public class AmortizarAntes extends AppCompatActivity {
         i.putExtra("hipoteca", hip);
         startActivity(i);
         finish();
+    }
+
+    public void activarCamposAmortAnterior(int visibility, int invisibility){
+        layout_cuota_amort_antes.setVisibility(visibility);
+        mes_anio_cuota_amort.setVisibility(visibility);
+        info_amort_anticipada.setVisibility(invisibility);
     }
 }
