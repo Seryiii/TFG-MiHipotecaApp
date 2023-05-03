@@ -26,8 +26,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="50dp"
-            android:layout_marginEnd="50dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
             android:text="Amortización anticipada de:"
@@ -82,7 +80,7 @@
 
             <CheckBox
                 android:id="@+id/check_amort_total"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
@@ -91,9 +89,9 @@
 
             <CheckBox
                 android:id="@+id/check_amort_parcial"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
                 android:layout_weight="1"
                 android:checked="false"
                 android:text="Amortización Parcial" />

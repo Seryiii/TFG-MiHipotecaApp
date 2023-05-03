@@ -353,15 +353,35 @@ public class NuevoSeguimiento extends AppCompatActivity {
 
     }
 
-    private void showDatePickerDialog() {
+    /*private void showDatePickerDialog() {
         DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
-            // +1 because January is zero
+            // +1 porque enero es cero
             final String selectedDate =  twoDigits(day) + "/" + twoDigits(month+1) + "/" + fourDigits(year);
             inicio_hipoteca.setText(selectedDate);
         });
 
         newFragment.show(getSupportFragmentManager(), "datePicker");
+    }*/
+
+    private void showDatePickerDialog() {
+        DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
+            // +1 porque enero es cero
+            final int MIN_YEAR = 1999;
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.YEAR, MIN_YEAR);
+            Date minDate = calendar.getTime();
+            calendar.set(Calendar.YEAR, year);
+            Date selectedDate = new Date(calendar.getTimeInMillis());
+
+            if (selectedDate.after(minDate)) {
+                final String formattedDate =  twoDigits(day) + "/" + twoDigits(month+1) + "/" + fourDigits(year);
+                inicio_hipoteca.setText(formattedDate);
+            } else Toast.makeText(this, "El año seleccionado debe ser mayor o igual a " + MIN_YEAR, Toast.LENGTH_SHORT).show();
+        });
+
+        newFragment.show(getSupportFragmentManager(), "datePicker");
     }
+
 
     private String twoDigits(int n) {
         return (n<=9) ? ("0"+n) : String.valueOf(n);

@@ -20,30 +20,39 @@
 
         <activity
             android:name=".UsuarioRegistrado.BlogActivity"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.TusOfertas"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.PoliticaPrivacidad"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.AcercaDe"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".SimularHipoteca.MostrarOfertas"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.AmortizarAntes"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_intereses_capital"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.Graficos.grafico_gastos_totales"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.custom_dialog_anios"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.Cuadro_amortizacion"
@@ -53,42 +62,54 @@
             android:exported="false" />
         <activity
             android:name=".SimularHipoteca.CompararNuevaHipoteca"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".PaginaPrincipal"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".RecuperarContra"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.PasarPremium"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".SimularHipoteca.Filtros"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.InformarDeUnProblema"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.HipotecasSeguimiento.EditarHipotecaSeguimiento"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.ModificarDatosUsuario"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".UsuarioRegistrado.InformacionUsuario.InfoPerfilUsuario"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".Registro"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".IniciarSesion"
+            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

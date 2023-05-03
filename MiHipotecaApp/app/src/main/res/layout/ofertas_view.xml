@@ -86,23 +86,16 @@
                         android:textStyle="bold"
                         android:textSize="10sp"
                         android:gravity="center"
-                        android:text="Mas detalles"/>
-                </LinearLayout>
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_weight="1"
-                    >
-                    <Button
-                        android:id="@+id/btnArrow"
-                        android:layout_width="35dp"
-                        android:layout_height="25dp"
-                        android:background="@drawable/more_details_line"
-                        />
+                        android:text="Más detalles"/>
                 </LinearLayout>
 
 
+                <Button
+                    android:id="@+id/btnArrow"
+                    android:layout_width="35dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/more_details_line"
+                    />
 
             </LinearLayout>
 

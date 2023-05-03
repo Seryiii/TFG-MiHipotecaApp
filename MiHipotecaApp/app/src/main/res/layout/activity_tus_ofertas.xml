@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/background_aplicacion"
     tools:context=".UsuarioRegistrado.HipotecasSeguimiento.TusOfertas">
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,8 +36,8 @@
     </LinearLayout>
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylcer_tusOfertas"
-        android:layout_width="409dp"
-        android:layout_height="729dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp" />
 </LinearLayout>

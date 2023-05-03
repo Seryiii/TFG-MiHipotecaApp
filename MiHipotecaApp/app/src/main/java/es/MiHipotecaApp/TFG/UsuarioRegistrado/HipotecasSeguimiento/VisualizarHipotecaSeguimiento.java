@@ -9,6 +9,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -125,7 +127,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private TextView titulo_seguimiento_hipoteca, txt_tipo_hipoteca_seguimiento, txt_banco_hipoteca, txt_com_autonoma_hipoteca, txt_dinero_falta_pagar, txt_tiempo_restante, txt_cuota_de;
     private LinearLayout layout_info_cuota_hip, layout_btns_graficos;
-
+    private TableLayout tabla_seg_amortizacion;
+    private TextView txt_no_amortizaciones;
     private String[] comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
@@ -198,8 +201,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         txt_cuota_de                         = findViewById(R.id.txt_cuota_de);
         layout_info_cuota_hip                = findViewById(R.id.layout_info_cuota_hip);
         layout_btns_graficos                 = findViewById(R.id.layout_btns_graficos);
-
-
+        tabla_seg_amortizacion               = findViewById(R.id.tabla_seg_amortizacion);
+        txt_no_amortizaciones                = findViewById(R.id.txt_no_amortizaciones);
     }
 
     private void cogerAmortizaciones(){
@@ -230,6 +233,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                             cogerEuribors();
                         }else{
                             rellenarUI();
+                            rellenarTablaAmortizaciones();
                             eventos();
                             construirGraficoAportadoVsAFinanciar();
                         }
@@ -281,6 +285,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                             DocumentSnapshot documentSnapshot = queryDocumentSnapshots.getDocuments().get(0);
                             euribors.add(documentSnapshot.getDouble("valor"));
                             rellenarUI();
+                            rellenarTablaAmortizaciones();
                             eventos();
                             construirGraficoAportadoVsAFinanciar();
                         }
@@ -842,6 +847,44 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         txt_cuota_de.setVisibility(visibility);
         layout_info_cuota_hip.setVisibility(visibility);
         layout_btns_graficos.setVisibility(visibility);
+    }
+
+    public void rellenarTablaAmortizaciones(){
+
+        if(amortizaciones_anticipadas.size() > 0){
+            txt_no_amortizaciones.setVisibility(View.GONE);
+            tabla_seg_amortizacion.setVisibility(View.VISIBLE);
+        }
+
+        for (Map.Entry<Integer, List<Object>> amortizacion : amortizaciones_anticipadas.entrySet()) {
+
+            // Crear una nueva fila y agregarla al TableLayout
+            TableRow tableRow = new TableRow(this);
+            tabla_seg_amortizacion.addView(tableRow);
+
+            TextView numCuota = new TextView(this);
+            numCuota.setText(Integer.toString(amortizacion.getKey()));
+            numCuota.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(numCuota);
+
+            TextView tipo = new TextView(this);
+            tipo.setText(amortizacion.getValue().get(0).toString());
+            tipo.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(tipo);
+
+            TextView capital = new TextView(this);
+            capital.setText(amortizacion.getValue().get(1).toString());
+            capital.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(capital);
+
+            TextView mesesReducidos = new TextView(this);
+            if(amortizacion.getValue().get(0).toString().equals("parcial_plazo")) mesesReducidos.setText(amortizacion.getValue().get(2).toString());
+            else mesesReducidos.setText("--");
+            mesesReducidos.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(mesesReducidos);
+
+        }
+
     }
 }
 

@@ -23,7 +23,6 @@
                 android:layout_weight="15"
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
-                android:layout_marginStart="35dp"
                 android:text="Cuadro de amortización"
                 android:textSize="40sp" />
 
