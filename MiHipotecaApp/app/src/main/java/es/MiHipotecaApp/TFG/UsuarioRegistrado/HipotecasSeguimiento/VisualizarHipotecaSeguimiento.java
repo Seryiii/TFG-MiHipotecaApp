@@ -42,6 +42,7 @@ import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -128,11 +129,16 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private String[] comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
+    private DecimalFormat formato;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_visualizar_hipoteca_seguimiento);
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.');
+        formato = new DecimalFormat("#.##", simbolos);
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
@@ -192,6 +198,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         txt_cuota_de                         = findViewById(R.id.txt_cuota_de);
         layout_info_cuota_hip                = findViewById(R.id.layout_info_cuota_hip);
         layout_btns_graficos                 = findViewById(R.id.layout_btns_graficos);
+
+
     }
 
     private void cogerAmortizaciones(){
@@ -391,7 +399,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             }
         }
 
-        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+
         String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas, euribors))  + "€"; // Formatear el número
         dinero_restante_a_pagar.setText(numeroFormateado);
         nombre_hipoteca.setText(hip.getNombre());
@@ -644,7 +652,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
 
     public void construirGraficoAportadoVsAFinanciar(){
-        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+
 
         titulo_grafico.setText("Aportado vs a financiar");
         double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);

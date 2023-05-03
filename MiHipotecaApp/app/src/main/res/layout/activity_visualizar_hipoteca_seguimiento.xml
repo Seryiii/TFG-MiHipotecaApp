@@ -133,6 +133,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:fontFamily="@font/allerta"
+                android:layout_weight="1"
                 android:text="Comunidad Autónoma:"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
@@ -145,8 +146,8 @@
                 android:id="@+id/comunidad_autonoma_seg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:fontFamily="@font/allerta"
-                android:layout_marginStart="10dp"
                 android:text="Madrid"
                 android:textColor="@color/black"
                 android:textSize="18sp"
@@ -265,8 +266,7 @@
                 android:layout_height="60dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_bordes_redondos"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginHorizontal="5dp"
                 android:text="@string/txt_btn_cuadro_amortizacion"
                 android:visibility="invisible"/>
 
@@ -275,8 +275,7 @@
                 android:layout_width="0dp"
                 android:layout_height="60dp"
                 android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:layout_marginEnd="10dp"
+                android:layout_marginHorizontal="5dp"
                 android:background="@drawable/btn_bordes_redondos"
                 android:text="@string/txt_btn_amortizar_antes"
                 android:visibility="invisible"/>

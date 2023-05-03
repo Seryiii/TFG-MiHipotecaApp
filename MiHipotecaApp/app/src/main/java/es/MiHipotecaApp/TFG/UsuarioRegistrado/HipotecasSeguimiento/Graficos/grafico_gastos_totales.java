@@ -21,6 +21,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +39,16 @@ public class grafico_gastos_totales extends AppCompatActivity {
     private HipotecaSeguimiento hip;
     private CircleImageView closeIcon;
 
+    private DecimalFormat formato;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grafico_gastos_totales);
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.');
+        formato = new DecimalFormat("#.##", simbolos);
         initUI();
         construirGraficoGastosTotales();
         eventos();
@@ -58,7 +65,6 @@ public class grafico_gastos_totales extends AppCompatActivity {
 
 
     public void construirGraficoGastosTotales(){
-        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
 
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();

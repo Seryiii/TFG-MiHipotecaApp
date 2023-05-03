@@ -32,7 +32,7 @@
             android:layout_marginEnd="30dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
-            android:text="Editar: hipoteca"
+            android:text="Editar Hipoteca"
             android:textSize="40sp" />
 
         <TextView
@@ -40,6 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
+            android:layout_marginStart="8dp"
             android:textAlignment="center"
             android:text="Comunidad autonoma: Madrid"
             android:textSize="20sp" />
@@ -85,7 +86,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:layout_marginStart="8dp"
-            android:layout_marginBottom="10dp"
             android:text="Precio de la vivienda: 200.000€"
             android:textAlignment="center"
             android:textSize="20sp" />
@@ -409,7 +409,7 @@
                 android:layout_marginTop="8dp"
                 android:background="@drawable/rounded_edit_text"
                 android:fontFamily="@font/allerta"
-                android:inputType="numberDecimal"
+                android:inputType="number"
                 android:hint="Año: 1, 2, 3, ..." />
 
             <EditText

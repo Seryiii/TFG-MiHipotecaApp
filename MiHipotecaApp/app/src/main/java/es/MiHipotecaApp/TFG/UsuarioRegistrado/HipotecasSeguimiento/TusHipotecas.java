@@ -327,6 +327,7 @@ public class TusHipotecas extends Fragment {
                                                             public void onSuccess(Void unused) {
                                                                 // Documentos eliminado correctamente
                                                                 Toast.makeText(getActivity(), getString(R.string.hipoteca_seguimiento_borrada_exito), Toast.LENGTH_LONG).show();
+                                                                getActivity().finish();
                                                                 Intent i = new Intent(getActivity(), PaginaPrincipal.class);
                                                                 startActivity(i);
                                                             }

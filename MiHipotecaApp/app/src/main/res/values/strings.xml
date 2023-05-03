@@ -42,7 +42,7 @@
     <string name="label_pol_privacidad">Pol. de privacidad</string>
     <string name="label_eliminar_usuario">Eliminar cuenta</string>
     <string name="label_modificar_perfil">Modificar Perfil</string>
-    <string name="label_nuevo_seguimiento">Nuevo seguimiento</string>
+    <string name="label_nuevo_seguimiento">Nuevo \n seguimiento</string>
     <string name="label_combobox_comunidad">¿En que comunidad autónoma se encuentra?</string>
     <string name="label_tipo_vivienda">¿Vivienda de régimen general o de protección oficial?</string>
     <string name="label_antiguedad_vivienda">¿Vivienda nueva o de segunda mano?</string>

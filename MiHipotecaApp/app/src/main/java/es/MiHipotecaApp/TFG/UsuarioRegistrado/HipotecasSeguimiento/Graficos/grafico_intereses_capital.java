@@ -15,6 +15,7 @@ import com.anychart.charts.Cartesian;
 import com.anychart.enums.LegendLayout;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -37,11 +38,16 @@ public class grafico_intereses_capital extends AppCompatActivity {
     private HashMap<Integer, List<Object>> amortizaciones_hip;
 
     private List<Double> euribors;
+    private DecimalFormat formato;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grafico_intereses_capital);
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.');
+        formato = new DecimalFormat("#.##", simbolos);
         initUI();
         construirGraficoLineas();
         eventos();
@@ -58,7 +64,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
     }
 
     public void construirGraficoLineas(){
-        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+
 
         List<DataEntry> capitalAnual = new ArrayList<>();
         List<DataEntry> interesesAnuales = new ArrayList<>();

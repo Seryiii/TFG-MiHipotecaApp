@@ -43,6 +43,7 @@ import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -103,7 +104,7 @@ public class AmortizarAntes extends AppCompatActivity {
     private double cantidad_amortizada;
     int meses_reducidos;
 
-    DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+    DecimalFormat formato; // Establecer el formato a dos decimales
     private final String TAG = "AmortizarAntes";
 
 
@@ -112,6 +113,10 @@ public class AmortizarAntes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amortizar_antes);
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.');
+        formato = new DecimalFormat("#.##", simbolos);
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");

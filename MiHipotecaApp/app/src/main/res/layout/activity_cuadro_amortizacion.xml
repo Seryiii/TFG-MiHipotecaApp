@@ -80,24 +80,14 @@
                 </LinearLayout>
 
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="AÑO"
-                    android:textStyle="bold"
-                    android:layout_marginLeft="15dp"
-                    android:layout_weight="1"
-                    android:textAlignment="center"
-                    android:textSize="20dp"/>
 
                 <TextView
                     android:id="@+id/year_of_calendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="XXXX"
+                    android:text="Año XXXX"
                     android:textStyle="bold"
                     android:layout_marginLeft="3dp"
-                    android:layout_marginRight="15dp"
                     android:layout_weight="1"
                     android:textAlignment="center"
                     android:textSize="20dp"/>

@@ -264,6 +264,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
                     check_mixta.setChecked(false);
                     check_variable.setChecked(false);
                     ActivarCampos("fija");
+                    check_parte_fija_variable.setChecked(false);
                 }
                 if(!check_variable.isChecked() && !check_mixta.isChecked()) {
                     check_fija.setChecked(true);
@@ -292,6 +293,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
                     check_variable.setChecked(false);
                     check_fija.setChecked(false);
                     ActivarCampos("mixto");
+                    check_parte_fija_variable.setChecked(false);
                 }
                 if(!check_fija.isChecked() && !check_variable.isChecked()) {
                     check_mixta.setChecked(true);
@@ -381,6 +383,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
                 ModificarCamposVariable(View.GONE);
                 ModificarCamposMixta(View.GONE);
                 ModificarCamposMixtaVariable(View.GONE);
+
 
             break;
             case "variable" :

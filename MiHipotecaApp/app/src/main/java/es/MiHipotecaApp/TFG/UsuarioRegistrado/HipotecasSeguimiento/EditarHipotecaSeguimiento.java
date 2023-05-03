@@ -443,8 +443,23 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
             camposCorrectos = false;
         }
         else {
-            if(camposCorrectos) editarHipoteca();
-            else return;
+            if(camposCorrectos){
+                if(!nombre_hipoteca.getText().toString().equals(hip.getNombre())) {
+                    Query hipotecas_usuario = db.collection("hipotecas_seguimiento").whereEqualTo("idUsuario", auth.getCurrentUser().getUid()).whereEqualTo("nombre", nombre_hipoteca.getText().toString());
+                    //COMPROBACION DE QUE NO INTRODUCE UNA HIPOTECA CON EL MISMO NOMBRE EL MISMO USUARIO
+                    hipotecas_usuario.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                if (!task.getResult().isEmpty() && task.getResult() != null)
+                                    nombre_hipoteca.setError("Una de sus hipotecas ya tiene este nombre");
+                                else editarHipoteca();
+                            } else
+                                Log.d(TAG, "Error en query hipotecas seg por nombre", task.getException());
+                        }
+                    });
+                } else editarHipoteca();
+            }else return;
         }
     }
 
@@ -453,7 +468,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
 
         nuevosDatos.put("nombre", nombre_hipoteca.getText().toString());
 
-        double totalGastos, gastos_vin;
+        double totalGastos;
         if(TextUtils.isEmpty(gastos_totales.getText())) totalGastos = 0;
         else totalGastos = Double.parseDouble(gastos_totales.getText().toString());
         nuevosDatos.put("totalGastos", totalGastos);
@@ -461,6 +476,12 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         List<Double> vinculaciones_hip = hip.getArrayVinculacionesAnual();
         if(!TextUtils.isEmpty(vinculaciones_anio.getText()) && !TextUtils.isEmpty(vinculaciones_valor.getText())) {
             vinculaciones_hip.set(Integer.parseInt(vinculaciones_anio.getText().toString()) - 1, Double.parseDouble(vinculaciones_valor.getText().toString()));
+        } else if(TextUtils.isEmpty(vinculaciones_anio.getText())) {
+            vinculaciones_anio.setError("Debes de incluir un año");
+            return;
+        } else {
+            vinculaciones_valor.setError("Debes de incluir un año");
+            return;
         }
         nuevosDatos.put("arrayVinculacionesAnual", vinculaciones_hip);
 
@@ -506,9 +527,13 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         // actualizar el documento con los nuevos valores
                         hipotecasRef.document(document.getId()).update(nuevosDatos);
-                        Toast.makeText(EditarHipotecaSeguimiento.this, getString(R.string.hipoteca_seguimiento_editada_exito), Toast.LENGTH_LONG).show();
-                        Intent i = new Intent(EditarHipotecaSeguimiento.this, PaginaPrincipal.class);
-                        startActivity(i);
+                        if(!nombre_hipoteca.getText().toString().equals(hip.getNombre())) cambiarNombreEnAmortizaciones();
+                        else {
+                            Toast.makeText(EditarHipotecaSeguimiento.this, getString(R.string.hipoteca_seguimiento_editada_exito), Toast.LENGTH_LONG).show();
+                            Intent i = new Intent(EditarHipotecaSeguimiento.this, PaginaPrincipal.class);
+                            startActivity(i);
+                        }
+
                     }
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());
@@ -517,11 +542,49 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         });
     }
 
+    private void cambiarNombreEnAmortizaciones(){
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        Query amortizaciones_doc = db.collection("amortizaciones_anticipadas").whereEqualTo("idUsuario", FirebaseAuth.getInstance().getCurrentUser().getUid()).whereEqualTo("nombre_hipoteca", hip.getNombre());
+
+        amortizaciones_doc.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            db.collection("amortizaciones_anticipadas").document(document.getId())
+                                    .update("nombre_hipoteca", nombre_hipoteca.getText().toString())
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Toast.makeText(EditarHipotecaSeguimiento.this, getString(R.string.hipoteca_seguimiento_editada_exito), Toast.LENGTH_LONG).show();
+                                            Intent i = new Intent(EditarHipotecaSeguimiento.this, PaginaPrincipal.class);
+                                            startActivity(i);
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w(TAG, "Error updating document", e);
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error getting documents.", e);
+                    }
+                });
+    }
+
     public void rellenarCampos(){
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
 
+        txt_edit_hipoteca.setText("Editar " + hip.getNombre());
         int i = 0;
         while(i < comunidades_base_datos.length){
             if(hip.getComunidad_autonoma().equals(comunidades_base_datos[i])) break;

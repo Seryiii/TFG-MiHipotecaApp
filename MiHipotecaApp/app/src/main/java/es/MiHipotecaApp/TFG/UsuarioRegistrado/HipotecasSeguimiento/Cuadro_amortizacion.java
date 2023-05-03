@@ -24,6 +24,7 @@ import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.BalloonSizeSpec;
 
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -60,6 +61,8 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     private ImageButton btn_info_cuadro_mensual;
     private ImageButton btn_info_cuadro_anual;
 
+    private DecimalFormat formato;
+
 
 
 
@@ -67,6 +70,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cuadro_amortizacion);
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.');
+        formato = new DecimalFormat("#.##", simbolos);
         closeIcon = findViewById(R.id.close_icon_cuadro);
 
         meses = new String[]{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
@@ -111,7 +118,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         calendar.setTime(hip.getFecha_inicio());
         /** Da valor al TextView del año mostrado en el calendario, si la hipoteca ya ha empezado, muestra el año actual
         si no ha empezado, muestra el primer año de hipoteca **/
-        if(calendar.get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR)) year_of_calendar.setText(Integer.toString(calendar.get(Calendar.YEAR)));
+        if(calendar.get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR)) year_of_calendar.setText("AÑO "+Integer.toString(calendar.get(Calendar.YEAR)));
         else year_of_calendar.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
 
 
@@ -127,7 +134,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
         // ADAPTARLO A QUE PARE CUANDO CAP PENDIENTE SEA 0
 
-        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+
 
         //Obtiene el numero de cuota de enero del año mostrado en el textView
         int numCuotaEnero = hip.getNumeroCuotaEnEnero(anio);
@@ -202,7 +209,7 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
 
     public void actualizarTablaAnios(){
         if(primeraColumna2 != null) tabla_cuadro_amortizacion_anual.addView(primeraColumna2);
-        DecimalFormat formato = new DecimalFormat("#.##"); // Establecer el formato a dos decimales
+
 
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(hip.getFecha_inicio());
