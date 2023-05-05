@@ -20,9 +20,9 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar **/
     @Override
     public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
-
         int cuotasRestantes = getPlazoActual(amortizaciones) - numPago;
         double capPendiente = getCapitalPendienteTotalActual(numPago, amortizaciones, euribors);
+
         return getCuotaMensual(porcentaje_fijo, capPendiente, getPlazoActual(amortizaciones)) * cuotasRestantes;
     }
 

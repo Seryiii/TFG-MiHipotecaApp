@@ -1,5 +1,7 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -129,6 +131,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private LinearLayout layout_info_cuota_hip, layout_btns_graficos;
     private TableLayout tabla_seg_amortizacion;
     private TextView txt_no_amortizaciones;
+    private ImageView btn_borrar_amort;
     private String[] comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
@@ -203,6 +206,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         layout_btns_graficos                 = findViewById(R.id.layout_btns_graficos);
         tabla_seg_amortizacion               = findViewById(R.id.tabla_seg_amortizacion);
         txt_no_amortizaciones                = findViewById(R.id.txt_no_amortizaciones);
+        btn_borrar_amort                     = findViewById(R.id.btn_borrar_amort);
     }
 
     private void cogerAmortizaciones(){
@@ -389,11 +393,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private void rellenarUI(){
 
-        // Establecer el formato a dos decimales
-        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.');
-        DecimalFormat formatoEuribor = new DecimalFormat("#.###", simbolos);
-
         numero_cuotas_pagadas = hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         info_cuota.setVisibility(View.GONE);
         if (numero_cuotas_pagadas >= hip.getPlazoActual(amortizaciones_anticipadas)) layout_porcentaje_aplicado.setVisibility(View.GONE);
@@ -404,13 +403,13 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 if(numero_cuotas_pagadas + 1 <= hip.getDuracion_primer_porcentaje_variable()) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
                 else{
                     if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0% :  Euribor + diferencial negativo");
-                    else porcentaje_aplicado_valor.setText(formatoEuribor.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_variable()) + "% + " + hip.getPorcentaje_diferencial_variable() + "%");
+                    else porcentaje_aplicado_valor.setText(formato.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_variable()) + "% + " + hip.getPorcentaje_diferencial_variable() + "%");
                 }
             }else{
                 if(numero_cuotas_pagadas + 1 <= hip.getAnios_fija_mixta() * 12) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
                 else {
                     if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0% :  Euribor + diferencial negativo");
-                    else porcentaje_aplicado_valor.setText(formatoEuribor.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_mixta()) + "% + " + hip.getPorcentaje_diferencial_mixta() + "%");
+                    else porcentaje_aplicado_valor.setText(formato.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_mixta()) + "% + " + hip.getPorcentaje_diferencial_mixta() + "%");
                 }
             }
         }
@@ -666,6 +665,27 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                 }
             }
         });
+
+        btn_borrar_amort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog dialogo = new AlertDialog.Builder(VisualizarHipotecaSeguimiento.this)
+                        .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                eliminarUltimaAmortizacion();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setTitle("ELIMINAR ÚLTIMA AMORTIZACIÓN ANTICIPADA").setMessage("¿Desea eliminar la última amortización anticipada?").create();
+                dialogo.show();
+            }
+        });
      }
 
 
@@ -897,6 +917,46 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             tableRow.addView(mesesReducidos);
 
         }
+
+    }
+
+    public void eliminarUltimaAmortizacion(){
+        amortizaciones_anticipadas.remove(numero_cuotas_pagadas + 1);
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference amortizacionesRef = db.collection("amortizaciones_anticipadas");
+        Query query_amort = amortizacionesRef.whereEqualTo("idUsuario", FirebaseAuth.getInstance().getCurrentUser().getUid()).whereEqualTo("nombre_hipoteca", hip.getNombre());
+        query_amort.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (!querySnapshot.isEmpty()) {
+                        DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
+                        Map<String, Object> nuevasAmortizaciones = new HashMap<>();
+
+                        for (Map.Entry<Integer, List<Object>> entry : amortizaciones_anticipadas.entrySet()) {
+                            String key = entry.getKey().toString();
+                            List<Object> value = entry.getValue();
+                            nuevasAmortizaciones.put(key, value);
+                        }
+                        documentSnapshot.getReference().update("amortizaciones_anticipadas", nuevasAmortizaciones).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void unused) {
+                                Toast.makeText(VisualizarHipotecaSeguimiento.this, "La amortización anticipada ha sido eliminada con éxito", Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.e("ERROR", " al eliminar la ultima amortizacion", e);
+                            }
+                        });
+
+                    }
+                }
+            }
+        });
 
     }
 }

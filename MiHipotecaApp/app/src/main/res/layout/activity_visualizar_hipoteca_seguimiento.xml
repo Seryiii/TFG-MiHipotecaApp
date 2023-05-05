@@ -393,28 +393,39 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_marginHorizontal="3dp"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
                 android:visibility="gone">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="2"
                     android:fontFamily="@font/allerta"
                     android:textColor="@color/black"
                     android:gravity="center"
                     android:text="Amort Anticipada: "
-                    android:textSize="22sp" />
+                    android:textSize="16sp" />
 
                 <TextView
                     android:id="@+id/amortizacion_anticipada_valor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="4"
                     android:text="0€"
                     android:fontFamily="@font/allerta"
                     android:textColor="@color/black"
                     android:gravity="center"
-                    android:textSize="22sp" />
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:id="@+id/btn_borrar_amort"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:layout_marginStart="5dp"
+                    android:background="@null"
+                    android:src="@drawable/basura" />
 
             </LinearLayout>
 
@@ -529,7 +540,8 @@
                     android:fontFamily="@font/allerta"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
-                    android:layout_marginEnd="10dp"                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"
+                    android:textColor="@color/black"
                     android:text="Gastos Totales"/>
             </LinearLayout>
 
@@ -555,6 +567,7 @@
                     android:fontFamily="@font/allerta"
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
+                    android:textAlignment="center"
                     android:layout_marginEnd="10dp"                    android:textColor="@color/black"
                     android:text="Intereses vs Amortizado"/>
             </LinearLayout>
