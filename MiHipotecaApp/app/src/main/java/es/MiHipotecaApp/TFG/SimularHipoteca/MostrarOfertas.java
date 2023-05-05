@@ -330,13 +330,13 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                     }
 
                 }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Intent intent = new Intent(MostrarOfertas.this, CompararNuevaHipoteca.class);
-                startActivity(intent);
-                Toast.makeText(MostrarOfertas.this,"Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
-                Log.d("PETICIONES", error.toString());
-            }
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Intent intent = new Intent(MostrarOfertas.this, CompararNuevaHipoteca.class);
+                        startActivity(intent);
+                        Toast.makeText(MostrarOfertas.this,"Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
+                        Log.d("PETICIONES", error.toString());
+                    }
         }
         );
         request.setRetryPolicy(new DefaultRetryPolicy(
