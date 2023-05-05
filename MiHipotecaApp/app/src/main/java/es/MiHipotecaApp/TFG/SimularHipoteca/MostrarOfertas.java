@@ -82,6 +82,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     private Handler handler = new Handler();
     private TextView textView;
     private int currentIndex = 0;
+    String URL_final;
     private String[] options = {"Obteniendo las mejores ofertas personalizadas", "Comparando con millones de posibilidades", "Esto podria llevar unos segundos..."};
 
 
@@ -99,6 +100,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
+        URL_final = getIntent().getStringExtra("url");
+
         initValues();
         eventos();
     }
@@ -238,8 +241,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         //10.0.2.2
         //147.96.81.245
         String ip=context.getString(R.string.ip);
-
-        String url = "http://10.0.2.2:5000"+ "/pruebaArray";
+        Log.d("URL", URL_final);
+        String url =ip+"/pruebaArray";
         ProgressBar progressBar = findViewById(R.id.progressBar);
         progressBar.setVisibility(View.VISIBLE);
 

@@ -17,6 +17,9 @@ import android.widget.Switch;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 
@@ -153,7 +156,32 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
                 datos.put("plazo_anios", plazo.getText().toString());
                 datos.put("ingresos", ingresos.getText().toString());
                 datos.put("detalles", detalles);
+
+                String comunidadAutonoma = URLEncoder.encode(comunidadComp.getSelectedItem().toString(), "UTF-8");
+                String tipoVivienda = URLEncoder.encode(datos.getString("tipo_vivienda"), "UTF-8");
+                String antiguedadVivienda = URLEncoder.encode(datos.getString("antiguedad_vivienda"), "UTF-8");
+                String precioVivienda = URLEncoder.encode(datos.getString("precio_vivienda"), "UTF-8");
+                String cantidadAbonada = URLEncoder.encode(datos.getString("cantidad_abonada"), "UTF-8");
+                String plazoAnios = URLEncoder.encode(plazo.getText().toString(), "UTF-8");
+                String ingresos = URLEncoder.encode(datos.getString("ingresos"), "UTF-8");
+                String detalles = URLEncoder.encode(datos.getString("detalles"), "UTF-8");
+
+                // Construir la URL con los datos
+                StringBuilder urlBuilder = new StringBuilder();
+                urlBuilder.append("http://147.96.81.245:5000/pruebaArray");
+                urlBuilder.append("?comunidad_autonoma=").append(comunidadAutonoma);
+                urlBuilder.append("&tipo_vivienda=").append(tipoVivienda);
+                urlBuilder.append("&antiguedad_vivienda=").append(antiguedadVivienda);
+                urlBuilder.append("&precio_vivienda=").append(precioVivienda);
+                urlBuilder.append("&cantidad_abonada=").append(cantidadAbonada);
+                urlBuilder.append("&plazo_anios=").append(plazoAnios);
+                urlBuilder.append("&ingresos=").append(ingresos);
+                urlBuilder.append("&detalles=").append(detalles);
+                String url = urlBuilder.toString();
+                intent.putExtra("url", url);
             } catch (JSONException e) {
+                throw new RuntimeException(e);
+            } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }
             String jsonStr = datos.toString();
