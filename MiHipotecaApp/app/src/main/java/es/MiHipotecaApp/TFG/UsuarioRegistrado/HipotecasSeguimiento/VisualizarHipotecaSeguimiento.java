@@ -697,7 +697,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         double capitalAmortizado = (hip.getPrecio_vivienda() - hip.getCantidad_abonada()) - capitalPendiente;
 
 
-        // SERIA HASTA PLAZO ACTUAL? TODO
         double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazoActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         double interesesPendientes = interesesTotales - interesesPagados;

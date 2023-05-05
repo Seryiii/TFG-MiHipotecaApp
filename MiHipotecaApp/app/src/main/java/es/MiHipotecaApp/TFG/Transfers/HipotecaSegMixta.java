@@ -208,19 +208,6 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         return valores;
     }
 
-    /** Esta funcion devuelve el capital del numero de cuota pasado **/
-
-    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
-        double porcentaje_aplicado = getPorcentajePorCuota(numCuota, amortizaciones, euribors);
-        double capPdte = numCuota == 1 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
-
-        double cuota   = getCuotaMensual(porcentaje_aplicado, capPdte , plazo_anios * 12  - numCuota + 1);
-        double capitalCuota = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
-
-        return capitalCuota;
-    }
-
-    //TODO esta funcion
     @Override
     public double cogerCuotaActual(int num_cuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
 
@@ -240,8 +227,6 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
                     else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
                         capital_pendiente -= (Double) amortizaciones.get(i).get(1);
                         cuota = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, getPlazoNumPago(i, amortizaciones)  - i + 1);
-                        //TODO CREO QUE LO DE ARRIBA ESTARIA BIEN y LA DE ABAJO ES LO QUE TENIAMOS ANTES (REVISAR LINEA DE ARRIBA POR SI PONER getPlazoNumPago o getPlazoActual )
-                        //cuota = getCuotaMensual(porcentaje_fijo_mixta, capital_pendiente, (plazo_anios * 12) - i + 1);
                     }
                     // Si hay reducción de plazo da igual porque la cuota es la misma
                 }
@@ -270,8 +255,6 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
                         porcentaje_aplicado = getEuriborPasado(i, euribors) + porcentaje_diferencial_mixta;
                         if(porcentaje_aplicado < 0) porcentaje_aplicado = 0;
                         cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, getPlazoNumPago(i, amortizaciones)  - i + 1);
-                        //TODO CREO QUE LO DE ARRIBA ESTARIA BIEN y LA DE ABAJO ES LO QUE TENIAMOS ANTES (REVISAR LINEA DE ARRIBA POR SI PONER getPlazoNumPago o getPlazoActual )
-                        //cuota = getCuotaMensual(porcentaje_aplicado, capital_pendiente, (plazo_anios * 12) - i + 1);
                     }
                     // Si hay reducción de plazo da igual porque la cuota es la misma
                 }

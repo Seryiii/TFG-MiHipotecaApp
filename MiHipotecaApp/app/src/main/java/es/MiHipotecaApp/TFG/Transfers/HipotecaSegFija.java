@@ -134,16 +134,6 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         return cuota;
     }
 
-    /** Esta funcion devuelve el capital del numero de cuota pasado **/
-    @Override
-    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
-
-        double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
-        double cuota        = getCuotaMensual(porcentaje_fijo, capPdte, getPlazoActual(amortizaciones) - numCuota + 1);
-        double capitalCuota = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
-        return capitalCuota;
-    }
-
     /** Esta funcion devuelve el total anual, capital anual, intereses anuales y capital pendiente del numero de anio pasado**/
     @Override
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){

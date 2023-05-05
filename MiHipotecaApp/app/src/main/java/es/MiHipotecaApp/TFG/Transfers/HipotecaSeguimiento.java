@@ -194,17 +194,6 @@ public class HipotecaSeguimiento implements Serializable {
         return numeroPagoActual + 1;
     }
 
-    /** Devuelve la cantidad que el usuario deberá de amortizar en funcion de los meses pasados **/
-    public double getAmortizarAlReducirMeses(int meses_reducir, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
-        double cantAmortizar = 0;
-        int plazoActual = getPlazoActual(amortizaciones);
-        int plazoReducido = plazoActual - meses_reducir;
-
-        for(int i = plazoReducido; i < plazoActual; i++) cantAmortizar += getCapitalDeUnaCuota(i + 1,amortizaciones, euribors);
-
-        return cantAmortizar;
-    }
-
     public int aniosActualesHipoteca(int plazoActual){
         int aniosHipoteca = 0;
         Calendar inicio = Calendar.getInstance();
@@ -229,7 +218,6 @@ public class HipotecaSeguimiento implements Serializable {
     public boolean siguienteCuotaRevision(HashMap<Integer, List<Object>> amortizaciones){ return false; }
 
     public ArrayList<Double> getFilaCuadroAmortizacionMensual(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return null; }
-    public double getCapitalDeUnaCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0;}
     public ArrayList<Double> getFilaCuadroAmortizacionAnual(int anio, int num_anio, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return null; }
 
     public double getPorcentajePorCuota(int numCuota, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){ return 0; }
