@@ -19,7 +19,7 @@ public class AlarmHelper {
         calendar.setTimeInMillis(System.currentTimeMillis());
 
         // Establecer la hora de ejecución de la tarea
-        calendar.set(Calendar.DAY_OF_MONTH, 2);
+        calendar.set(Calendar.DAY_OF_MONTH, 6);
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
