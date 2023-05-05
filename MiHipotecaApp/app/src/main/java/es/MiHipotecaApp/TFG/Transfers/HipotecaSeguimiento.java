@@ -94,6 +94,7 @@ public class HipotecaSeguimiento implements Serializable {
     public double getCuotaMensual(double porcentaje_aplicado, double cantidad_pendiente, int num_cuotas_restantes){
 
         if (num_cuotas_restantes <= 0) return 0;
+        if (porcentaje_aplicado == 0) return cantidad_pendiente / num_cuotas_restantes;
         double aux = Math.pow((1 + (porcentaje_aplicado / 100) / 12), num_cuotas_restantes); //+ cuotasReducidas);
         double cuotaMensual = ((cantidad_pendiente) * ((porcentaje_aplicado / 100) / 12))/(1 -(1 / aux));
         return cuotaMensual;

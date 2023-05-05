@@ -389,6 +389,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private void rellenarUI(){
 
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setDecimalSeparator('.');
+        DecimalFormat formatoEuribor = new DecimalFormat("#.###", simbolos);
+
         numero_cuotas_pagadas = hip.getNumeroCuotaActual(amortizaciones_anticipadas);
         info_cuota.setVisibility(View.GONE);
         if (numero_cuotas_pagadas >= hip.getPlazoActual(amortizaciones_anticipadas)) layout_porcentaje_aplicado.setVisibility(View.GONE);
@@ -397,10 +402,16 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             if(hip.getTipo_hipoteca().equals("fija")) porcentaje_aplicado_valor.setText( porcentaje_aplicado+ "%");
             else if(hip.getTipo_hipoteca().equals("variable")){
                 if(numero_cuotas_pagadas + 1 <= hip.getDuracion_primer_porcentaje_variable()) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
-                else porcentaje_aplicado_valor.setText(porcentaje_aplicado - hip.getPorcentaje_diferencial_variable() + "% + " + hip.getPorcentaje_diferencial_variable() + "%");
+                else{
+                    if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0% :  Euribor + diferencial negativo");
+                    else porcentaje_aplicado_valor.setText(formatoEuribor.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_variable()) + "% + " + hip.getPorcentaje_diferencial_variable() + "%");
+                }
             }else{
                 if(numero_cuotas_pagadas + 1 <= hip.getAnios_fija_mixta() * 12) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
-                else porcentaje_aplicado_valor.setText(porcentaje_aplicado - hip.getPorcentaje_diferencial_mixta() + "% + " + hip.getPorcentaje_diferencial_mixta() + "%");
+                else {
+                    if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0% :  Euribor + diferencial negativo");
+                    else porcentaje_aplicado_valor.setText(formatoEuribor.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_mixta()) + "% + " + hip.getPorcentaje_diferencial_mixta() + "%");
+                }
             }
         }
 
@@ -431,9 +442,11 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         } else if(hip.getTipo_hipoteca().equals("variable")) {
             //Si cumple la condicion, esta aplicando el primer porcentaje fijado, en otro caso el diferencial + euribor
             porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) < hip.getDuracion_primer_porcentaje_variable() ? hip.getPrimer_porcentaje_variable() : hip.getEuriborActual(euribors) + hip.getPorcentaje_diferencial_variable();
+            if (porcentaje_aplicado < 0) porcentaje_aplicado = 0;
         } else {
             //Si cumple la condicion, esta en la fase fija, en otro en la variable
             porcentaje_aplicado  = hip.getNumeroCuotaActual(amortizaciones_anticipadas) <= hip.getAnios_fija_mixta() * 12 ? hip.getPorcentaje_fijo_mixta() : hip.getEuriborActual(euribors) + hip.getPorcentaje_diferencial_mixta();
+            if (porcentaje_aplicado < 0) porcentaje_aplicado = 0;
         }
 
         if (hip.siguienteCuotaRevision(amortizaciones_anticipadas)) info_cuota.setVisibility(View.VISIBLE);
