@@ -25,6 +25,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.SimularHipoteca.MostrarOfertas;
 import es.MiHipotecaApp.TFG.SimularHipoteca.RecyclerAdapter;
@@ -40,6 +41,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
     private FirebaseUser user;
     private Button btn_fijas, btn_varMix;
     private TusOfertas tusOfertas;
+    private CircleImageView closeIcon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
         rvLista = findViewById(R.id.recylcer_tusOfertas);
         btn_fijas = findViewById(R.id.buttonFijas);
         btn_varMix = findViewById(R.id.buttonVariablesMixta);
+        closeIcon = findViewById(R.id.close_icon);
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -79,6 +82,10 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
                 adapter.notifyDataSetChanged();
 
             }
+        });
+        closeIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { finish(); }
         });
     }
 
