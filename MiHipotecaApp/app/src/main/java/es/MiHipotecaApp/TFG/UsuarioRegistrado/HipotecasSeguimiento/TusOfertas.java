@@ -8,6 +8,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,20 +38,50 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
     private FirebaseFirestore db;
     private FirebaseAuth auth;
     private FirebaseUser user;
+    private Button btn_fijas, btn_varMix;
+    private TusOfertas tusOfertas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tus_ofertas);
         rvLista = findViewById(R.id.recylcer_tusOfertas);
+        btn_fijas = findViewById(R.id.buttonFijas);
+        btn_varMix = findViewById(R.id.buttonVariablesMixta);
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
+        tusOfertas = this;
         cargarOfertas();
+        eventos();
         LinearLayoutManager manager = new LinearLayoutManager(TusOfertas.this);
         rvLista.setLayoutManager(manager);
         adapter = new RecyclerAdapter(ofertasFija,"fija",this);
         rvLista.setAdapter(adapter);
     }
+
+    private void eventos() {
+        btn_fijas.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter = new RecyclerAdapter(ofertasFija,"fija",tusOfertas);
+                rvLista.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+
+        btn_varMix.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                adapter = new RecyclerAdapter(ofertasVarMix,"varMix",tusOfertas);
+                rvLista.setAdapter(adapter);
+                adapter.notifyDataSetChanged();
+
+            }
+        });
+    }
+
     private void cargarOfertas() {
         String uid = user.getUid();
         CollectionReference ofertasRef = db.collection("ofertas_guardadas");
@@ -98,10 +131,6 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
 
     @Override
     public void actualizar() {
-      /**  ofertasFija = new ArrayList<>();
-        ofertasVarMix = new ArrayList<>();
-        cargarOfertas();
-        adapter.notifyDataSetChanged();**/
         Intent intent = new Intent(this, TusOfertas.class);
         startActivity(intent);
     }
