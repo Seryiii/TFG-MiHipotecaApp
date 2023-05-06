@@ -20,10 +20,9 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     /** Esta funcion devuelve el capital y los intereses pendientes por pagar **/
     @Override
     public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
-        int cuotasRestantes = getPlazoActual(amortizaciones) - numPago;
-        double capPendiente = getCapitalPendienteTotalActual(numPago, amortizaciones, euribors);
+        int cuotasRestantes = getPlazoNumPago(numPago, amortizaciones) - numPago;
 
-        return getCuotaMensual(porcentaje_fijo, capPendiente, getPlazoActual(amortizaciones)) * cuotasRestantes;
+        return cogerCuotaActual(numPago + 1, amortizaciones, euribors) * cuotasRestantes;
     }
 
     /** Esta funcion devuelve el capital pendiente total por amortizar**/
@@ -124,7 +123,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
                 if(amortizaciones.get(i).get(0).equals("total")) return 0;
                 else if (amortizaciones.get(i).get(0).equals("parcial_cuota")){
                     capital_pendiente -= (Double) amortizaciones.get(i).get(1);
-                    cuota = getCuotaMensual(porcentaje_fijo, capital_pendiente, (plazo_anios * 12) - i + 1);
+                    cuota = getCuotaMensual(porcentaje_fijo, capital_pendiente, getPlazoNumPago(num_cuota, amortizaciones) - i + 1);
                 }
                 // Si hay reducción de plazo da igual porque la cuota es la misma
             }

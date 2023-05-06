@@ -14,6 +14,7 @@ import com.anychart.AnyChartView;
 import com.anychart.chart.common.dataentry.DataEntry;
 import com.anychart.chart.common.dataentry.ValueDataEntry;
 import com.anychart.charts.Pie;
+import com.anychart.enums.LegendLayout;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
@@ -107,6 +108,11 @@ public class grafico_gastos_totales extends AppCompatActivity {
                         pie.labels().fontSize(22);
                         pie.labels().position("outside");
                         pie.connectorLength(30);
+                        pie.legend().enabled(true);
+                        pie.legend().fontSize(14d);
+                        pie.legend().padding(10d, 10d, 10d, 10d);
+                        pie.legend().itemsLayout(LegendLayout.HORIZONTAL_EXPANDABLE);
+                        pie.legend().position("bottom");
                         grafico.setChart(pie);
                         grafico.invalidate();
 
