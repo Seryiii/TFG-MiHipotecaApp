@@ -403,21 +403,28 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             else if(hip.getTipo_hipoteca().equals("variable")){
                 if(numero_cuotas_pagadas + 1 <= hip.getDuracion_primer_porcentaje_variable()) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
                 else{
-                    if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0% :  Euribor + diferencial negativo");
+                    if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0%");
                     else porcentaje_aplicado_valor.setText(formato.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_variable()) + "% + " + hip.getPorcentaje_diferencial_variable() + "%");
                 }
             }else{
                 if(numero_cuotas_pagadas + 1 <= hip.getAnios_fija_mixta() * 12) porcentaje_aplicado_valor.setText(porcentaje_aplicado + "%");
                 else {
-                    if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0% :  Euribor + diferencial negativo");
+                    if (porcentaje_aplicado == 0) porcentaje_aplicado_valor.setText("0%");
                     else porcentaje_aplicado_valor.setText(formato.format(porcentaje_aplicado - hip.getPorcentaje_diferencial_mixta()) + "% + " + hip.getPorcentaje_diferencial_mixta() + "%");
                 }
             }
         }
 
 
-        String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas, euribors))  + "€"; // Formatear el número
-        dinero_restante_a_pagar.setText(numeroFormateado);
+        //String numeroFormateado = formato.format(hip.getDineroRestanteActual(numero_cuotas_pagadas, amortizaciones_anticipadas, euribors))  + "€"; // Formatear el número
+        double capitalPendiente  = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
+
+        double interesesTotales    = hip.getInteresesHastaNumPago(hip.getPlazoActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
+        double interesesPagados    = hip.getInteresesHastaNumPago(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
+        double interesesPendientes = interesesTotales - interesesPagados;
+        double dineroRestante = interesesPendientes + capitalPendiente;
+
+        dinero_restante_a_pagar.setText(formato.format(dineroRestante));
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
         ponerLogoBanco();
@@ -477,7 +484,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         cuotaFormateada = formato.format(cuota_mensual) + "€"; // Formatear el número
         cuota_mensual_seguimiento.setText(cuotaFormateada);
 
-        double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
+        //double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
+        if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)) capitalPendiente -= (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
         String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, porcentaje_aplicado)) + "€";
         capital_cuota_mensual.setText(capitalFormateado);
 

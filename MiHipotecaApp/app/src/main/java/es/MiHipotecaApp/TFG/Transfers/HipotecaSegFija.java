@@ -21,7 +21,6 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
     @Override
     public double getDineroRestanteActual(int numPago, HashMap<Integer, List<Object>> amortizaciones, List<Double> euribors){
         int cuotasRestantes = getPlazoNumPago(numPago, amortizaciones) - numPago;
-
         return cogerCuotaActual(numPago + 1, amortizaciones, euribors) * cuotasRestantes;
     }
 
@@ -85,7 +84,12 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         double capPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones,euribors);
         double capPdte      = getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
         double cuota = cogerCuotaActual(numCuota, amortizaciones, euribors);
-        double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
+
+        double capAmortMensual;
+
+        if(amortizaciones.containsKey(numCuota)) capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte - (Double) amortizaciones.get(numCuota).get(1), porcentaje_fijo);
+        else capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_fijo);
+
 
         // Restamos al capital pendiente la amortizacion para sacar la nueva cuota
         // Este if es para mostrar la cuota con la amortizacion
@@ -99,6 +103,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
             }
         }
 
+        if(capPdte < cuota) cuota = capPdte;
         valores.add(cuota);
         valores.add(capAmortMensual);
         valores.add(getInteresMensual(capPdte, porcentaje_fijo));
@@ -158,7 +163,7 @@ public class HipotecaSegFija extends HipotecaSeguimiento implements Serializable
         // Capital pendiente para diciembre de este año
         double capPdteUltimo = ultimoAnio ? 0 : getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones, euribors);
         // Capital pendiente para diciembre del año anterior
-        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
+        double capPdteAnterior = cuotasPagadas < 12 && !ultimoAnio ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
 
         double totalCapitalAnual = capPdteAnterior - capPdteUltimo;
 
