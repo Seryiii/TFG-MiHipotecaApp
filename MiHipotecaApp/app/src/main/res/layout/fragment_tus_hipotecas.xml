@@ -48,15 +48,14 @@
         </LinearLayout>
         <LinearLayout
             android:id="@+id/btn_verOfertas"
-
-            android:layout_width="300dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:orientation="horizontal"
             >
             <TextView
-                android:layout_width="110dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Tus ofertas"
                 android:textSize="18dp"

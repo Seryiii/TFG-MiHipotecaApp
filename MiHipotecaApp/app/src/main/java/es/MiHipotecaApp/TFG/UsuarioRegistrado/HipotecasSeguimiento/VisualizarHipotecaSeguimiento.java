@@ -138,6 +138,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
     private DecimalFormat formato;
+    private boolean premium;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -548,6 +549,16 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         compruebaSiVinculacionAnual();
 
+        /*grafico.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!premium){
+                    CustomDialogoPremium dialogo = new CustomDialogoPremium();
+                    dialogo.show(getSupportFragmentManager(), "dialogo");
+                }
+            }
+        });*/
+
         close_icon_seg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) { finish(); }
@@ -646,7 +657,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         btn_grafico_gastos_totales.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!btn_grafico_gastos_totales.isEnabled()){
+                if(!premium){
                     CustomDialogoPremium dialogo = new CustomDialogoPremium();
                     dialogo.show(getSupportFragmentManager(), "dialogo");
                 }else {
@@ -662,7 +673,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         btn_grafico_intereses_capital.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!btn_grafico_intereses_capital.isEnabled()){
+                if(!premium){
                     CustomDialogoPremium dialogo = new CustomDialogoPremium();
                     dialogo.show(getSupportFragmentManager(), "dialogo");
                 }else {
@@ -757,12 +768,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                     if(!document.getBoolean("premium")) {
                         //Al no ser premium no deja interactuar con los graficos
                         grafico.setAlpha(0.1f); //Hace que el grafico se vea menos
-                        grafico.setEnabled(false);
-                        btn_grafico_gastos_totales.setAlpha(0.8f);
-                        btn_grafico_gastos_totales.setEnabled(false);
-                        btn_grafico_intereses_capital.setAlpha(0.8f);
-                        btn_grafico_intereses_capital.setEnabled(false);
-                    }
+                        premium = false;
+                        grafico.setClickable(false);
+                    } else premium = true;
 
                 } else {
                     Log.d(TAG, "Error getting documents: ", task.getException());

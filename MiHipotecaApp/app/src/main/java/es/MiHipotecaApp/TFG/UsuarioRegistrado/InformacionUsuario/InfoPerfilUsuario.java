@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,13 +43,13 @@ import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 
 public class InfoPerfilUsuario extends Fragment {
 
-    private Button eliminar_cuenta;
-    private Button modificar_datos;
-    private Button informar_problema;
-    private Button pasar_a_premium;
-    private Button pol_privacidad;
-    private Button acerca_de;
-    private Button cerrar_sesion;
+    private LinearLayout eliminar_cuenta;
+    private LinearLayout modificar_datos;
+    private LinearLayout informar_problema;
+    private LinearLayout pasar_a_premium;
+    private LinearLayout pol_privacidad;
+    private LinearLayout acerca_de;
+    private LinearLayout cerrar_sesion;
     private FirebaseAuth firebaseAuth;
     private CircleImageView imagen_perfil;
     private Long imgPerfil;

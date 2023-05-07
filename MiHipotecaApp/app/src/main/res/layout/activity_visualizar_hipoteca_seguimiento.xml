@@ -264,7 +264,7 @@
             <Button
                 android:id="@+id/btn_cuadro_amortizacion"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:background="@drawable/btn_bordes_redondos"
                 android:layout_marginHorizontal="5dp"
