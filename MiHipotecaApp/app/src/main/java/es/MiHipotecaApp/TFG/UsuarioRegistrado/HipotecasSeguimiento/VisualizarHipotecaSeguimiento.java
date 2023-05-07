@@ -938,7 +938,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
             TextView comision = new TextView(this);
             double porcentaje_comision = (Double) amortizacion.getValue().get(amortizacion.getValue().size() - 1);
-            double comision_valor = ((Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1) * porcentaje_comision) / 100;
+            double comision_valor = ((Double) amortizacion.getValue().get(1) * porcentaje_comision) / 100;
 
 
             comision.setText(formato.format(comision_valor));
