@@ -816,7 +816,13 @@
                         android:textAlignment="center"
                         android:padding="10dp"/>
 
-
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/allerta"
+                        android:text="Comisión Total"
+                        android:textAlignment="center"
+                        android:padding="10dp"/>
 
                 </TableRow>
 

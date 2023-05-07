@@ -118,5 +118,8 @@ public class PaginaPrincipal extends AppCompatActivity implements BottomNavigati
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
 
+    }
 }

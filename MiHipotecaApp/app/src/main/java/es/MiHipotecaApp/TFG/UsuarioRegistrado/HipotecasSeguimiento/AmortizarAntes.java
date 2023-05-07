@@ -51,6 +51,7 @@ import java.util.List;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -234,6 +235,7 @@ public class AmortizarAntes extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+                    total_comision.setText("Comisión: 0€");
                     check_amort_total.setChecked(false);
                     label_info_amort_parcial.setVisibility(View.VISIBLE);
                     layout_amort_parcial.setVisibility(View.VISIBLE);
@@ -484,6 +486,8 @@ public class AmortizarAntes extends AppCompatActivity {
     private void amortizar(){
 
         double total_comision = 0;
+        double porcentaje_comision = 0;
+        if(!TextUtils.isEmpty(edit_comision.getText())) porcentaje_comision = Double.parseDouble(edit_comision.getText().toString());
         if(check_comision.isChecked()){
             if(!edit_dinero_a_amortizar.getText().toString().equals("")) total_comision = Double.parseDouble(edit_dinero_a_amortizar.getText().toString()) * (Double.parseDouble(edit_comision.getText().toString()) / 100);
             else if(!edit_reduccion_plazo_meses.getText().toString().equals("")) total_comision = Double.parseDouble(edit_reduccion_plazo_meses.getText().toString()) * (Double.parseDouble(edit_comision.getText().toString()) / 100);
@@ -511,6 +515,7 @@ public class AmortizarAntes extends AppCompatActivity {
                 amortizacion.add(meses_reducidos);
             }
         }
+        amortizacion.add(porcentaje_comision);
         registrar_amortizacion(num_cuota_amortizacion, amortizacion, total_comision);
 
     }
@@ -579,14 +584,24 @@ public class AmortizarAntes extends AppCompatActivity {
                         for (QueryDocumentSnapshot document2 : task.getResult()) {
                             // actualizar el documento con los nuevos valores
                             hipotecasRef.document(document2.getId()).update(nuevosDatos2);
+
+                            Intent i = new Intent(AmortizarAntes.this, PaginaPrincipal.class);
+                            i.putExtra("no_volver_atras", "no_atras");
+                            startActivity(i);
                         }
+
                     } else {
                         Log.e("ERROR", " getting documents");
                     }
                 }
             });
+        }else{
+
+            Intent i = new Intent(AmortizarAntes.this, PaginaPrincipal.class);
+            startActivity(i);
         }
-        finish();
+
+
     }
 
     @Override

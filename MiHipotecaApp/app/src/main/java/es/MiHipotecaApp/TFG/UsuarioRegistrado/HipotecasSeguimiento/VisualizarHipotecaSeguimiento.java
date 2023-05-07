@@ -57,6 +57,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
@@ -682,7 +683,13 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                eliminarUltimaAmortizacion();
+
+                                double porcentaje_comision;
+                                String tipo_amort = (String) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(0);
+                                if (tipo_amort.equals("parcial_plazo")) porcentaje_comision = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(3);
+                                else porcentaje_comision = (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(2);
+                                if (porcentaje_comision > 0) eliminarComision(porcentaje_comision, tipo_amort);
+                                else eliminarUltimaAmortizacion();
                             }
                         })
                         .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
@@ -929,20 +936,62 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             mesesReducidos.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
             tableRow.addView(mesesReducidos);
 
+            TextView comision = new TextView(this);
+            double porcentaje_comision = (Double) amortizacion.getValue().get(amortizacion.getValue().size() - 1);
+            double comision_valor = ((Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1) * porcentaje_comision) / 100;
+
+
+            comision.setText(formato.format(comision_valor));
+            comision.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
+            tableRow.addView(comision);
+
         }
 
     }
 
-    public void eliminarUltimaAmortizacion(){
-        amortizaciones_anticipadas.remove(numero_cuotas_pagadas + 1);
+    private void eliminarComision(double porcentaje_comision, String tipo_amort){
 
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference hipotecasRef = db.collection("hipotecas_seguimiento");
+        Query query = hipotecasRef.whereEqualTo("nombre", hip.getNombre()).whereEqualTo("idUsuario", FirebaseAuth.getInstance().getCurrentUser().getUid());
+
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    QuerySnapshot querySnapshot = task.getResult();
+                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                        double comision = ((Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1) * porcentaje_comision) / 100;
+                        // Obtener la referencia al documento
+                        DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                        DocumentReference docRef = document.getReference();
+                        long totalGastos = document.getLong("totalGastos");
+                        docRef.update("totalGastos", totalGastos - comision);
+                        eliminarUltimaAmortizacion();
+                    } else {
+                        Log.d(TAG, "No se encontraron documentos");
+                    }
+                } else {
+                    Log.d(TAG, "Error al obtener la hipoteca para borrar la comision de amortizacion anticipada: ", task.getException());
+                }
+            }
+        });
+
+
+
+    }
+
+    public void eliminarUltimaAmortizacion() {
+
+        amortizaciones_anticipadas.remove(numero_cuotas_pagadas + 1);
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference amortizacionesRef = db.collection("amortizaciones_anticipadas");
         Query query_amort = amortizacionesRef.whereEqualTo("idUsuario", FirebaseAuth.getInstance().getCurrentUser().getUid()).whereEqualTo("nombre_hipoteca", hip.getNombre());
         query_amort.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if(task.isSuccessful()) {
+                if (task.isSuccessful()) {
                     QuerySnapshot querySnapshot = task.getResult();
                     if (!querySnapshot.isEmpty()) {
                         DocumentSnapshot documentSnapshot = querySnapshot.getDocuments().get(0);
@@ -957,7 +1006,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                             @Override
                             public void onSuccess(Void unused) {
                                 Toast.makeText(VisualizarHipotecaSeguimiento.this, "La amortización anticipada ha sido eliminada con éxito", Toast.LENGTH_LONG).show();
-                                finish();
+                                Intent i = new Intent(VisualizarHipotecaSeguimiento.this, PaginaPrincipal.class);
+                                startActivity(i);
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -971,7 +1021,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
             }
         });
 
+
     }
+
+
 }
 
 

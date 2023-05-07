@@ -188,7 +188,12 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         double capitalPdteCuota = getCapitalPendienteTotalActual(numCuota, amortizaciones, euribors);
         double capPdte = numCuota == 0 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(numCuota - 1, amortizaciones, euribors);
         double cuota = cogerCuotaActual(numCuota, amortizaciones, euribors);
-        double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
+
+        double capAmortMensual;
+        if(amortizaciones.containsKey(numCuota)) capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte - (Double) amortizaciones.get(numCuota).get(1), porcentaje_aplicado);
+        else capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
+
+        //double capAmortMensual = getCapitalAmortizadoMensual(cuota, capPdte, porcentaje_aplicado);
 
         if(amortizaciones.containsKey(numCuota)){
             capPdte -= (Double) amortizaciones.get(numCuota).get(1);
@@ -200,7 +205,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
             }
         }
 
-
+        if(capPdte < cuota) cuota = capPdte;
         valores.add(cuota);
         valores.add(capAmortMensual);
         valores.add(getInteresMensual(capPdte, porcentaje_aplicado));
@@ -292,7 +297,7 @@ public class HipotecaSegMixta extends HipotecaSeguimiento implements Serializabl
         // Capital pendiente para diciembre de este año
         double capPdteUltimo = ultimoAnio ? 0 : getCapitalPendienteTotalActual(cuotasPagadas, amortizaciones, euribors);
         // Capital pendiente para diciembre del año anterior
-        double capPdteAnterior = cuotasPagadas < 12 ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
+        double capPdteAnterior = cuotasPagadas < 12 && !ultimoAnio ? precio_vivienda - cantidad_abonada : getCapitalPendienteTotalActual(cuotasPagadas - cuotasAnuales, amortizaciones, euribors);
 
         double totalCapitalAnual = capPdteAnterior - capPdteUltimo;
 
