@@ -21,9 +21,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -108,20 +105,6 @@ public class EuriborMens extends Worker {
                                                 Log.w(TAG, "Error al consultar euribor en Firestore", task.getException());
                                             }
                                         });
-                               /* db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
-
-
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Log.w(TAG,"euribor registrado con exito en Firestore: ");
-
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w(TAG,"Error al registrar euribor en Firestore: ");
-                                    }
-                                });*/
                             } catch (JSONException e) {
                                 throw new RuntimeException(e);
                             }
@@ -140,7 +123,6 @@ public class EuriborMens extends Worker {
                 60000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-                //requestQueue.add(request);
                 VolleySingleton.getInstance(context).addToRequestQueue(request);
                 }
         }

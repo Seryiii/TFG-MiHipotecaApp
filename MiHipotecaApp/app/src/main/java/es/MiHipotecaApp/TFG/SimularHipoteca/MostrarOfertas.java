@@ -30,12 +30,9 @@ import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -58,7 +55,7 @@ import java.util.List;
 import java.util.Map;
 
 public class MostrarOfertas extends AppCompatActivity implements custom_dialog_oferta.pasarDatos {
-    //RequestQueue requestQueue;
+
     Context context;
     private RecyclerView rvLista;
     private RecyclerAdapter adapter;
@@ -80,7 +77,6 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     private FirebaseUser user;
 
     private Handler handler = new Handler();
-    private TextView textView;
     private int currentIndex = 0;
     String URL_final;
     private String[] options = {"Obteniendo las mejores ofertas personalizadas", "Comparando con millones de posibilidades", "Esto podria llevar unos segundos..."};
@@ -91,7 +87,6 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mostrar_ofertas);
         context = this.getApplicationContext();
-        //requestQueue = Volley.newRequestQueue(this,new HurlStack());
         db   = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
@@ -238,8 +233,6 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     }
 
     private void obtenerDatosBancos() {
-        //10.0.2.2
-        //147.96.81.245
         String ip=context.getString(R.string.ip);
         Log.d("URL", URL_final);
         String url =ip+"/pruebaArray";
@@ -319,7 +312,6 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                         }
 
                         adapter.notifyDataSetChanged();
-                        //sp_bancos.setVisibility(View.VISIBLE);
                         txt_filtrarBancos.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);
                         btn_fijas.setVisibility(View.VISIBLE);
@@ -340,61 +332,14 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         }
         );
         request.setRetryPolicy(new DefaultRetryPolicy(
-                120000, // segundos
+                300000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
-        //requestQueue.add(request);
         VolleySingleton.getInstance(context).addToRequestQueue(request);
 
     }
 
-    private void postPrueba(){
-        String url = "http://10.0.2.2:5000/postPrueba";
-        JSONObject params = new JSONObject();
-        try {
-            params.put("precio", 12);
-            params.put("edad", 10);
-            params.put("fecha_nacimiento", "10/07/2000");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, params,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        // Manejar la respuesta de la API
-                        try {
-                            // Obtener los datos devueltos
-                            int precio = response.getInt("precio");
-                            int edad = response.getInt("edad");
-                            String fechaNacimiento = response.getString("fecha_nacimiento");
 
-
-                            // Hacer un log de los datos devueltos
-                            Log.d("RESPONSE", "Precio: " + precio);
-                            Log.d("RESPONSE", "Edad: " + edad);
-                            Log.d("RESPONSE", "Fecha de Nacimiento: " + fechaNacimiento);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-
-
-
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                // Manejar errores de la solicitud
-                Log.e("ERROR", error.toString());
-            }
-        });
-
-// Agregar solicitud a la RequestQueue
-        //requestQueue.add(request);
-        VolleySingleton.getInstance(context).addToRequestQueue(request);
-    }
 
     private Runnable runnable = new Runnable() {
         @Override
