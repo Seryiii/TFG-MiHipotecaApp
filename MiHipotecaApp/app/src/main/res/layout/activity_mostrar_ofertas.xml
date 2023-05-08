@@ -11,8 +11,7 @@ tools:context=".SimularHipoteca.MostrarOfertas">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_marginTop="10dp">
+        android:padding="16dp">
 
         <Button
             android:id="@+id/buttonFijas"
@@ -21,18 +20,37 @@ tools:context=".SimularHipoteca.MostrarOfertas">
             android:layout_height="wrap_content"
             android:background="@drawable/button_background"
             android:text="Fijas"
+            android:gravity="center"
+            android:layout_gravity="center"
             android:textColor="#FFFFFF"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            />
 
         <Button
             android:id="@+id/buttonVariablesMixta"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginLeft="10dp"
             android:background="@drawable/button_background"
             android:text="Variables/Mixta"
+            android:textSize="12dp"
             android:textColor="#FFFFFF"
-            android:visibility="invisible"/>
+            android:visibility="invisible"
+            />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/close_icon_comparar_hip"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="30dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/close_icon"
+            />
 
     </LinearLayout>
 

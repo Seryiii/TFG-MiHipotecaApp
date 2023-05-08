@@ -157,8 +157,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         if(tipoBtn.equals("guardar")){
             holder.btn_eliminar.setVisibility(View.GONE);
             if(oferta.isGuardada())holder.btn_guardar.setVisibility(View.GONE);
+            holder.tvBanco.setText(oferta.getBanco());
         }
-        else holder.btn_guardar.setVisibility(View.GONE);
+        else {
+            holder.btn_guardar.setVisibility(View.GONE);
+            holder.tvBanco.setText(oferta.getNombre());
+        }
         eventoBtn(holder,oferta);
         if(detalles == null){
             if(oferta.getVinculaciones().equals("")){
@@ -172,7 +176,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
 
         }
-        holder.tvBanco.setText(oferta.getBanco());
         holder.tvDesc.setText(oferta.getDesc());
         ponerLogoBanco(oferta.getBanco(), holder);
         if(tipo.equals("fija")){
@@ -180,7 +183,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             holder.tvTae.setText("TAE " + oferta.getTae());
             holder.tvCuota.setText(oferta.getCuota());
         }else{
-            holder.tvTin.setText("TIN " + oferta.getTin_x());
+            holder.tvTin.setText(oferta.getTin_x());
             holder.tvTin_resto.setText("TIN Resto "+ oferta.getTin_resto());
             holder.tvTae.setText("TAE " + oferta.getTae());
             holder.tvCuota.setText(oferta.getCuota_x());

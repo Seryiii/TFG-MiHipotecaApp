@@ -114,9 +114,9 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
                         ofertasFija.add(o);
                     }
                     else{
-                        String cuota_x = documentSnapshot.getString("cuota_x");
+                        String cuota_x = documentSnapshot.getString("couta_x");
                         String cuota_resto = documentSnapshot.getString("cuota_resto");
-                        String tin_x = documentSnapshot.getString("tin_x");
+                        String tin_x = documentSnapshot.getString("tin_x_anios");
                         String tin_resto = documentSnapshot.getString("tin_resto");
                         o = new Oferta(banco,desc,tin_x,tin_resto,tae,cuota_x,cuota_resto,vinculaciones);
                         o.setNombre(nombre);

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
@@ -81,6 +82,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     String URL_final;
     private String[] options = {"Obteniendo las mejores ofertas personalizadas", "Comparando con millones de posibilidades", "Esto podria llevar unos segundos..."};
 
+    private CircleImageView close_icon_comparar_hip;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,7 +117,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         sp_bancos = findViewById(R.id.sp_bancos);
         txt_filtrarBancos = findViewById(R.id.txt_filtrarBancos);
         switchBusqueda = findViewById(R.id.switchBusqueda);
-
+        close_icon_comparar_hip = findViewById(R.id.close_icon_comparar_hip);
     }
     private void eventos(){
         btn_fijas.setOnClickListener(new View.OnClickListener() {
@@ -200,6 +202,13 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
+            }
+        });
+
+        close_icon_comparar_hip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
 
