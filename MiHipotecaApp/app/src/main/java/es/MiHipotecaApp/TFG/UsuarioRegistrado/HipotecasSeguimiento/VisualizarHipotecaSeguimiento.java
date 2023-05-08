@@ -105,10 +105,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private LinearLayout layout_porcentaje_aplicado;
 
     private TextView porcentaje_aplicado_valor;
-    private LinearLayout capital_layout;
-    private LinearLayout capital_layout_valor;
-    private LinearLayout intereses_layout;
-    private LinearLayout intereses_layout_valor;
+    private LinearLayout info_grafico;
     private LinearLayout layout_cuota_seguimiento;
     private LinearLayout layout_amortizacion_anticipada;
     private LinearLayout layout_capital_intereses1;
@@ -188,10 +185,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         capital_pendiente                    = findViewById(R.id.capital_pendiente_seguimiento_val);
         intereses_pagados                    = findViewById(R.id.intereses_pagados_seguimiento_val);
         intereses_pendientes                 = findViewById(R.id.intereses_pendientes_seguimiento_val);
-        capital_layout                       = findViewById(R.id.capital_layout);
-        capital_layout_valor                 = findViewById(R.id.capital_layout_valor);
-        intereses_layout                     = findViewById(R.id.intereses_layout);
-        intereses_layout_valor               = findViewById(R.id.intereses_layout_valor);
+        info_grafico                       = findViewById(R.id.info_grafico);
 
         btn_grafico_gastos_totales           = findViewById(R.id.btn_grafico_gastos_totales);
         btn_grafico_intereses_capital        = findViewById(R.id.btn_grafico_intereses_capital);
@@ -331,6 +325,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         if (anioInicioPrueba[0] == anioActual && mesInicioPrueba[0].equals(mesActual)) {
                             // Se han obtenido todos los valores de Euribor
                             rellenarUI();
+                            rellenarTablaAmortizaciones();
                             eventos();
                             construirGraficoAportadoVsAFinanciar();
 
@@ -890,10 +885,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         capital_pendiente.setVisibility(visibility);
         intereses_pagados.setVisibility(visibility);
         intereses_pendientes.setVisibility(visibility);
-        capital_layout.setVisibility(visibility);
-        capital_layout_valor.setVisibility(visibility);
-        intereses_layout.setVisibility(visibility);
-        intereses_layout_valor.setVisibility(visibility);
+        info_grafico.setVisibility(visibility);
 
         btn_grafico_gastos_totales.setVisibility(visibility);
         btn_grafico_intereses_capital.setVisibility(visibility);

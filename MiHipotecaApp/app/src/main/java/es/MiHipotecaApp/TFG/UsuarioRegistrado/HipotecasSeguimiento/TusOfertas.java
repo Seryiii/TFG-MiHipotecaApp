@@ -139,6 +139,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
     @Override
     public void actualizar() {
         Intent intent = new Intent(this, TusOfertas.class);
+        finish();
         startActivity(intent);
     }
 }
