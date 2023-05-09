@@ -4,7 +4,7 @@
     <string name="app_name">MiHipotecaApp</string>
 
     <!-- BOTONES -->
-    <string name="txt_btn_simular_hipoteca">SIMULAR HIPOTECA</string>
+    <string name="txt_btn_simular_hipoteca">COMPARAR HIPOTECAS</string>
     <string name="txt_btn_iniciar_sesion">INICIAR SESIÓN</string>
     <string name="txt_btn_registrarse">REGISTRARSE</string>
     <string name="txt_btn_aplicar_cambios">APLICAR CAMBIOS</string>

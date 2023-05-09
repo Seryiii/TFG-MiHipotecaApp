@@ -40,6 +40,7 @@ import java.util.concurrent.ExecutionException;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevaVinculacionAnualFragment;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusOfertas;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder>{
@@ -243,12 +244,15 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         holder.btn_guardar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //HACER ESTA NOCHE
-                custom_dialog_oferta fragment = new custom_dialog_oferta(oferta,holder,tipo);
-                fragment.show(fragmentManager, "Nombre oferta fragment");
-                // Guardar nombreOferta en la colección de ofertas_guardadas
-                    }
-                });
+                FirebaseUser currentUser = auth.getCurrentUser();
+                if(currentUser != null) {
+                    custom_dialog_oferta fragment = new custom_dialog_oferta(oferta, holder, tipo);
+                    fragment.show(fragmentManager, "Nombre oferta fragment");
+                    // Guardar nombreOferta en la colección de ofertas_guardadas
+                }else Toast.makeText(view.getContext(), "Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
+            }
+        });
+
         holder.btn_eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

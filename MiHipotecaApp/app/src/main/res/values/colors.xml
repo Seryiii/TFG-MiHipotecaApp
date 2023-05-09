@@ -12,6 +12,7 @@
     <color name="color_btn">#6096B4</color>
     <color name="color_intermedio">#EEE9DA</color>
     <color name="gris_oscuro">#4F4F4F</color>
-    
+    <color name="titulo">#001A7A</color>
+
 
 </resources>
