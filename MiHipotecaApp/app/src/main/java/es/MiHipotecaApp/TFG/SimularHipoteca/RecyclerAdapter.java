@@ -249,7 +249,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     custom_dialog_oferta fragment = new custom_dialog_oferta(oferta, holder, tipo);
                     fragment.show(fragmentManager, "Nombre oferta fragment");
                     // Guardar nombreOferta en la colección de ofertas_guardadas
-                }else Toast.makeText(view.getContext(), "Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
+                }else Toast.makeText(view.getContext(), "Necesitas registrarte para poder guardar ofertas", Toast.LENGTH_LONG).show();
             }
         });
 
