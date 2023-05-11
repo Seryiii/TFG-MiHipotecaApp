@@ -32,8 +32,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="35dp"
-                    android:fontFamily="@font/allerta"
-                    android:gravity="center"
+                    android:fontFamily="@font/text_bold"
+                    android:textColor="@color/titulo2"
+                    android:shadowColor="@color/dark_blue"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="3"                      android:gravity="center"
                     android:text="@string/label_seguimiento"
                     android:textSize="40sp"
                     android:visibility="invisible"/>
@@ -42,11 +46,15 @@
                     android:id="@+id/nombre_seguimiento_hipoteca"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/allerta"
-                    android:gravity="center"
+                    android:fontFamily="@font/text_bold"
+                    android:textColor="@color/titulo2"
+                    android:shadowColor="@color/dark_blue"
+                    android:shadowDx="3"
+                    android:shadowDy="3"
+                    android:shadowRadius="3"                      android:gravity="center"
                     android:text="Titulo"
                     android:textSize="35sp"
-                        android:visibility="invisible" />
+                    android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -73,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="@string/label_tipo_de_hipoteca"
                 android:textSize="22sp"
                 android:visibility="invisible" />
@@ -85,7 +93,7 @@
                 android:layout_marginLeft="15dp"
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="Fija"
                 android:textSize="22sp"
                 android:visibility="invisible" />
@@ -104,7 +112,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/allerta"
                 android:layout_gravity="center"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="Banco"
                 android:textAlignment="center"
                 android:textSize="20sp"
@@ -138,7 +146,7 @@
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="18sp"
                 android:visibility="invisible" />
 
@@ -149,7 +157,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/allerta"
                 android:text="Madrid"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="18sp"
                 android:visibility="invisible" />
 
@@ -178,7 +186,7 @@
                 android:gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="@string/label_dinero_que_falta_por_pagar"
                 android:textSize="18sp"
                 android:visibility="invisible" />
@@ -193,7 +201,7 @@
                 android:layout_gravity="center"
                 android:layout_marginStart="10dp"
                 android:layout_marginEnd="10dp"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="@string/label_tiempo_restante"
                 android:textSize="18sp"
                 android:visibility="invisible" />
@@ -218,7 +226,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/allerta"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:layout_gravity="center"
                     android:layout_marginLeft="30dp"
                     android:text="150000"
@@ -245,7 +253,7 @@
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
                 android:layout_marginStart="8dp"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="20 años"
                 android:textStyle="bold"
                 android:textSize="20sp"
@@ -295,7 +303,7 @@
             android:layout_marginEnd="50dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:text="@string/label_cuota_de"
             android:textSize="22sp"
             android:visibility="invisible"/>
@@ -308,7 +316,7 @@
             android:layout_marginEnd="50dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:text="Enero"
             android:textStyle="bold"
             android:textSize="22sp"
@@ -338,7 +346,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/allerta"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:gravity="center"
                     android:text="Cuota: "
                     android:textSize="22sp" />
@@ -349,7 +357,7 @@
                     android:layout_height="wrap_content"
                     android:text="500€"
                     android:fontFamily="@font/allerta"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:gravity="center"
                     android:textSize="22sp" />
 
@@ -386,7 +394,7 @@
                     android:text="1.5%"
                     android:layout_weight="1"
                     android:fontFamily="@font/allerta"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:gravity="center"
                     android:textSize="22sp" />
 
@@ -404,7 +412,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:fontFamily="@font/allerta"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:gravity="center"
                     android:text="Amort Anticipada: "
                     android:textSize="16sp" />
@@ -416,7 +424,7 @@
                     android:layout_weight="4"
                     android:text="0€"
                     android:fontFamily="@font/allerta"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:gravity="center"
                     android:textSize="16sp" />
 
@@ -447,7 +455,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:text="Capital"
                     android:textSize="22sp" />
 
@@ -457,7 +465,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:text="Intereses"
                     android:textSize="22sp" />
 
@@ -479,7 +487,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:text="250€"
                     android:textSize="22sp" />
 
@@ -490,7 +498,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/allerta"
                     android:gravity="center"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:text="250€"
                     android:textSize="22sp" />
 
@@ -502,7 +510,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/allerta"
                 android:textAlignment="center"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:text="Cuotas pagadas:  "
                 android:textSize="22sp"
                 android:layout_marginBottom="10dp"/>
@@ -544,7 +552,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:layout_marginEnd="10dp"
-                    android:textColor="@color/black"
+                    android:textColor="@color/text_color"
                     android:text="Gastos Totales"/>
             </LinearLayout>
 
@@ -571,7 +579,7 @@
                     android:layout_gravity="center"
                     android:layout_marginStart="10dp"
                     android:textAlignment="center"
-                    android:layout_marginEnd="10dp"                    android:textColor="@color/black"
+                    android:layout_marginEnd="10dp"                    android:textColor="@color/text_color"
                     android:text="Intereses vs Amortizado"/>
             </LinearLayout>
 
@@ -585,7 +593,7 @@
             android:layout_gravity="center"
             android:fontFamily="@font/allerta"
             android:layout_marginTop="20dp"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:textStyle="bold"
             android:textAlignment="center"
             android:text="Aportado vs a financiar"
@@ -614,7 +622,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"/>
+                android:background="@color/white"/>
 
             <LinearLayout
                 android:id="@+id/info_grafico"
@@ -626,7 +634,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/black"/>
+                    android:background="@color/white"/>
 
                 <!-- Primer cuadrante -->
                 <LinearLayout
@@ -643,7 +651,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="Capital Amortizado"
                         android:textSize="18sp" />
 
@@ -653,7 +661,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="0€"
                         android:textSize="18sp" />
 
@@ -663,7 +671,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/black"/>
+                    android:background="@color/white"/>
 
                 <!-- Segundo cuadrante -->
                 <LinearLayout
@@ -680,7 +688,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="Capital Pendiente"
                         android:textSize="18sp" />
 
@@ -690,7 +698,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="5.000€"
                         android:textSize="18sp" />
 
@@ -700,7 +708,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/black"/>
+                    android:background="@color/white"/>
 
             </LinearLayout>
 
@@ -708,7 +716,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"/>
+                android:background="@color/white"/>
 
             <LinearLayout
                 android:id="@+id/bottom_layout"
@@ -721,7 +729,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="wrap_content"
-                    android:background="@android:color/black"/>
+                    android:background="@color/white"/>
 
                 <!-- Tercer cuadrante -->
                 <LinearLayout
@@ -739,7 +747,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="Intereses Pagados"
                         android:textSize="18sp" />
 
@@ -751,7 +759,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="0€"
                         android:textSize="18sp" />
 
@@ -761,7 +769,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/black"/>
+                    android:background="@color/white"/>
 
                 <!-- Cuarto cuadrante -->
                 <LinearLayout
@@ -778,7 +786,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="Intereses Pendiente"
                         android:textSize="18sp" />
 
@@ -789,7 +797,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/allerta"
                         android:gravity="center"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:text="5.000€"
                         android:textSize="18sp" />
 
@@ -799,7 +807,7 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/black"/>
+                    android:background="@color/white"/>
 
             </LinearLayout>
 
@@ -807,7 +815,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@android:color/black"/>
+                android:background="@color/white"/>
 
         </LinearLayout>
 
@@ -825,7 +833,7 @@
             android:layout_marginTop="15dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:text="Amortizaciones anticipadas realizadas"
             android:textSize="18sp" />
 
@@ -836,7 +844,7 @@
             android:layout_marginTop="15dp"
             android:fontFamily="@font/allerta"
             android:gravity="center"
-            android:textColor="@color/black"
+            android:textColor="@color/text_color"
             android:text="No hay amortizaciones anticipadas"
             android:textSize="18sp" />
         

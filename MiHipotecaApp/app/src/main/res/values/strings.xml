@@ -33,7 +33,7 @@
     <string name="label_repetir_contrasenia_nueva">Repetir contraseña nueva</string>
     <string name="label_acepto_terminos">Acepto los términos y condiciones</string>
     <string name="label_selecciona_avatar">Escoge un avatar</string>
-    <string name="titulo_actividad_principal">TUS HIPOTECAS</string>
+    <string name="titulo_actividad_principal">MIS HIPOTECAS</string>
     <string name="label_configuracion_usuario">Perfil y ajustes</string>
     <string name="label_notificar_problema">Notificar problema</string>
     <string name="label_cambiar_datos">Modificar perfil</string>

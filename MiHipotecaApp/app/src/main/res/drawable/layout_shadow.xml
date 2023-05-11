@@ -1,5 +1,5 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
-    <solid android:color="@android:color/white"/>
+    <solid android:color="@color/card_color"/>
     <corners android:radius="4dp"/>
     <padding
         android:bottom="4dp"
@@ -7,6 +7,6 @@
         android:right="4dp"
         android:top="4dp"/>
     <shadow
-        android:color="@android:color/black"
+        android:color="@color/white"
         android:radius="40dp"/>
 </shape>

@@ -28,6 +28,7 @@
                 android:layout_marginTop="44dp"
                 android:fontFamily="@font/allerta"
                 android:text="@string/titulo_actividad_principal"
+                android:textColor="@color/titulo2"
                 android:gravity="center"
                 android:textSize="28dp"
                 app:layout_constraintEnd_toStartOf="@+id/foto_perfil_pag_principal"
@@ -54,19 +55,21 @@
             android:gravity="center"
             android:orientation="horizontal"
             >
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Tus ofertas"
-                android:textSize="18dp"
                 android:layout_gravity="center"
                 android:gravity="center"
-                />
+                android:text="Mis ofertas"
+                android:textColor="@color/text_color"
+                android:textSize="18dp" />
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
+                android:layout_marginLeft="10dp"
                 android:layout_gravity="center"
-                android:background="@drawable/save"
+                android:background="@drawable/offerts_icon"
                 />
     </LinearLayout>
 

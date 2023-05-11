@@ -71,6 +71,7 @@ tools:context=".SimularHipoteca.MostrarOfertas">
                 android:layout_width="120dp"
                 android:layout_height="wrap_content"
                 android:text="Filtrar por bancos"
+                android:textColor="@color/text_color"
                 android:layout_gravity="center"
                 android:visibility="invisible"
                 />
@@ -111,6 +112,7 @@ tools:context=".SimularHipoteca.MostrarOfertas">
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:textSize="20dp"
+        android:textColor="@color/text_color"
         android:textStyle="bold"
         android:text="Esto podria llevar unos segundos..." />
 

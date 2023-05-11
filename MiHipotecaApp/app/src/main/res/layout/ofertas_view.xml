@@ -12,6 +12,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/card_color"
         android:padding="10dp">
         <LinearLayout
             android:layout_width="100dp"
@@ -19,6 +20,7 @@
             android:orientation="vertical">
             <ImageView
                 android:id="@+id/imgItem"
+                android:background="@color/text_color"
                 android:layout_width="100dp"
                 android:layout_height="80dp"
                 android:layout_marginRight="10dp"/>
@@ -31,6 +33,7 @@
                     android:layout_width="100dp"
                     android:layout_height="35dp"
                     android:text="Guardar"
+                    android:textColor="@color/text_color"
                     android:textSize="12dp"
                     style="?android:attr/buttonBarButtonStyle"
 
@@ -40,6 +43,7 @@
                     android:layout_width="100dp"
                     android:layout_height="35dp"
                     android:text="Eliminar"
+                    android:textColor="@color/text_color"
                     android:textSize="12dp"
                     style="?android:attr/buttonBarButtonStyle"
                     />
@@ -69,6 +73,7 @@
                         android:id="@+id/tvBanco"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/titulo2"
                         android:textStyle="bold"
                         android:textSize="18sp"/>
                 </LinearLayout>
@@ -83,6 +88,7 @@
                         android:id="@+id/txt_detalles"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
                         android:textStyle="bold"
                         android:textSize="10sp"
                         android:gravity="center"
@@ -104,6 +110,7 @@
                 android:id="@+id/tvDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
                 android:textSize="12sp"
                 android:layout_marginTop="5dp"/>
             <LinearLayout
@@ -120,17 +127,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
+                        android:textColor="@color/text_color"
                         android:layout_marginTop="10dp"
                         android:gravity="center"/>
                     <TextView
                         android:id="@+id/tvTin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
                         android:textSize="12sp"
                         android:gravity="center"/>
                     <TextView
                         android:id="@+id/tvTin_resto"
                         android:layout_width="match_parent"
+                        android:textColor="@color/text_color"
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:gravity="center"/>
@@ -149,18 +159,21 @@
                         android:textSize="14sp"
                         android:text="@string/label_cuota"
                         android:textStyle="bold"
+                        android:textColor="@color/text_color"
                         android:layout_marginTop="10dp"
                         />
                     <TextView
                         android:id="@+id/tvCuota"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
                         android:gravity="center"
                         android:textSize="12sp"/>
                     <TextView
                         android:id="@+id/tvCuota_resto"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/text_color"
                         android:gravity="center"
                         android:textSize="12sp"/>
                 </LinearLayout>

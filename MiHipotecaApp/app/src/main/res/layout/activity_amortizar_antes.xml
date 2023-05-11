@@ -26,8 +26,12 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/allerta"
-            android:gravity="center"
+            android:fontFamily="@font/text_bold"
+            android:textColor="@color/titulo2"
+            android:shadowColor="@color/dark_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"            android:gravity="center"
             android:text="Amortización anticipada de:"
             android:textSize="40sp" />
 
@@ -35,7 +39,12 @@
             android:id="@+id/nombre_amort_anticipada_hip"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fontFamily="@font/allerta"
+            android:fontFamily="@font/text_bold"
+            android:textColor="@color/titulo2"
+            android:shadowColor="@color/dark_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"
             android:gravity="center"
             android:text="Titulo"
             android:textSize="35sp" />
@@ -51,6 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:textColor="@color/text_color"
                 android:checked="false"
                 android:text="¿Comisión por amortización anticipada?" />
 
@@ -84,6 +94,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
                 android:layout_weight="1"
+                android:textColor="@color/text_color"
                 android:checked="true"
                 android:text="Amortización total" />
 
@@ -93,6 +104,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="15dp"
                 android:layout_weight="1"
+                android:textColor="@color/text_color"
                 android:checked="false"
                 android:text="Amortización Parcial" />
 
@@ -260,8 +272,8 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/allerta"
                 android:gravity="center"
+                android:textColor="@color/text_color"
                 android:text="Cantidad a amortizar: 5000€"
-                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <TextView
@@ -271,8 +283,8 @@
                 android:fontFamily="@font/allerta"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
+                android:textColor="@color/text_color"
                 android:text="Capital pdte anterior: 5000€"
-                android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <TextView
@@ -283,7 +295,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="Capital pdte nuevo: 5000€"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="20sp" />
 
             <LinearLayout
@@ -308,7 +320,7 @@
                         android:gravity="center"
                         android:text="Cuota antigua"
                         android:layout_weight="1"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:textSize="22sp" />
 
                     <TextView
@@ -319,7 +331,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text="Cuota nueva"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:textSize="22sp" />
 
                 </LinearLayout>
@@ -338,7 +350,7 @@
                         android:gravity="center"
                         android:text=""
                         android:layout_weight="1"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:textSize="22sp" />
 
                     <TextView
@@ -349,7 +361,7 @@
                         android:layout_weight="1"
                         android:gravity="center"
                         android:text=""
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_color"
                         android:textSize="22sp" />
 
                 </LinearLayout>
@@ -363,7 +375,7 @@
                 android:layout_marginTop="10dp"
                 android:gravity="center"
                 android:text="Comisión: 0€"
-                android:textColor="@color/black"
+                android:textColor="@color/text_color"
                 android:textSize="20sp" />
 
         </LinearLayout>

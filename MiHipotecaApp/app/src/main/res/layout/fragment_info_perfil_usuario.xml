@@ -24,6 +24,7 @@
           android:layout_marginTop="32dp"
           android:layout_weight="1"
           android:fontFamily="@font/allerta"
+          android:textColor="@color/titulo2"
           android:text="@string/label_configuracion_usuario"
           android:textSize="32dp"
           />
@@ -58,6 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="4"
             android:layout_marginStart="8dp"
+            android:textColor="@color/text_color"
             android:text="@string/label_modificar_perfil"
             android:textSize="28dp"
             />
@@ -95,6 +97,7 @@
         android:layout_width="0dp"
         android:layout_weight="4"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
         android:layout_marginStart="8dp"
         android:text="@string/label_pasar_premium"
         android:textSize="28dp"
@@ -136,6 +139,7 @@
         android:layout_width="0dp"
         android:layout_weight="4"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
         android:layout_marginStart="8dp"
         android:text="@string/label_notificar_problema"
         android:textSize="28dp"
@@ -168,7 +172,7 @@
         android:layout_weight="4"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-
+        android:textColor="@color/text_color"
         android:text="@string/label_acercaDe"
         android:textSize="28dp" />
 
@@ -200,6 +204,7 @@
         android:layout_weight="4"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
+        android:textColor="@color/text_color"
         android:text="@string/label_pol_privacidad"
         android:textSize="28dp"
         />
@@ -242,6 +247,7 @@
         android:layout_width="0dp"
         android:layout_weight="4"
         android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
         android:layout_marginStart="8dp"
         android:text="@string/label_cierre_sesion"
         android:textSize="28dp"
@@ -275,6 +281,7 @@
     <TextView
         android:layout_width="0dp"
         android:layout_weight="4"
+        android:textColor="@color/text_color"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/label_eliminar_usuario"

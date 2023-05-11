@@ -12,15 +12,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:gravity="center"
         android:layout_marginStart="16dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:fontFamily="@font/allerta"
-
-            android:text="@string/label_registro"
+            android:fontFamily="@font/text_bold"
+            android:textColor="@color/titulo2"
+            android:shadowColor="@color/dark_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"            android:text="@string/label_registro"
             android:textSize="40sp"/>
 
         <TextView
@@ -28,7 +32,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/allerta"
             android:layout_marginTop="8dp"
-
+            android:textColor="@color/text_color"
             android:text="@string/label_datos_de_acceso"
             android:textSize="28sp" />
 
@@ -38,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@color/text_color"
             android:fontFamily="@font/allerta"
             android:text="@string/label_correo_electronico"
             android:textSize="22sp" />
@@ -60,6 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            android:textColor="@color/text_color"
             android:fontFamily="@font/allerta"
             android:text="@string/label_nombre"
             android:textSize="22sp" />
@@ -81,6 +87,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:fontFamily="@font/allerta"
+            android:textColor="@color/text_color"
             android:text="@string/label_contrasenia"
             android:textSize="22sp" />
 
@@ -101,6 +108,7 @@
             android:layout_marginTop="16dp"
             android:fontFamily="@font/allerta"
             android:text="@string/label_repetir_contrasenia"
+            android:textColor="@color/text_color"
             android:textSize="22sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edit_contra_registro" />
@@ -125,6 +133,7 @@
                 android:id="@+id/link_abrir_terminos_condiciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/text_color"
                 android:fontFamily="@font/allerta"
                 android:text="@string/label_acepto_terminos"
                 android:textSize="18sp" />
@@ -138,6 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/allerta"
+            android:textColor="@color/text_color"
             android:text="@string/label_selecciona_avatar"
             android:textSize="18sp" />
 

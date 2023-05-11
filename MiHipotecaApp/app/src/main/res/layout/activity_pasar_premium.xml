@@ -25,8 +25,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:fontFamily="@font/text_bold"
+            android:textColor="@color/titulo2"
+            android:shadowColor="@color/dark_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"
             android:text="@string/label_pasate_premium"
-            android:textStyle="bold"
             android:textSize="28dp" />
 
         <ViewFlipper
@@ -35,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_gravity="center"
-            android:background="@color/purple_500"
+            android:background="@color/dark_blue"
             android:inAnimation="@anim/slide_in_right"
             android:outAnimation="@anim/slide_out_left">
             <LinearLayout
@@ -133,6 +138,7 @@
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="12dp"
+            android:textColor="@color/text_color"
             android:textSize="24dp"
             android:textStyle="bold"
             />
@@ -141,7 +147,7 @@
             android:layout_width="200dp"
             android:layout_height="50dp"
             android:layout_gravity="center"
-            app:cardBackgroundColor="@color/purple_500"
+            app:cardBackgroundColor="@color/dark_blue"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp">
             <!-- Contenido de la tarjeta aquí -->
@@ -160,7 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
-            app:cardBackgroundColor="@color/purple_500"
+            app:cardBackgroundColor="@color/dark_blue"
             app:cardCornerRadius="8dp"
             app:cardElevation="4dp">
             <!-- Contenido de la tarjeta aquí -->
@@ -221,7 +227,7 @@
         android:layout_height="wrap_content"
         android:text="@string/txt_btn_pasar_a_premium"
         android:layout_marginTop="32dp"
-        android:backgroundTint="@color/purple_500"
+        android:backgroundTint="@color/dark_blue"
         android:layout_gravity="center"/>
 
     </LinearLayout>
