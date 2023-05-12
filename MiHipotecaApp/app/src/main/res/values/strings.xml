@@ -24,7 +24,7 @@
     <string name="label_contrasenia">Contraseña</string>
     <string name="label_contrasenia_nueva">Contraseña nueva</string>
     <string name="label_ejemplo_contrasenia">************</string>
-    <string name="label_recuperar_contrasenia">Recuperar contraseña</string>
+    <string name="label_recuperar_contrasenia"><u><b>Recuperar contraseña</b></u></string>
     <string name="label_no_tienes_cuenta">¿No tienes cuenta? <u><b>Regístrate aquí</b></u></string>
     <string name="label_registro">Registro</string>
     <string name="label_datos_de_acceso">Datos de acceso</string>

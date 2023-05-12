@@ -71,6 +71,7 @@
         android:layout_marginBottom="200dp"
         android:background="@drawable/btn_bordes_redondos"
         android:text="@string/txt_btn_recuperar_contrasenia"
+        android:fontFamily="@font/text_bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

@@ -248,7 +248,7 @@
         android:layout_width="0dp"
         android:layout_weight="1"
         android:layout_height="48dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="20dp"
         android:src="@drawable/logout_icon"
 
         />
