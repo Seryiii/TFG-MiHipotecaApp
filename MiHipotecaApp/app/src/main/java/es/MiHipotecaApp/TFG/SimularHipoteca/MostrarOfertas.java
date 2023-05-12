@@ -366,7 +366,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         }
         );
         request.setRetryPolicy(new DefaultRetryPolicy(
-                300000, // segundos
+                200000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
