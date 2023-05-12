@@ -100,6 +100,34 @@ tools:context=".SimularHipoteca.MostrarOfertas">
 
 
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="Ordenar por"
+            android:textColor="@color/text_color"
+            android:fontFamily="@font/text_bold"
+            android:layout_marginStart="20dp"
+            android:textSize="14sp"/>
+        <Button
+            android:id="@+id/btn_ordenarTae"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+            android:text="TAE"/>
+        <Button
+            android:id="@+id/btn_ordenarCuota"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginLeft="20dp"
+
+            android:text="CUOTA"/>
+
+
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar"

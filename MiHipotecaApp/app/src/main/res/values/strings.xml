@@ -43,7 +43,7 @@
     <string name="label_eliminar_usuario">Eliminar cuenta</string>
     <string name="label_modificar_perfil">Modificar Perfil</string>
     <string name="label_nuevo_seguimiento">Nuevo \n seguimiento</string>
-    <string name="label_combobox_comunidad">¿En que privincia se encuentra?</string>
+    <string name="label_combobox_comunidad">¿En que provincia se encuentra?</string>
     <string name="label_tipo_vivienda">¿Vivienda de régimen general o de protección oficial?</string>
     <string name="label_antiguedad_vivienda">¿Vivienda nueva o de segunda mano?</string>
     <string name="label_vivienda_nueva">Vivienda nueva</string>
