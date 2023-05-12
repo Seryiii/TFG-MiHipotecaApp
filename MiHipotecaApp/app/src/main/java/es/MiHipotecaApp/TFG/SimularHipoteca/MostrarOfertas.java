@@ -19,6 +19,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -154,12 +155,36 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                     //el switch está activado
                     if(fija){
                         String[] bancosFija = bancosDiferentes(lista_fija);
-                        ArrayAdapter<String> adapterSpinner_fija = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosFija);
+                        ArrayAdapter<String> adapterSpinner_fija = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosFija){
+                            @Override
+                            public View getView(int position, View convertView, ViewGroup parent) {
+                                View view = super.getView(position, convertView, parent);
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.grey_color));
+                                return view;
+                            }    @Override
+                            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                                View view = super.getDropDownView(position, convertView, parent);
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.background_aplicacion));
+                                return view;
+                            }
+                        };
                         sp_bancos.setAdapter(adapterSpinner_fija);
                     }
                     else{
                         String[] bancosVarMixt = bancosDiferentes(lista_varMix);
-                        ArrayAdapter<String> adapterSpinner_varMix = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosVarMixt);
+                        ArrayAdapter<String> adapterSpinner_varMix = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosVarMixt){
+                            @Override
+                            public View getView(int position, View convertView, ViewGroup parent) {
+                                View view = super.getView(position, convertView, parent);
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.grey_color));
+                                return view;
+                            }    @Override
+                            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                                View view = super.getDropDownView(position, convertView, parent);
+                                ((TextView) view).setTextColor(getResources().getColor(R.color.background_aplicacion));
+                                return view;
+                            }
+                        };
                         sp_bancos.setAdapter(adapterSpinner_varMix);
                     }
                     sp_bancos.setVisibility(View.VISIBLE);

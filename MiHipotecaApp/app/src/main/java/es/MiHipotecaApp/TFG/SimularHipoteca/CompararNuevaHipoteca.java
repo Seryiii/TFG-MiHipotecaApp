@@ -2,10 +2,13 @@ package es.MiHipotecaApp.TFG.SimularHipoteca;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -13,6 +16,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,12 +55,40 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         closeIcon = findViewById(R.id.close_icon);
         tipoVivienda = findViewById(R.id.sp_tipo_vivienda);
         String[] tiposVivienda = {"Vivienda habitual", "Segunda vivienda", "No residente", "Otros"};
-        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, tiposVivienda);
+        ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, tiposVivienda){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                ((TextView) view).setTextColor(getResources().getColor(R.color.grey_color));
+                return view;
+        }    @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                ((TextView) view).setTextColor(getResources().getColor(R.color.background_aplicacion));
+                return view;
+            }
+        };
+
+
+
         tipoVivienda.setAdapter(adapter);
 
         comunidadComp = findViewById(R.id.sp_comunidad_comparador);
 
-        String[] comunidades = {"A Coruña", "Álava", "Albacete", "Alicante", "Almeria", "Asturias", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ceuta", "Ciudad Real", "Córdoba", "Cuenca", "Girona", "Granada", "Guadalajara", "Guipuzcoa", "Huelva", "Huesca", "Illes Balears ", "Jaén", "León", "LLeida", "La Rioja", "Lugo", "Madrid", "Málaga", "Melilla", "Murcia", "Navarra", "Ourense", "Palencia", "Palmas", "Pontevedra", "Salamanca", "Santa Cruz De Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza"};        ArrayAdapter<String> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
+        String[] comunidades = {"A Coruña", "Álava", "Albacete", "Alicante", "Almeria", "Asturias", "Ávila", "Badajoz", "Barcelona", "Burgos", "Cáceres", "Cádiz", "Cantabria", "Castellón", "Ceuta", "Ciudad Real", "Córdoba", "Cuenca", "Girona", "Granada", "Guadalajara", "Guipuzcoa", "Huelva", "Huesca", "Illes Balears ", "Jaén", "León", "LLeida", "La Rioja", "Lugo", "Madrid", "Málaga", "Melilla", "Murcia", "Navarra", "Ourense", "Palencia", "Palmas", "Pontevedra", "Salamanca", "Santa Cruz De Tenerife", "Segovia", "Sevilla", "Soria", "Tarragona", "Teruel", "Toledo", "Valencia", "Valladolid", "Vizcaya", "Zamora", "Zaragoza"};
+        ArrayAdapter<String> adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades){
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                View view = super.getView(position, convertView, parent);
+                ((TextView) view).setTextColor(getResources().getColor(R.color.grey_color));
+                return view;
+            }    @Override
+            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                ((TextView) view).setTextColor(getResources().getColor(R.color.background_aplicacion));
+                return view;
+            }
+        };
         comunidadComp.setAdapter(adapter2);
 
         viviendaNuevaCheck    = findViewById(R.id.checkBox_vivienda_nueva);
@@ -73,7 +105,23 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
     private void eventos(){
         closeIcon.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { finish(); }
+            public void onClick(View v) {
+                AlertDialog dialogo = new AlertDialog.Builder(v.getContext())
+                        .setPositiveButton(getString(R.string.si_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        })
+                        .setNegativeButton(getString(R.string.no_eliminar_cuenta), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        })
+                        .setTitle("CANCELAR COMPARACION").setMessage("¿Desea dejar de crear una nueva comparación? Perderá todo su progreso").create();
+                dialogo.show();
+                }
         });
 
         viviendaNuevaCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

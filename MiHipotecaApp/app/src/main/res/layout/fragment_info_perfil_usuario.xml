@@ -23,8 +23,12 @@
           android:layout_marginStart="36dp"
           android:layout_marginTop="32dp"
           android:layout_weight="1"
-          android:fontFamily="@font/allerta"
+          android:fontFamily="@font/text_bold"
           android:textColor="@color/titulo2"
+          android:shadowColor="@color/dark_blue"
+          android:shadowDx="3"
+          android:shadowDy="3"
+          android:shadowRadius="3"
           android:text="@string/label_configuracion_usuario"
           android:textSize="32dp"
           />
@@ -61,7 +65,8 @@
             android:layout_marginStart="8dp"
             android:textColor="@color/text_color"
             android:text="@string/label_modificar_perfil"
-            android:textSize="28dp"
+            android:fontFamily="@font/text_bold"
+            android:textSize="25dp"
             />
         <ImageView
             android:layout_width="0dp"
@@ -97,10 +102,11 @@
         android:layout_width="0dp"
         android:layout_weight="4"
         android:layout_height="wrap_content"
+        android:fontFamily="@font/text_bold"
         android:textColor="@color/text_color"
         android:layout_marginStart="8dp"
         android:text="@string/label_pasar_premium"
-        android:textSize="28dp"
+        android:textSize="25dp"
         />
 
     <ImageView
@@ -140,17 +146,18 @@
         android:layout_weight="4"
         android:layout_height="wrap_content"
         android:textColor="@color/text_color"
+        android:fontFamily="@font/text_bold"
         android:layout_marginStart="8dp"
         android:text="@string/label_notificar_problema"
-        android:textSize="28dp"
+        android:textSize="25dp"
         />
 
     <ImageView
-        android:layout_width="48dp"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="48dp"
         android:layout_marginEnd="32dp"
-        android:background="@drawable/baseline_arrow_forward_ios_24"
-        />
+        android:background="@drawable/baseline_arrow_forward_ios_24" />
   </LinearLayout>
   <LinearLayout
       android:id="@+id/btn_acercaDe"
@@ -174,7 +181,8 @@
         android:layout_marginStart="8dp"
         android:textColor="@color/text_color"
         android:text="@string/label_acercaDe"
-        android:textSize="28dp" />
+        android:fontFamily="@font/text_bold"
+        android:textSize="25dp" />
 
     <ImageView
         android:layout_width="0dp"
@@ -203,10 +211,11 @@
         android:layout_width="0dp"
         android:layout_weight="4"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:textColor="@color/text_color"
         android:text="@string/label_pol_privacidad"
-        android:textSize="28dp"
+        android:fontFamily="@font/text_bold"
+        android:textSize="25dp"
         />
 
     <ImageView
@@ -250,7 +259,8 @@
         android:textColor="@color/text_color"
         android:layout_marginStart="8dp"
         android:text="@string/label_cierre_sesion"
-        android:textSize="28dp"
+        android:fontFamily="@font/text_bold"
+        android:textSize="25dp"
         />
     <ImageView
         android:layout_width="0dp"
@@ -269,7 +279,7 @@
       android:orientation="horizontal"
       android:gravity="center"
       android:layout_marginTop="16dp"
-      android:layout_marginBottom="16dp">
+      android:layout_marginBottom="24dp">
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="0dp"
         android:layout_weight="1"
@@ -285,7 +295,8 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/label_eliminar_usuario"
-        android:textSize="28dp"
+        android:fontFamily="@font/text_bold"
+        android:textSize="25dp"
         />
 
     <ImageView

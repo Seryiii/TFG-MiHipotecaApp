@@ -26,9 +26,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginTop="44dp"
-                android:fontFamily="@font/allerta"
+                android:layout_marginStart="12dp"
                 android:text="@string/titulo_actividad_principal"
+                android:fontFamily="@font/text_bold"
                 android:textColor="@color/titulo2"
+                android:shadowColor="@color/dark_blue"
+                android:shadowDx="3"
+                android:shadowDy="3"
+                android:shadowRadius="3"
                 android:gravity="center"
                 android:textSize="28dp"
                 app:layout_constraintEnd_toStartOf="@+id/foto_perfil_pag_principal"
@@ -61,9 +66,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:gravity="center"
+                android:fontFamily="@font/text_bold"
                 android:text="Mis ofertas"
                 android:textColor="@color/text_color"
-                android:textSize="18dp" />
+                android:textSize="20dp" />
             <ImageView
                 android:layout_width="35dp"
                 android:layout_height="35dp"
