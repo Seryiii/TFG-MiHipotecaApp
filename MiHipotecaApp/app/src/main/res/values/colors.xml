@@ -19,6 +19,7 @@
     <color name="color_btn">#316CB3</color>
     <color name="purple_200">#2F3333</color>
     <color name="dark_blue">#316CB3</color>
+    <color name="picked_button">#12345C</color>
     <color name="purple_700">#2F3333</color>
     <color name="teal_200">#316CB3</color>
     <color name="teal_700">#316CB3</color>

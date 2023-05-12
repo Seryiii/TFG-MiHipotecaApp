@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
-xmlns:tools="http://schemas.android.com/tools"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical"
-android:background="@color/background_aplicacion"
-tools:context=".SimularHipoteca.MostrarOfertas">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/background_aplicacion"
+    tools:context=".SimularHipoteca.MostrarOfertas">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="12"
+            android:layout_gravity="center"
+            android:textAlignment="center"
+            android:fontFamily="@font/text_bold"
+            android:layout_marginLeft="25dp"
+            android:textColor="@color/titulo2"
+            android:shadowColor="@color/dark_blue"
+            android:shadowDx="3"
+            android:shadowDy="3"
+            android:shadowRadius="3"
+            android:text="Ofertas"
+            android:textSize="28dp" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/close_icon_comparar_hip"
+            android:layout_width="wrap_content"
+            android:gravity="center"
+            android:layout_height="30dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/close_icon"
+            />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,18 +77,8 @@ tools:context=".SimularHipoteca.MostrarOfertas">
             android:visibility="visible"
             />
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/close_icon_comparar_hip"
-            android:layout_width="wrap_content"
-            android:gravity="center"
-            android:layout_height="30dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginEnd="16dp"
-            android:src="@drawable/close_icon"
-            />
-
     </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -76,14 +100,14 @@ tools:context=".SimularHipoteca.MostrarOfertas">
                 android:text="Filtrar por bancos"
                 android:textColor="@color/text_color"
                 android:layout_gravity="center"
-                android:visibility="visible"
+                android:visibility="invisible"
                 />
             <Switch
                 android:id="@+id/switchBusqueda"
                 android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:visibility="visible"
+                android:visibility="invisible"
                 />
             <Spinner
                 android:id="@+id/sp_bancos"
@@ -92,7 +116,7 @@ tools:context=".SimularHipoteca.MostrarOfertas">
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:layout_marginStart="15dp"
-                android:visibility="visible"
+                android:visibility="invisible"
                 />
 
         </LinearLayout>
@@ -136,7 +160,7 @@ tools:context=".SimularHipoteca.MostrarOfertas">
         android:layout_centerInParent="true"
         android:layout_gravity="center"
         android:layout_marginTop="100dp"
-        android:visibility="visible" />
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/tvEspera"

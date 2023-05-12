@@ -61,6 +61,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
         rvLista.setLayoutManager(manager);
         adapter = new RecyclerAdapter(ofertasFija,"fija",this);
         rvLista.setAdapter(adapter);
+        btn_fijas.setAlpha(0.5f);
     }
 
     private void eventos() {
@@ -70,8 +71,8 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
                 adapter = new RecyclerAdapter(ofertasFija,"fija",tusOfertas);
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-
-            }
+                btn_fijas.setAlpha(0.5f);
+                btn_varMix.setAlpha(1f);             }
         });
 
         btn_varMix.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +81,8 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
                 adapter = new RecyclerAdapter(ofertasVarMix,"varMix",tusOfertas);
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
-
+                btn_varMix.setAlpha(0.5f);
+                btn_fijas.setAlpha(1f);
             }
         });
         closeIcon.setOnClickListener(new View.OnClickListener() {

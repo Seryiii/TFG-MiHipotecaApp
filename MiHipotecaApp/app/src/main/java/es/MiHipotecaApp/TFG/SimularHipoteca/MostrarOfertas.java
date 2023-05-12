@@ -104,6 +104,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         URL_final = getIntent().getStringExtra("url");
 
         initValues();
+        btn_fijas.setAlpha(0.5f);
         eventos();
     }
 
@@ -134,6 +135,9 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                 ArrayAdapter<String> adapterSpinner_fija = new ArrayAdapter(context, android.R.layout.simple_spinner_item, bancosFija);
                 sp_bancos.setAdapter(adapterSpinner_fija);
                 fija = true;
+                btn_fijas.setAlpha(0.5f);
+                btn_fijas.setAlpha(0.5f);
+
             }
         });
 
