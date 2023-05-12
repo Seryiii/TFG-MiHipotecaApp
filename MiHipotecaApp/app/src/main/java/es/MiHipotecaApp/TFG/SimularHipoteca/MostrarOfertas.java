@@ -31,9 +31,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.NetworkError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -51,6 +53,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -287,7 +290,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-
+                        cargarOfertasFija(mJsonArray);
+                        /*
                         for (int i = 0; i < mJsonArray.length(); i++) {
                             try {
                                 JSONObject jsonObject = mJsonArray.getJSONObject(i);
@@ -311,13 +315,14 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                                 throw new RuntimeException(e);
                             }
 
-                        }
+                        }*/
                         try {
                             mJsonArray = response.getJSONArray("var_mixta");
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
-
+                        cargarOfertasVariableMixta(mJsonArray);
+                        /*
                         for (int i = 0; i < mJsonArray.length(); i++) {
                             try {
                                 JSONObject jsonObject = mJsonArray.getJSONObject(i);
@@ -352,28 +357,129 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                         btn_varMix.setVisibility(View.VISIBLE);
                         tvEspera.setVisibility(View.GONE);
                         switchBusqueda.setVisibility(View.VISIBLE);
-
+*/
+                        adapter.notifyDataSetChanged();
+                        txt_filtrarBancos.setVisibility(View.VISIBLE);
+                        progressBar.setVisibility(View.GONE);
+                        btn_fijas.setVisibility(View.VISIBLE);
+                        btn_varMix.setVisibility(View.VISIBLE);
+                        tvEspera.setVisibility(View.GONE);
+                        switchBusqueda.setVisibility(View.VISIBLE);
                     }
 
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Intent intent = new Intent(MostrarOfertas.this, CompararNuevaHipoteca.class);
-                        startActivity(intent);
-                        Toast.makeText(MostrarOfertas.this,"Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
-                        Log.d("PETICIONES", error.toString());
+                        if (error instanceof NetworkError && error.networkResponse != null && error.networkResponse.statusCode == 200) {
+                            // Manejar el código de respuesta 200 como una respuesta válida
+                            JSONObject response = null;
+                            try {
+                                response = new JSONObject(new String(error.networkResponse.data, HttpHeaderParser.parseCharset(error.networkResponse.headers)));
+                                // Procesar la respuesta aquí
+                                JSONArray mJsonArray=null;
+                                try {
+                                    mJsonArray = response.getJSONArray("fija");
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                cargarOfertasFija(mJsonArray);
+                                try {
+                                    mJsonArray = response.getJSONArray("var_mixta");
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                                cargarOfertasVariableMixta(mJsonArray);
+
+                            } catch (JSONException | UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                                // Manejar cualquier error de análisis aquí
+                            }
+                            adapter.notifyDataSetChanged();
+                            txt_filtrarBancos.setVisibility(View.VISIBLE);
+                            progressBar.setVisibility(View.GONE);
+                            btn_fijas.setVisibility(View.VISIBLE);
+                            btn_varMix.setVisibility(View.VISIBLE);
+                            tvEspera.setVisibility(View.GONE);
+                            switchBusqueda.setVisibility(View.VISIBLE);
+
+                        } else {
+                            Intent intent = new Intent(MostrarOfertas.this, CompararNuevaHipoteca.class);
+                            startActivity(intent);
+                            Toast.makeText(MostrarOfertas.this, "Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
+                            Log.d("PETICIONES", error.toString());
+                        }
                     }
         }
         );
         request.setRetryPolicy(new DefaultRetryPolicy(
-                200000, // segundos
+                300000, // segundos
                 0, // 1 reintentos
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         VolleySingleton.getInstance(context).addToRequestQueue(request);
 
     }
 
+    private void cargarOfertasVariableMixta(JSONArray mJsonArray) {
+        for (int i = 0; i < mJsonArray.length(); i++) {
+            try {
+                JSONObject jsonObject = mJsonArray.getJSONObject(i);
+                String banco = jsonObject.getString("banco");
+                String desc = jsonObject.getString("desc");
+                String tin_x_anios = jsonObject.getString("tin_x_anios");
+                String tin_resto = jsonObject.getString("tin_resto");
+                String tae = jsonObject.getString("tae");
+                String cuota_x_anios = jsonObject.getString("cuota_x_anios");
+                String cuota_resto = jsonObject.getString("cuota_resto");
+                if(detalles){
+                    String vinculaciones = jsonObject.getString("vinculaciones");
+                    Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto,vinculaciones);
+                    lista_varMix.add(oferta);
+                }
+                else{
+                    Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto);
+                    lista_varMix.add(oferta);
+                }
 
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+    }
+
+    private void cargarOfertasFija(JSONArray mJsonArray){
+
+
+        for (int i = 0; i < mJsonArray.length(); i++) {
+            try {
+                JSONObject jsonObject = mJsonArray.getJSONObject(i);
+                String banco = jsonObject.getString("banco");
+                String desc = jsonObject.getString("desc");
+                String tin = jsonObject.getString("tin");
+                String tae = jsonObject.getString("tae");
+                String cuota = jsonObject.getString("cuota");
+
+                if(detalles){
+                    String vinculaciones = jsonObject.getString("vinculaciones");
+                    Oferta oferta = new Oferta(banco,desc,tin,tae,cuota,vinculaciones);
+                    lista_fija.add(oferta);
+                }
+                else{
+                    Oferta oferta = new Oferta(banco,desc,tin,tae,cuota);
+                    lista_fija.add(oferta);
+                }
+
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+
+        }
+
+    }
+    private void SetVisible(){
+
+    }
 
     private Runnable runnable = new Runnable() {
         @Override
@@ -427,6 +533,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                     db.collection("ofertas_guardadas").add(o).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
+
                             //Toast.makeText(MostrarOfertas., "Oferta guardada correctamente!", Toast.LENGTH_LONG).show();
                             Log.w("GUARDAR","Exito al guardar");
                             oferta.setGuardada(true);
