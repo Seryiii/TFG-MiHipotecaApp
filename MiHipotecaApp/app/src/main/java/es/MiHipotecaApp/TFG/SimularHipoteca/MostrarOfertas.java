@@ -136,7 +136,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                 sp_bancos.setAdapter(adapterSpinner_fija);
                 fija = true;
                 btn_fijas.setAlpha(0.5f);
-                btn_fijas.setAlpha(0.5f);
+                btn_varMix.setAlpha(1f);
 
             }
         });
@@ -152,6 +152,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                 rvLista.setAdapter(adapter);
                 adapter.notifyDataSetChanged();
                 fija = false;
+                btn_varMix.setAlpha(0.5f);
+                btn_fijas.setAlpha(1f);
             }
         });
         switchBusqueda.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
