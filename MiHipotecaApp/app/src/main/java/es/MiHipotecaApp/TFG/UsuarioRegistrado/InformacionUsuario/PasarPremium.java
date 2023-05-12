@@ -102,7 +102,7 @@ public class PasarPremium extends AppCompatActivity {
                         plan_actual.setText("MiHipotecaApp Premium");
                         btn_pasar_premium.setText("CANCELAR SUSCRIPCIÓN");
                         titulo_actividad.setText("Tu plan premium");
-                        linear_layout_precio.setVisibility(View.INVISIBLE);
+                        linear_layout_precio.setVisibility(View.VISIBLE);
                         premium = true;
                         pasate = "Volver a MiHipotecaApp Free";
                         mejorar = "¿Desea volver a MiHipotecaApp Free?";

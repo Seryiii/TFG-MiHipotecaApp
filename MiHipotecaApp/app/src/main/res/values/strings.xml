@@ -121,7 +121,7 @@
     <string name="label_viv_seg_mano">Vivienda de segunda mano</string>
     <string name="label_seguimiento">Seguimiento</string>
     <string name="label_tipo_de_hipoteca">Tipo de Hipoteca: </string>
-    <string name="label_dinero_que_falta_por_pagar">Dinero que falta por pagar</string>
+    <string name="label_dinero_que_falta_por_pagar">Dinero a pagar:</string>
     <string name="label_tiempo_restante">Tiempo restante</string>
     <string name="label_cuota_de">CUOTA DE </string>
     <string name="label_ingresos">Ingresos mensuales:</string>
