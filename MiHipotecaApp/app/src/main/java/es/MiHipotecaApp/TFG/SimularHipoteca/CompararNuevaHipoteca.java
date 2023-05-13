@@ -173,10 +173,16 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
         //COMPROBACION CANTIDAD APORTADA POR EL BANCO <= 80%
         double precio_viv = Double.parseDouble(precioVivienda.getText().toString());
         double ahorro_aport = Double.parseDouble(cantidadAbonada.getText().toString());
+        int anios_hipoteca=Integer.parseInt(plazo.getText().toString());
         double dinero_aport_banco = precio_viv - ahorro_aport;
         if(dinero_aport_banco > precio_viv * 0.8){
             cantidadAbonada.setError(getString(R.string.ahorro_mayor_80_por_ciento));
             camposCorrectos = false;
+        }
+
+        if(anios_hipoteca>30){
+            plazo.setError(getString(R.string.anios_superados));
+            camposCorrectos= false;
         }
         if(TextUtils.isEmpty(plazo.getText())){
             plazo.setError(getString(R.string.plazo_vacio));
@@ -187,6 +193,7 @@ public class CompararNuevaHipoteca extends AppCompatActivity {
             plazo.setError(getString(R.string.ingresos_vacio));
             camposCorrectos = false;
         }
+
 
         if(camposCorrectos){
             Intent intent = new Intent(CompararNuevaHipoteca.this, MostrarOfertas.class);
