@@ -56,8 +56,9 @@
             android:layout_height="wrap_content"
             android:text="@string/label_banco"
             android:textSize="20dp"
+            android:layout_gravity="center"
             android:textColor="@color/text_color"
-            android:layout_marginStart="28dp"
+
             android:layout_marginTop="24dp"/>
         <Spinner
             android:id="@+id/sp_banco_nuevo_seg_edit"
@@ -150,7 +151,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/label_porcentaje_fijo"
-            android:layout_marginStart="16dp"
+            android:gravity="center"
             android:textColor="@color/text_color"
             android:layout_marginTop="20dp"
             android:visibility="visible"
@@ -163,9 +164,10 @@
             android:layout_height="48dp"
             android:paddingLeft="10dp"
             android:layout_marginTop="8dp"
+            android:layout_gravity="center"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
-            android:layout_marginStart="16dp"
+
             android:hint="Porcentaje fijo"
             android:inputType="numberDecimal"
             android:visibility="visible"
@@ -376,7 +378,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/label_gastos_totales"
-            android:layout_marginStart="16dp"
+            android:gravity="center"
             android:textColor="@color/text_color"
             android:layout_marginTop="20dp"
             android:textSize="16sp"/>
@@ -387,9 +389,9 @@
             android:layout_width="300dp"
             android:layout_height="48dp"
             android:paddingLeft="10dp"
+            android:layout_gravity="center"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
-            android:layout_marginStart="16dp"
             android:inputType="numberDecimal"
             android:text="0" />
 
@@ -398,7 +400,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/label_gastos_vinculaciones"
-            android:layout_marginStart="16dp"
+            android:gravity="center"
             android:textColor="@color/text_color"
             android:layout_marginTop="20dp"
             android:textSize="16sp"/>
@@ -451,7 +453,7 @@
             android:layout_height="wrap_content"
             android:text="@string/label_nombre_hipoteca"
             android:textColor="@color/text_color"
-            android:layout_marginStart="16dp"
+            android:gravity="center"
             android:layout_marginTop="20dp"
             android:textSize="16sp"/>
 
@@ -462,10 +464,10 @@
             android:layout_width="300dp"
             android:layout_height="48dp"
             android:paddingLeft="10dp"
+            android:layout_gravity="center"
             android:layout_marginTop="8dp"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
-            android:layout_marginStart="16dp"
             android:inputType="text"
             android:maxLength="20"
             android:text="" />
