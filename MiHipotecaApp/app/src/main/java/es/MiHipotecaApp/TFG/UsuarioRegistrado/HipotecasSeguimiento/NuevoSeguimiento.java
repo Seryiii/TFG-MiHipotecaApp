@@ -36,6 +36,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -391,7 +392,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
     private void showDatePickerDialog() {
         DatePickerFragment newFragment = DatePickerFragment.newInstance((datePicker, year, month, day) -> {
             // +1 porque enero es cero
-            final int MIN_YEAR = 1999;
+            final int MIN_YEAR = 1800;
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.YEAR, MIN_YEAR);
             Date minDate = calendar.getTime();
@@ -401,7 +402,7 @@ public class NuevoSeguimiento extends AppCompatActivity {
             if (selectedDate.after(minDate)) {
                 final String formattedDate =  twoDigits(day) + "/" + twoDigits(month+1) + "/" + fourDigits(year);
                 inicio_hipoteca.setText(formattedDate);
-            } else Toast.makeText(this, "El año seleccionado debe ser mayor o igual a " + MIN_YEAR, Toast.LENGTH_SHORT).show();
+            } else Toast.makeText(this, "El año seleccionado debe ser mayor o igual a 1999", Toast.LENGTH_SHORT).show();
         });
 
         newFragment.show(getSupportFragmentManager(), "datePicker");
@@ -507,9 +508,11 @@ public class NuevoSeguimiento extends AppCompatActivity {
             }
         }
 
-
         if (TextUtils.isEmpty(inicio_hipoteca.getText())) {
             inicio_hipoteca.setError("Debe seleccionar una fecha de inicio para la hipoteca");
+            camposCorrectos = false;
+        }else if(Integer.parseInt(inicio_hipoteca.getText().toString().substring(6, 10)) <  1999){
+            inicio_hipoteca.setError("La hipoteca no puede ser anterior a 1999");
             camposCorrectos = false;
         }
 
