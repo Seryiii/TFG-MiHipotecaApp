@@ -40,7 +40,7 @@
                     android:shadowRadius="3"                      android:gravity="center"
                     android:text="@string/label_seguimiento"
                     android:textSize="36sp"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
 
                     <TextView
                     android:id="@+id/nombre_seguimiento_hipoteca"
@@ -54,7 +54,7 @@
                     android:shadowRadius="3"                      android:gravity="center"
                     android:text="Titulo"
                     android:textSize="35sp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
                 </LinearLayout>
 
@@ -84,7 +84,7 @@
                 android:textColor="@color/text_color"
                 android:text="@string/label_tipo_de_hipoteca"
                 android:textSize="22sp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/tipo_hipoteca_seguimiento"
@@ -96,7 +96,7 @@
                 android:textColor="@color/text_color"
                 android:text="Fija"
                 android:textSize="22sp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
         </LinearLayout>
 
         <LinearLayout
@@ -116,7 +116,7 @@
                 android:text="Banco"
                 android:textAlignment="center"
                 android:textSize="20sp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
             <ImageView
                 android:id="@+id/logo_banco_seg"
@@ -128,7 +128,7 @@
                 android:layout_marginBottom="12dp"
                 android:paddingHorizontal="8dp"
                 android:layout_marginEnd="8dp"
-                android:visibility="visible" />
+                android:visibility="invisible" />
 
         </LinearLayout>
 
@@ -163,7 +163,7 @@
                     android:layout_marginBottom="16dp"
                     android:textColor="@color/text_color"
                     android:textSize="16sp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
                 <TextView
                     android:id="@+id/txt_dinero_falta_pagar"
                     android:layout_width="match_parent"
@@ -175,7 +175,7 @@
                     android:textColor="@color/text_color"
                     android:text="@string/label_dinero_que_falta_por_pagar"
                     android:textSize="16sp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
                 <TextView
                     android:id="@+id/txt_tiempo_restante"
                     android:layout_width="match_parent"
@@ -186,7 +186,7 @@
                     android:textColor="@color/text_color"
                     android:text="@string/label_tiempo_restante"
                     android:textSize="16sp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
 
             </LinearLayout>
             <LinearLayout
@@ -204,7 +204,7 @@
                     android:layout_marginBottom="16dp"
                     android:textColor="@color/text_color"
                     android:textSize="16sp"
-                    android:visibility="visible" />
+                    android:visibility="invisible" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -223,7 +223,7 @@
                         android:textStyle="bold"
                         android:layout_marginEnd="6dp"
                         android:textSize="16sp"
-                        android:visibility="visible"/>
+                        android:visibility="invisible"/>
                     <ImageButton
                         android:id="@+id/btn_info_dinero_por_pagar"
                         android:layout_width="wrap_content"
@@ -231,7 +231,7 @@
                         android:layout_gravity="center"
                         android:src="@drawable/info"
                         android:background="@null"
-                        android:visibility="visible"/>
+                        android:visibility="invisible"/>
 
                 </LinearLayout>
                 <TextView
@@ -244,7 +244,7 @@
                     android:text="20 años"
                     android:textStyle="bold"
                     android:textSize="16sp"
-                    android:visibility="visible"/>
+                    android:visibility="invisible"/>
 
             </LinearLayout>
         </LinearLayout>
@@ -270,7 +270,7 @@
                 android:layout_marginHorizontal="5dp"
                 android:textSize="12sp"
                 android:text="@string/txt_btn_cuadro_amortizacion"
-                android:visibility="visible"/>
+                android:visibility="invisible"/>
 
             <Button
                 android:id="@+id/btn_amortizar_antes"
@@ -281,7 +281,7 @@
                 android:textSize="12sp"
                 android:background="@drawable/btn_bordes_redondos"
                 android:text="@string/txt_btn_amortizar_antes"
-                android:visibility="visible"/>
+                android:visibility="invisible"/>
 
         </LinearLayout>
 
@@ -298,7 +298,7 @@
             android:textColor="@color/text_color"
             android:text="@string/label_cuota_de"
             android:textSize="22sp"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
 
         <TextView
             android:id="@+id/nombre_mes_actual_seguimiento_hip"
@@ -312,7 +312,7 @@
             android:text="Enero"
             android:textStyle="bold"
             android:textSize="22sp"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
 
         <LinearLayout
             android:id="@+id/layout_info_cuota_hip"
@@ -323,7 +323,7 @@
             android:layout_marginEnd="8dp"
             android:orientation="vertical"
             android:background="@drawable/btn_bordes_redondos"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <LinearLayout
                 android:id="@+id/layout_cuota_seguimiento"
@@ -519,7 +519,7 @@
             android:layout_marginStart="8dp"
             android:gravity="center"
             android:background="@drawable/btn_bordes_redondos2"
-            android:visibility="visible">
+            android:visibility="invisible">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -590,7 +590,7 @@
             android:textAlignment="center"
             android:text="Aportado vs a financiar"
             android:textSize="22sp"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
 
 
         <com.anychart.AnyChartView
@@ -600,10 +600,24 @@
             android:layout_marginEnd="15dp"
             android:layout_width="match_parent"
             android:layout_height="450dp"
-            android:visibility="visible"/>
+            android:visibility="invisible"/>
 
+        <TextView
+            android:id="@+id/texto_si_no_premium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/allerta"
+            android:layout_marginTop="20dp"
+            android:textColor="@color/text_color"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:text="No puedes ver el gráfico hasta que no seas usuario premium"
+            android:textSize="22sp"
+            android:visibility="gone"/>
 
         <LinearLayout
+            android:id="@+id/tabla_valores_grafico"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -855,7 +869,7 @@
                 android:layout_marginEnd="10dp"
                 android:stretchColumns="*"
                 android:background="@color/white"
-                android:visibility="visible">
+                android:visibility="invisible">
 
                 <TableRow
                     android:layout_width="match_parent"

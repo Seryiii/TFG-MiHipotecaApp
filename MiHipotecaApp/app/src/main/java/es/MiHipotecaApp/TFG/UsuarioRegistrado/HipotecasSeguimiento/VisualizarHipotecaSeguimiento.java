@@ -87,6 +87,9 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private TextView titulo_grafico;
     private AnyChartView grafico;
 
+    private TextView texto_si_no_premium;
+
+    private LinearLayout tabla_valores_grafico;
     private TextView capital_amortizado;
     private TextView capital_pendiente;
     private TextView intereses_pagados;
@@ -121,8 +124,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
     private int numero_cuotas_pagadas;
 
-    public int anioInicio;
-    public String mesInicio;
 
     private ProgressBar progressBar;
 
@@ -181,12 +182,13 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         //GRÁFICOS
         titulo_grafico                       = findViewById(R.id.titulo_grafico);
         grafico                              = findViewById(R.id.grafico_seguimiento);
+        tabla_valores_grafico                = findViewById(R.id.tabla_valores_grafico);
         capital_amortizado                   = findViewById(R.id.capital_amortizado_seguimiento_val);
         capital_pendiente                    = findViewById(R.id.capital_pendiente_seguimiento_val);
         intereses_pagados                    = findViewById(R.id.intereses_pagados_seguimiento_val);
         intereses_pendientes                 = findViewById(R.id.intereses_pendientes_seguimiento_val);
-        info_grafico                       = findViewById(R.id.info_grafico);
-
+        info_grafico                         = findViewById(R.id.info_grafico);
+        texto_si_no_premium                  = findViewById(R.id.texto_si_no_premium);
         btn_grafico_gastos_totales           = findViewById(R.id.btn_grafico_gastos_totales);
         btn_grafico_intereses_capital        = findViewById(R.id.btn_grafico_intereses_capital);
 
@@ -762,8 +764,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                     DocumentSnapshot document = querySnapshot.getDocuments().get(0);
                     if(!document.getBoolean("premium")) {
                         //Al no ser premium no deja interactuar con los graficos
-                        grafico.setAlpha(0.1f); //Hace que el grafico se vea menos
+                        grafico.setAlpha(0.0f); //Hace que el grafico se vea menos
+                        tabla_valores_grafico.setVisibility(View.GONE);
                         premium = false;
+                        texto_si_no_premium.setVisibility(View.VISIBLE);
                         grafico.setClickable(false);
                     } else premium = true;
 
