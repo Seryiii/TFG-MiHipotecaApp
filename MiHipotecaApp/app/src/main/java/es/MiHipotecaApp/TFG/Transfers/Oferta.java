@@ -18,6 +18,9 @@ public class Oferta {
     private String nombre ;
     private boolean guardada;
 
+    private int cuota_num;
+    private double tae_num;
+
 
 
     public Oferta(String banco, String desc, String tin, String tae, String cuota) {
@@ -57,6 +60,22 @@ public class Oferta {
         this.cuota_resto = cuota_resto;
         this.vinculaciones = vinculaciones;
         this.guardada = false;
+    }
+
+    public int getCuota_num(){
+        return cuota_num;
+    }
+
+    public void setCuota_num(int cuota_num) {
+        this.cuota_num = cuota_num;
+    }
+
+    public double getTae_num() {
+        return tae_num;
+    }
+
+    public void setTae_num(double tae_num) {
+        this.tae_num = tae_num;
     }
 
     public String getVinculaciones() {

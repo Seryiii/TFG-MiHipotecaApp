@@ -55,9 +55,13 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MostrarOfertas extends AppCompatActivity implements custom_dialog_oferta.pasarDatos {
 
@@ -68,6 +72,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     private List<Oferta> lista_varMix = new ArrayList<>();
     private Button btn_fijas;
     private Button btn_varMix;
+    private Button btn_orderTae;
+    private Button btn_orderCuota;
     private TextView tvEspera;
     private JSONObject datos;
     private  boolean detalles;
@@ -123,6 +129,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         txt_filtrarBancos = findViewById(R.id.txt_filtrarBancos);
         switchBusqueda = findViewById(R.id.switchBusqueda);
         close_icon_comparar_hip = findViewById(R.id.close_icon_comparar_hip);
+        btn_orderCuota = findViewById(R.id.btn_ordenarCuota);
+        btn_orderTae = findViewById(R.id.btn_ordenarTae);
     }
     private void eventos(){
         btn_fijas.setOnClickListener(new View.OnClickListener() {
@@ -154,6 +162,80 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                 fija = false;
                 btn_varMix.setAlpha(0.5f);
                 btn_fijas.setAlpha(1f);
+            }
+        });
+        btn_orderCuota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //fijas
+                for(Oferta oferta : lista_fija){
+                    int euroIndex = oferta.getCuota().indexOf('€');
+                    String numeroString = oferta.getCuota().substring(0, euroIndex).trim();
+                    numeroString = numeroString.replace(".", "");
+                    int numero = Integer.parseInt(numeroString);
+                    oferta.setCuota_num(numero);
+                }
+                // Ordenar la lista en función de la cuota
+                Collections.sort(lista_fija, new Comparator<Oferta>() {
+                    public int compare(Oferta o1, Oferta o2) {
+                        return Integer.compare(o1.getCuota_num(), o2.getCuota_num());
+                    }
+                });
+
+
+                //varMix
+                Pattern pattern = Pattern.compile("\\d+\\.?\\d*");
+                for(Oferta oferta : lista_varMix){
+                    Matcher matcher = pattern.matcher(oferta.getCuota_x());
+                    if (matcher.find()) {
+                        int cuota = Integer.parseInt(matcher.group());
+                        oferta.setCuota_num(cuota);
+                    }
+
+                }
+                // Ordenar la lista en función de la cuota
+                Collections.sort(lista_varMix, new Comparator<Oferta>() {
+                    public int compare(Oferta o1, Oferta o2) {
+                        return Integer.compare(o1.getCuota_num(), o2.getCuota_num());
+                    }
+                });
+                adapter.notifyDataSetChanged();
+            }
+        });
+
+        btn_orderTae.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //fijas
+                for(Oferta oferta : lista_fija){
+                    int porcentajeIndex = oferta.getTae().indexOf('%');
+                    String numeroString = oferta.getTae().substring(0, porcentajeIndex).trim();
+                    numeroString = numeroString.replace(',', '.');
+                    Double numero = Double.parseDouble(numeroString);
+                    oferta.setTae_num(numero);
+                }
+                // Ordenar la lista en función de la cuota
+                Collections.sort(lista_fija, new Comparator<Oferta>() {
+                    public int compare(Oferta o1, Oferta o2) {
+                        return Double.compare(o1.getTae_num(), o2.getTae_num());
+                    }
+                });
+
+                //varMix
+                for(Oferta oferta : lista_varMix){
+                    int porcentajeIndex = oferta.getTae().indexOf('%');
+                    String numeroString = oferta.getTae().substring(0, porcentajeIndex).trim();
+                    numeroString = numeroString.replace(',', '.');
+                    Double numero = Double.parseDouble(numeroString);
+                    oferta.setTae_num(numero);
+                }
+                // Ordenar la lista en función de la cuota
+                Collections.sort(lista_varMix, new Comparator<Oferta>() {
+                    public int compare(Oferta o1, Oferta o2) {
+                        return Double.compare(o1.getTae_num(), o2.getTae_num());
+                    }
+                });
+                adapter.notifyDataSetChanged();
             }
         });
         switchBusqueda.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
