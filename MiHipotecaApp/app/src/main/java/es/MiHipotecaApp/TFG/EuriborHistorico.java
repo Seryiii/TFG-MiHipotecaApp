@@ -78,7 +78,7 @@ public class EuriborHistorico extends AppCompatActivity {
                                 String valor_euribor = jsonObject.getString("valor");
                                 Double valor=Double.parseDouble(valor_euribor);
                                 Euribor eu=new Euribor(anio,mes,valor);
-                                db.collection("euribor_prueba").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
+                                db.collection("euribor").add(eu).addOnSuccessListener(new OnSuccessListener<DocumentReference>(){
 
 
                                     @Override

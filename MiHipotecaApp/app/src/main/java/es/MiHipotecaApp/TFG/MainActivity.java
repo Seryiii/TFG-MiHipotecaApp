@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
     private void comprobarEuribor(){
-        db.collection("euribor_prueba").get().addOnCompleteListener(task-> {
+        db.collection("euribor").get().addOnCompleteListener(task-> {
             if(task.isSuccessful()){
                 QuerySnapshot querySnapshot=task.getResult();
                 System.out.println(querySnapshot);
