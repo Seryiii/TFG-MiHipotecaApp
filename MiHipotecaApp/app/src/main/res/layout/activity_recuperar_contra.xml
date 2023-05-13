@@ -23,7 +23,7 @@
         android:shadowDy="3"
         android:shadowRadius="3"
         android:scaleType="centerCrop"
-        android:text="@string/label_recuperar_contrasenia"
+        android:text="@string/label_recuperar_contrasenia_titulo"
         android:textSize="36sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
