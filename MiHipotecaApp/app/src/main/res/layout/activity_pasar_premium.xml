@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".UsuarioRegistrado.InformacionUsuario.PasarPremium"
     android:background="@color/background_aplicacion">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,41 +21,42 @@
             android:layout_marginEnd="16dp"
             android:src="@drawable/close_icon" />
 
-        <TextView
+        <!--<TextView
             android:id="@+id/titulo_actividad"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/text_bold"
-            android:textColor="@color/titulo2"
             android:shadowColor="@color/dark_blue"
             android:shadowDx="3"
             android:shadowDy="3"
             android:shadowRadius="3"
             android:text="@string/label_pasate_premium"
-            android:textSize="28dp" />
+            android:textColor="@color/titulo2"
+            android:textSize="28dp" />-->
 
         <ViewFlipper
             android:id="@+id/view_flipper"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
             android:layout_gravity="center"
-            android:background="@color/dark_blue"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/btn_bordes_redondos"
             android:inAnimation="@anim/slide_in_right"
             android:outAnimation="@anim/slide_out_left">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                >
+                android:layout_gravity="center">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:textColor="@color/white"
                     android:text="@string/label_ventajas_premium_1"
                     android:textAlignment="center"
+                    android:textColor="@color/white"
                     android:textSize="24dp" />
             </LinearLayout>
 
@@ -62,26 +64,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:layout_gravity="center"
                     android:text="@string/label_ventajas_premium_2"
                     android:textAlignment="center"
+                    android:textColor="@color/white"
                     android:textSize="24dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
+
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/white"
                     android:layout_gravity="center"
                     android:text="@string/label_ventajas_premium_3"
                     android:textAlignment="center"
+                    android:textColor="@color/white"
                     android:textSize="24dp" />
             </LinearLayout>
 
@@ -91,13 +96,14 @@
             android:id="@+id/view_flipper2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center">
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                >
+                android:layout_gravity="center">
+
                 <androidx.constraintlayout.utils.widget.ImageFilterView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -110,6 +116,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
+
                 <androidx.constraintlayout.utils.widget.ImageFilterView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -117,10 +124,12 @@
 
                 </androidx.constraintlayout.utils.widget.ImageFilterView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center">
+
                 <androidx.constraintlayout.utils.widget.ImageFilterView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -134,14 +143,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/label_plan_actual"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="12dp"
+            android:text="@string/label_plan_actual"
             android:textColor="@color/text_color"
             android:textSize="24dp"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
+
         <androidx.cardview.widget.CardView
             android:id="@+id/my_card_view"
             android:layout_width="200dp"
@@ -155,14 +164,14 @@
                 android:id="@+id/plan_actual"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="MiHipotecaApp Free"
-                android:textColor="@color/white"
-                android:layout_gravity="center"/>
+                android:textColor="@color/white" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
             android:id="@+id/my_card_view_2"
-            android:layout_width="200dp"
+            android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="32dp"
@@ -174,61 +183,69 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
                     android:text="@string/label_plan_premium"
                     android:textColor="@color/white"
-                    android:layout_marginTop="10dp"
-                    android:layout_gravity="center"
-                    android:textStyle="bold"
                     android:textSize="16dp"
+                    android:textStyle="bold"
 
                     />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:textAlignment="center"
-                    android:text="@string/label_info_premium"
-                    android:textColor="@color/white"
                     android:layout_gravity="center"
-                    />
+                    android:layout_marginTop="10dp"
+                    android:padding="8dp"
+                    android:text="@string/label_info_premium"
+                    android:textAlignment="center"
+                    android:textColor="@color/white" />
+
                 <LinearLayout
                     android:id="@+id/linear_layout_precio"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
                     android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="12dp"
                     android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/coste_premium_tachado"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
                         android:text="@string/label_coste_premium_tachado"
                         android:textColor="@color/white"
-                        android:textSize="20dp"
-                        android:layout_gravity="center" />
+                        android:textSize="20dp" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="20dp"
                         android:text="@string/label_coste_premium_rebajado"
                         android:textColor="@color/white"
                         android:textSize="20dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="20dp"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-    <Button
-        android:id="@+id/btn_pasar_premium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/txt_btn_pasar_a_premium"
-        android:layout_marginTop="32dp"
-        android:backgroundTint="@color/dark_blue"
-        android:layout_gravity="center"/>
+
+        <Button
+            android:id="@+id/btn_pasar_premium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="#CAA024"
+            android:text="@string/txt_btn_pasar_a_premium" />
 
     </LinearLayout>
 

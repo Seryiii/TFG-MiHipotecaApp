@@ -597,13 +597,13 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
 
-        txt_edit_hipoteca.setText("Editar " + hip.getNombre());
+        //txt_edit_hipoteca.setText("Editar " + hip.getNombre());
         int i = 0;
         while(i < comunidades_base_datos.length){
             if(hip.getComunidad_autonoma().equals(comunidades_base_datos[i])) break;
             i++;
         }
-        txt_edit_comunidad.setText("Comunidad autonoma: " + comunidades[i]);
+        txt_edit_comunidad.setText("Comunidad autónoma: " + comunidades[i]);
 
 
         String [] bancos = {"ING","SANTANDER","BBVA","CAIXABANK","BANKINTER","EVO BANCO","SABADELL","UNICAJA","DEUTSCHE BANK","OPEN BANK","KUTXA BANK","IBERCAJA","ABANCA"};
@@ -616,15 +616,15 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
 
         txt_edit_tipo_vivienda.setText("Tipo de vivienda: " + hip.getTipo_vivienda());
 
-        txt_edit_antiguedad_vivienda.setText("Vivienda " + hip.getAntiguedad_vivienda());
+        txt_edit_antiguedad_vivienda.setText("Estado de la vivienda: " + hip.getAntiguedad_vivienda());
 
         txt_edit_precio_vivienda.setText("Precio de la vivienda: " + hip.getPrecio_vivienda() + "€");
         txt_edit_cant_abonada.setText("Cantidad abonada: " + hip.getCantidad_abonada() + "€");
-        txt_edit_plazo_hip.setText("Plazo hipoteca: " + hip.getPlazo_anios() + " años");
+        txt_edit_plazo_hip.setText("Plazo de la hipoteca: " + hip.getPlazo_anios() + " años");
 
         //date
         SimpleDateFormat formato = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        txt_edit_inicio_hip.setText("Inicio hipoteca: " + formato.format(hip.getFecha_inicio()));
+        txt_edit_inicio_hip.setText("Fecha de inicio: " + formato.format(hip.getFecha_inicio()));
 
         txt_edit_tipo_hip.setText("Tipo de hipoteca: " + hip.getTipo_hipoteca());
         if(hip.getTipo_hipoteca().equals("variable")){

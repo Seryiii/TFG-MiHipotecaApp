@@ -43,7 +43,7 @@
         android:layout_width="350dp"
         android:layout_height="wrap_content"
         android:fontFamily="@font/allerta"
-        android:text="¡Encuentra y controla la casa de tus sueños!"
+        android:text="¡Consigue y gestiona la casa de tus sueños, al mejor precio!"
         android:textColor="@color/white"
         android:textAlignment="center"
         android:textSize="18sp"
