@@ -36,7 +36,7 @@
         android:shadowRadius="3"        android:layout_gravity="center"
         android:textAlignment="center"
         android:text="@string/label_nuevo_seguimiento"
-        android:textSize="40sp" />
+        android:textSize="42sp" />
 
         <TextView
             android:layout_width="wrap_content"

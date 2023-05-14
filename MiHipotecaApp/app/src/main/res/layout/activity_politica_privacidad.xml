@@ -32,7 +32,7 @@
             android:shadowDx="3"
             android:shadowDy="3"
             android:shadowRadius="3"
-            android:text="Politica de privacidad"
+            android:text="Política de privacidad"
             android:textAlignment="center"
             android:layout_gravity="center"
             android:textSize="40sp"/>
