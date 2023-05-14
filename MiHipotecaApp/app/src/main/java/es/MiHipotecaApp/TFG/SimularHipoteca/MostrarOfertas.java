@@ -75,6 +75,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
     private Button btn_orderTae;
     private Button btn_orderCuota;
     private TextView tvEspera;
+    private TextView txt_ordenar;
     private JSONObject datos;
     private  boolean detalles;
 
@@ -120,6 +121,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         btn_fijas = findViewById(R.id.buttonFijas);
         btn_varMix = findViewById(R.id.buttonVariablesMixta);
         tvEspera = findViewById(R.id.tvEspera);
+        txt_ordenar = findViewById(R.id.txt_ordernar);
         //Pasar los datos de una intent a otra
         Intent intent = getIntent();
         String jsonStr = intent.getStringExtra("datos");
@@ -485,6 +487,9 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                             adapter.notifyDataSetChanged();
                             txt_filtrarBancos.setVisibility(View.VISIBLE);
                             progressBar.setVisibility(View.GONE);
+                            btn_orderCuota.setVisibility(View.VISIBLE);
+                            btn_orderTae.setVisibility(View.VISIBLE);
+                            txt_ordenar.setVisibility(View.VISIBLE);
                             btn_fijas.setVisibility(View.VISIBLE);
                             btn_varMix.setVisibility(View.VISIBLE);
                             tvEspera.setVisibility(View.GONE);
