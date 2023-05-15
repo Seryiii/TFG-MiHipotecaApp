@@ -2,8 +2,7 @@ package es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.Graficos;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
+
 import android.os.Bundle;
 import android.view.View;
 
@@ -27,7 +26,7 @@ import es.MiHipotecaApp.TFG.Transfers.HipotecaSegFija;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegMixta;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSegVariable;
 import es.MiHipotecaApp.TFG.Transfers.HipotecaSeguimiento;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento;
+
 
 public class grafico_intereses_capital extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package es.MiHipotecaApp.TFG.UsuarioRegistrado;
+package es.MiHipotecaApp.TFG.Transfers;
 
 public class Noticia {
 

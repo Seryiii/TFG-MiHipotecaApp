@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -27,7 +26,6 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
-import es.MiHipotecaApp.TFG.SimularHipoteca.MostrarOfertas;
 import es.MiHipotecaApp.TFG.SimularHipoteca.RecyclerAdapter;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
 

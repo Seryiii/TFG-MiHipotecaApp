@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.Transfers.Noticia;
 
 public class BlogActivity extends AppCompatActivity {
 

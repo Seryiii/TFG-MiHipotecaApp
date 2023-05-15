@@ -1,10 +1,8 @@
 package es.MiHipotecaApp.TFG.UsuarioRegistrado;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +11,7 @@ import android.widget.TextView;
 import java.util.List;
 
 import es.MiHipotecaApp.TFG.R;
+import es.MiHipotecaApp.TFG.Transfers.Noticia;
 
 public class BlogAdapter extends RecyclerView.Adapter<BlogAdapter.NoticiaViewHolder> {
 

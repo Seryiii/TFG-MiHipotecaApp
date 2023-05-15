@@ -29,16 +29,10 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import es.MiHipotecaApp.TFG.Transfers.Usuario;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.EditarHipotecaSeguimiento;
 
 
 public class Registro extends AppCompatActivity {

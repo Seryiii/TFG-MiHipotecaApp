@@ -1,14 +1,10 @@
 package es.MiHipotecaApp.TFG;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
+
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,12 +14,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Calendar;
 
 import es.MiHipotecaApp.TFG.SimularHipoteca.CompararNuevaHipoteca;
-import es.MiHipotecaApp.TFG.EuriborHistorico;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.PasarPremium;
 
 public class MainActivity extends AppCompatActivity {
 

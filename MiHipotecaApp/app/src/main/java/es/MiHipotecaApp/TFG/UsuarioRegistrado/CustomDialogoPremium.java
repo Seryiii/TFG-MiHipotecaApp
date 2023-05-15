@@ -8,14 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
-import es.MiHipotecaApp.TFG.PaginaPrincipal;
 import es.MiHipotecaApp.TFG.R;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevoSeguimiento;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.InformacionUsuario.PasarPremium;
 
 public class CustomDialogoPremium extends DialogFragment {

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -16,7 +16,6 @@ import androidx.appcompat.app.AppCompatDialogFragment;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.SimularHipoteca.RecyclerAdapter;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
-import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.NuevaVinculacionAnualFragment;
 
 public class custom_dialog_oferta  extends AppCompatDialogFragment {
     private Oferta oferta;

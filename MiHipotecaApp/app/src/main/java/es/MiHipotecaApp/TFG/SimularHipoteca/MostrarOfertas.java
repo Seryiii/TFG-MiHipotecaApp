@@ -381,73 +381,14 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                             throw new RuntimeException(e);
                         }
                         cargarOfertasFija(mJsonArray);
-                        /*
-                        for (int i = 0; i < mJsonArray.length(); i++) {
-                            try {
-                                JSONObject jsonObject = mJsonArray.getJSONObject(i);
-                                String banco = jsonObject.getString("banco");
-                                String desc = jsonObject.getString("desc");
-                                String tin = jsonObject.getString("tin");
-                                String tae = jsonObject.getString("tae");
-                                String cuota = jsonObject.getString("cuota");
 
-                                if(detalles){
-                                    String vinculaciones = jsonObject.getString("vinculaciones");
-                                    Oferta oferta = new Oferta(banco,desc,tin,tae,cuota,vinculaciones);
-                                    lista_fija.add(oferta);
-                                }
-                                else{
-                                    Oferta oferta = new Oferta(banco,desc,tin,tae,cuota);
-                                    lista_fija.add(oferta);
-                                }
-
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                        }*/
                         try {
                             mJsonArray = response.getJSONArray("var_mixta");
                         } catch (JSONException e) {
                             throw new RuntimeException(e);
                         }
                         cargarOfertasVariableMixta(mJsonArray);
-                        /*
-                        for (int i = 0; i < mJsonArray.length(); i++) {
-                            try {
-                                JSONObject jsonObject = mJsonArray.getJSONObject(i);
-                                String banco = jsonObject.getString("banco");
-                                String desc = jsonObject.getString("desc");
-                                String tin_x_anios = jsonObject.getString("tin_x_anios");
-                                String tin_resto = jsonObject.getString("tin_resto");
-                                String tae = jsonObject.getString("tae");
-                                String cuota_x_anios = jsonObject.getString("cuota_x_anios");
-                                String cuota_resto = jsonObject.getString("cuota_resto");
-                                if(detalles){
-                                    String vinculaciones = jsonObject.getString("vinculaciones");
-                                    Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto,vinculaciones);
-                                    lista_varMix.add(oferta);
-                                }
-                                else{
-                                    Oferta oferta = new Oferta(banco,desc,tin_x_anios,tin_resto,tae,cuota_x_anios,cuota_resto);
-                                    lista_varMix.add(oferta);
-                                }
 
-
-                            } catch (JSONException e) {
-                                throw new RuntimeException(e);
-                            }
-
-                        }
-
-                        adapter.notifyDataSetChanged();
-                        txt_filtrarBancos.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.GONE);
-                        btn_fijas.setVisibility(View.VISIBLE);
-                        btn_varMix.setVisibility(View.VISIBLE);
-                        tvEspera.setVisibility(View.GONE);
-                        switchBusqueda.setVisibility(View.VISIBLE);
-*/
                         adapter.notifyDataSetChanged();
                         txt_filtrarBancos.setVisibility(View.VISIBLE);
                         progressBar.setVisibility(View.GONE);

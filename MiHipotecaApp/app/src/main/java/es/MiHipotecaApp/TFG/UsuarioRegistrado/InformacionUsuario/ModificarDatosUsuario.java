@@ -30,7 +30,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
-import es.MiHipotecaApp.TFG.MainActivity;
 import es.MiHipotecaApp.TFG.R;
 
 public class ModificarDatosUsuario extends AppCompatActivity implements custom_dialog_avatares.customDialogInterface {
