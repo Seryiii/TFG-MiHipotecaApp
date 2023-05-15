@@ -29,15 +29,7 @@
             android:layout_marginBottom="28dp"
             android:textSize="40sp"/>
 
-        <!--<TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="@font/text_bold"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/text_color"
-            android:text="@string/label_datos_de_acceso"
-            android:textSize="28sp" />
-           -->
+
 
         <TextView
             android:id="@+id/textView4"

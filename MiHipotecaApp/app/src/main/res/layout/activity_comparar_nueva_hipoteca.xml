@@ -156,7 +156,7 @@
             android:layout_gravity="center"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
-            android:hint="Ej: 100.000 €"
+            android:hint="Ej: 100.000 "
             android:layout_marginTop="10dp"
             android:inputType="number|numberDecimal"
             android:text=""
@@ -184,7 +184,7 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
-            android:hint="Ej: 30.000 €"
+            android:hint="Ej: 30.000 "
             android:inputType="numberDecimal"
             android:text="" />
 
@@ -207,7 +207,7 @@
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:layout_marginTop="10dp"
-            android:hint="Ej: 30 años"
+            android:hint="Ej: 30 "
             android:layout_gravity="center"
             android:inputType="number"
             android:text="" />
@@ -229,7 +229,7 @@
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:layout_marginTop="10dp"
-            android:hint="Ej: 2.000 €"
+            android:hint="Ej: 2.000 "
             android:layout_gravity="center"
             android:inputType="number"
             android:text="" />
