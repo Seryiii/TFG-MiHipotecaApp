@@ -412,7 +412,7 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        if (error instanceof NetworkError && error.networkResponse != null && error.networkResponse.statusCode == 200) {
+                        if (error.networkResponse!=null && error.networkResponse.statusCode == 200) {
                             // Manejar el código de respuesta 200 como una respuesta válida
                             JSONObject response = null;
                             try {
