@@ -8,6 +8,7 @@ import android.os.Bundle;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.HipotecasSeguimiento.TusHipotecas;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
 import es.MiHipotecaApp.TFG.VolleySingleton;
 
@@ -111,7 +112,6 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         URL_final = getIntent().getStringExtra("url");
 
         initValues();
-        btn_fijas.setAlpha(0.5f);
         eventos();
     }
 
@@ -135,6 +135,10 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         btn_orderTae = findViewById(R.id.btn_ordenarTae);
     }
     private void eventos(){
+
+        btn_fijas.setAlpha(0.5f);
+        btn_orderTae.setAlpha(0.5f);
+        btn_orderCuota.setAlpha(1f);
         btn_fijas.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -169,6 +173,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         btn_orderCuota.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btn_orderCuota.setAlpha(0.5f);
+                btn_orderTae.setAlpha(1f);
                 //fijas
                 for(Oferta oferta : lista_fija){
                     int euroIndex = oferta.getCuota().indexOf('€');
@@ -208,6 +214,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         btn_orderTae.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                btn_orderTae.setAlpha(0.5f);
+                btn_orderCuota.setAlpha(1f);
                 //fijas
                 for(Oferta oferta : lista_fija){
                     int porcentajeIndex = oferta.getTae().indexOf('%');
@@ -394,6 +402,9 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                         progressBar.setVisibility(View.GONE);
                         btn_fijas.setVisibility(View.VISIBLE);
                         btn_varMix.setVisibility(View.VISIBLE);
+                        btn_orderCuota.setVisibility(View.VISIBLE);
+                        btn_orderTae.setVisibility(View.VISIBLE);
+                        txt_ordenar.setVisibility(View.VISIBLE);
                         tvEspera.setVisibility(View.GONE);
                         switchBusqueda.setVisibility(View.VISIBLE);
                     }
@@ -437,7 +448,8 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
                             switchBusqueda.setVisibility(View.VISIBLE);
 
                         } else {
-                            Intent intent = new Intent(MostrarOfertas.this, CompararNuevaHipoteca.class);
+                            Intent intent = new Intent(MostrarOfertas.this, TusHipotecas.class);
+                            finish();
                             startActivity(intent);
                             Toast.makeText(MostrarOfertas.this, "Ha ocurrido un problema al conectar con el servidor", Toast.LENGTH_LONG).show();
                             Log.d("PETICIONES", error.toString());
@@ -509,9 +521,6 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
             }
 
         }
-
-    }
-    private void SetVisible(){
 
     }
 
