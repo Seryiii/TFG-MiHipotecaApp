@@ -375,9 +375,9 @@ public class MostrarOfertas extends AppCompatActivity implements custom_dialog_o
         progressBar.setVisibility(View.VISIBLE);
 
         JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.POST,
-                url,
-                datos,
+                Request.Method.GET,
+                URL_final,
+                null,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
