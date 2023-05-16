@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -40,6 +41,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
     private Button btn_fijas, btn_varMix;
     private TusOfertas tusOfertas;
     private CircleImageView closeIcon;
+    private TextView txt_noOfertas;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
         adapter = new RecyclerAdapter(ofertasFija,"fija",this);
         rvLista.setAdapter(adapter);
         btn_fijas.setAlpha(0.5f);
+        txt_noOfertas = findViewById(R.id.txt_infoNoOfer);
     }
 
     private void eventos() {
@@ -124,6 +127,7 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
                     }
 
                 }
+                if(queryDocumentSnapshots.getDocuments().isEmpty())txt_noOfertas.setVisibility(View.VISIBLE);
 
                 adapter.notifyDataSetChanged();
             }

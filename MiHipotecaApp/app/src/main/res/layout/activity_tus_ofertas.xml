@@ -81,10 +81,24 @@
 
     </LinearLayout>
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recylcer_tusOfertas"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:layout_editor_absoluteX="1dp"
         tools:layout_editor_absoluteY="1dp" />
+    <TextView
+        android:id="@+id/txt_infoNoOfer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/text_color"
+        android:fontFamily="@font/text_bold"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="No existen ofertas guardadas"
+        android:textSize="24sp"
+        android:visibility="invisible"
+        />
+
 </LinearLayout>
