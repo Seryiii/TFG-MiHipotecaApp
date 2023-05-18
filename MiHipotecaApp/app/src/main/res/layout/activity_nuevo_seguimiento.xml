@@ -155,6 +155,7 @@
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:hint="Ej: 300.000 "
+            android:textColor="@color/black"
             android:inputType="number|numberDecimal"
             android:layout_gravity="center"
             android:text="" />
@@ -179,6 +180,7 @@
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:hint="Ej: 70.000"
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:inputType="numberDecimal"
             android:text="" />
@@ -203,6 +205,7 @@
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:hint="Ej: 30 "
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:inputType="number"
             android:text="" />
@@ -233,6 +236,7 @@
             android:hint="Pulsa para seleccionar fecha"
             android:layout_gravity="center"
             android:inputType="date"
+            android:textColor="@color/black"
             android:text=""
             android:clickable="true"
             android:focusable="false"/>
@@ -308,6 +312,7 @@
             android:fontFamily="@font/allerta"
             android:layout_gravity="center"
             android:hint="Ej: 2,5 "
+            android:textColor="@color/black"
             android:inputType="numberDecimal"
             android:visibility="visible"
             android:text="" />
@@ -348,6 +353,7 @@
             android:layout_marginStart="16dp"
             android:hint="Duración en meses"
             android:inputType="number"
+            android:textColor="@color/black"
             android:visibility="gone"
             android:text="" />
 
@@ -373,6 +379,7 @@
             android:fontFamily="@font/allerta"
             android:layout_marginStart="16dp"
             android:hint="Primer porcentaje"
+            android:textColor="@color/black"
             android:inputType="numberDecimal"
             android:visibility="gone"
             android:text="" />
@@ -398,6 +405,7 @@
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:layout_marginStart="16dp"
+            android:textColor="@color/black"
             android:hint="Diferencial"
             android:inputType="numberDecimal"
             android:visibility="gone"
@@ -462,6 +470,7 @@
             android:fontFamily="@font/allerta"
             android:layout_marginStart="16dp"
             android:hint="Años fijos"
+            android:textColor="@color/black"
             android:inputType="number"
             android:visibility="gone"
             android:text="" />
@@ -473,7 +482,7 @@
             android:text="@string/label_porcentaje_fijo"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:textColor="@color/text_color"
+            android:textColor="@color/black"
             android:visibility="gone"
             android:textSize="16sp"/>
 
@@ -488,6 +497,7 @@
             android:fontFamily="@font/allerta"
             android:layout_marginStart="16dp"
             android:hint="Porcentaje fijo"
+            android:textColor="@color/black"
             android:inputType="numberDecimal"
             android:visibility="gone"
             android:text="" />
@@ -514,6 +524,7 @@
             android:fontFamily="@font/allerta"
             android:layout_marginStart="16dp"
             android:hint="Diferencial"
+            android:textColor="@color/black"
             android:inputType="numberDecimal"
             android:visibility="gone"
             android:text=""/>
@@ -563,6 +574,7 @@
             android:paddingLeft="10dp"
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
+            android:textColor="@color/black"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:inputType="numberDecimal"
@@ -585,6 +597,7 @@
             android:paddingLeft="10dp"
             android:layout_gravity="center"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:inputType="numberDecimal"
@@ -606,6 +619,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:layout_marginTop="8dp"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
@@ -628,6 +642,7 @@
             android:layout_height="48dp"
             android:layout_gravity="center"
             android:paddingLeft="10dp"
+            android:textColor="@color/black"
             android:layout_marginTop="8dp"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
@@ -650,6 +665,7 @@
             android:layout_height="48dp"
             android:paddingLeft="10dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
@@ -673,6 +689,7 @@
             android:paddingLeft="10dp"
             android:layout_marginTop="8dp"
             android:layout_gravity="center"
+            android:textColor="@color/black"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"
             android:inputType="numberDecimal"
@@ -695,6 +712,7 @@
             android:layout_height="48dp"
             android:paddingLeft="10dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/black"
             android:layout_gravity="center"
             android:background="@drawable/rounded_edit_text"
             android:fontFamily="@font/allerta"

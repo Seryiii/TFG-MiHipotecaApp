@@ -76,6 +76,7 @@
         android:padding="12dp"
         android:layout_margin="35dp"
         android:gravity="top"
+        android:textColor="@color/black"
         android:inputType="textEmailAddress"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

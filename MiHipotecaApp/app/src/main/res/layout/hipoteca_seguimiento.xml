@@ -47,6 +47,7 @@
                 android:textColor="@color/titulo2"
                 android:fontFamily="@font/text_bold"
                 android:layout_gravity="center"
+                android:textAlignment="center"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
