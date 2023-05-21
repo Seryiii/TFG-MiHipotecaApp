@@ -161,6 +161,7 @@
     <string name="anios_menor_plazo">El campo duración no puede ser mayor o igual que el plazo de la hipoteca</string>
     <string name="meses_menor_plazo">Los meses de este campo pueden ser como maximo el numero de cuotas menos el ultimo año</string>
     <string name="no_puede_amortizar">No se puede amortizar debido a que ya solo queda una cuota</string>
+    <string name="no_puede_amortizar_fin">No se puede amortizar debido a que la hipoteca ya ha finalizado</string>
     <string name="amortizacion_existente">Ya existe una amortización para la siguiente cuota</string>
     <string name="precio_aportado_insuficiente">El dinero aportado tiene que ser del 20% respecto al precio de la vivienda</string>
     <string name="anios_superados">Los años no pueden ser superiores a 30 años</string>

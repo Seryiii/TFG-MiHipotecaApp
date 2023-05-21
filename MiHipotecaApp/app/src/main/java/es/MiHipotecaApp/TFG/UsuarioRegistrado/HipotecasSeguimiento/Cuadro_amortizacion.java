@@ -109,11 +109,12 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         amortizaciones_hip = (HashMap<Integer, List<Object>>) getIntent().getSerializableExtra("amortizaciones_anticipadas");
         euribors = (List<Double>) getIntent().getSerializableExtra("euribors");
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(hip.getFecha_inicio());
+        Calendar inicioHip = Calendar.getInstance();
+        inicioHip.setTime(hip.getFecha_inicio());
         /** Da valor al TextView del año mostrado en el calendario, si la hipoteca ya ha empezado, muestra el año actual
         si no ha empezado, muestra el primer año de hipoteca **/
-        if(calendar.get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR)) year_of_calendar.setText("AÑO "+Integer.toString(calendar.get(Calendar.YEAR)));
+        if(inicioHip.get(Calendar.YEAR) > Calendar.getInstance().get(Calendar.YEAR)) year_of_calendar.setText(Integer.toString(inicioHip.get(Calendar.YEAR)));
+        else if(inicioHip.get(Calendar.YEAR) + hip.aniosActualesHipoteca(hip.getPlazoActual(amortizaciones_hip)) - 1 < Calendar.getInstance().get(Calendar.YEAR)) year_of_calendar.setText(Integer.toString(inicioHip.get(Calendar.YEAR) + hip.aniosActualesHipoteca(hip.getPlazoActual(amortizaciones_hip)) - 1));
         else year_of_calendar.setText(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)));
 
 

@@ -595,7 +595,8 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
                         startActivity(i);
                         finish();
                     }
-                }else Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.no_puede_amortizar), Toast.LENGTH_LONG).show();
+                } else if(hip.getNumeroCuotaActual(amortizaciones_anticipadas) + 1 == hip.getPlazoActual(amortizaciones_anticipadas) - 1) Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.no_puede_amortizar), Toast.LENGTH_LONG).show();
+                else Toast.makeText(VisualizarHipotecaSeguimiento.this, getString(R.string.no_puede_amortizar_fin), Toast.LENGTH_LONG).show();
 
             }
         });
