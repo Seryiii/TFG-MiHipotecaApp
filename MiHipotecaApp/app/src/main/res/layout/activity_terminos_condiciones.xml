@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    tools:context=".Registro"
-    android:background="@color/background_aplicacion">
+    android:background="@color/background_aplicacion"
+    tools:context=".TerminosCondiciones">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,7 +14,7 @@
 
 
         <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/close_icon_acerca_de"
+            android:id="@+id/close_icon_terminos"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -34,7 +34,7 @@
             android:shadowDx="3"
             android:shadowDy="3"
             android:shadowRadius="3"
-            android:text="Acerca de MiHipoteca App"
+            android:text="Términos y condiciones"
             android:textAlignment="center"
             android:layout_gravity="center"
             android:textSize="28sp"/>
@@ -52,7 +52,7 @@
                 android:padding="20dp"
                 android:textColor="@color/text_color"
                 android:fontFamily="@font/allerta"
-                android:text="@string/label_texto_acerca_de"
+                android:text="@string/label_texto_terminos"
                 android:textSize="20sp"/>
 
 

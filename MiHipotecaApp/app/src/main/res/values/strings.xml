@@ -200,15 +200,42 @@ Nos reservamos el derecho de actualizar esta política de privacidad en cualquie
 
 En MiHipoteca App, nos tomamos en serio la protección de tu privacidad y nos comprometemos a proteger tus datos personales. Si tienes alguna pregunta o preocupación sobre nuestra política de privacidad, no dudes en ponerte en contacto con nuestro equipo de soporte.</string>
 
+<string name="label_texto_terminos">
+Bienvenido a MiHipoteca App. Estos términos y condiciones de uso ("Términos") establecen los términos y condiciones legales para el uso de la aplicación móvil MiHipoteca App ("la Aplicación") y los servicios relacionados ofrecidos por nosotros. Al utilizar la Aplicación, usted acepta cumplir con estos Términos en su totalidad. Si no está de acuerdo con alguno de los Términos, no utilice la Aplicación.
 
-    <!-- PRIMER EJEMPLO MORALES -->
-    <string name="txt_correo">Correo</string>
-    <string name="txt_pass">Contraseña</string>
-    <string name="txt_text">Hola</string>
-    <string name="dialog_message">¿Estás seguro de eliminar la cuenta?</string>
-    <string name="dialog_title">ELIMINAR CUENTA</string>
-    <string name="si_eliminar_cuenta">Si</string>
-    <string name="no_eliminar_cuenta">No</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+\nUso de la Aplicación
+\n\n - 1.1. MiHipoteca App es una aplicación móvil diseñada para ayudar a los usuarios a comparar y realizar un seguimiento de distintas opciones de hipoteca ofrecidas por diferentes bancos.
+\n\n - 1.2. Usted reconoce y acepta que la información proporcionada en la Aplicación es solo con fines informativos y no constituye asesoramiento financiero o legal. No nos responsabilizamos por ninguna decisión tomada basada en la información proporcionada por la Aplicación.
+
+\nPrivacidad
+\n\n - 2.1. Respetamos su privacidad y nos comprometemos a proteger sus datos personales. Consulte nuestra Política de Privacidad para obtener información detallada sobre cómo recopilamos, utilizamos y protegemos su información personal.
+
+\nPropiedad Intelectual
+\n\n - 3.1. La Aplicación y todo su contenido, incluyendo pero no limitado a textos, gráficos, imágenes, logotipos y nombres comerciales, están protegidos por derechos de propiedad intelectual y son propiedad exclusiva de MiHipoteca App.
+\n\n - 3.2. No se le otorga ningún derecho o licencia para utilizar la propiedad intelectual de MiHipoteca App sin nuestro consentimiento previo y por escrito.
+
+\nLimitación de Responsabilidad
+\n\n - 4.1. Usted utiliza la Aplicación bajo su propio riesgo. MiHipoteca App no se hace responsable por cualquier daño directo, indirecto, incidental, especial, consecuente o punitivo que pueda surgir del uso o la incapacidad de utilizar la Aplicación.
+\n\n - 4.2. La Aplicación puede contener enlaces a sitios web de terceros. No nos hacemos responsables por el contenido, la exactitud o las prácticas de privacidad de dichos sitios web.
+
+\nModificaciones y Terminación
+\n\n - 5.1. Nos reservamos el derecho de modificar o discontinuar la Aplicación, total o parcialmente, en cualquier momento y sin previo aviso.
+\n\n - 5.2. Podemos modificar estos Términos en cualquier momento. Los cambios entrarán en vigencia inmediatamente después de su publicación en la Aplicación. Es su responsabilidad revisar periódicamente estos Términos para estar al tanto de las modificaciones.
+
+\nLey Aplicable
+\n\n - 6.1. Estos Términos se regirán e interpretarán de acuerdo con las leyes vigentes en el lugar donde se encuentre MiHipoteca App.
+
+\nSi tiene alguna pregunta o inquietud sobre estos Términos, contáctenos a través de la sección de notificar problema de la Aplicación.
+
+\nGracias por utilizar MiHipoteca App. Esperamos que encuentre útil nuestra aplicación y que le ayude en su búsqueda de la mejor opción hipotecaria.
+</string>
+
+<string name="txt_correo">Correo</string>
+<string name="txt_pass">Contraseña</string>
+<string name="txt_text">Hola</string>
+<string name="dialog_message">¿Estás seguro de eliminar la cuenta?</string>
+<string name="dialog_title">ELIMINAR CUENTA</string>
+<string name="si_eliminar_cuenta">Si</string>
+<string name="no_eliminar_cuenta">No</string>
+
 </resources>

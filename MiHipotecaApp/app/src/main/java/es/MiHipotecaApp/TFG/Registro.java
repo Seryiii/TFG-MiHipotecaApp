@@ -1,6 +1,7 @@
 package es.MiHipotecaApp.TFG;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -56,6 +57,8 @@ public class Registro extends AppCompatActivity {
     private AwesomeValidation awesomeValidation;
 
 
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +82,8 @@ public class Registro extends AppCompatActivity {
         registrar = findViewById(R.id.btn_registrarse);
         avatarRadio = findViewById(R.id.grupo_avatar_registro);
 
+        link_terminos.setPaintFlags(Paint.UNDERLINE_TEXT_FLAG);
+
         registrar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -90,7 +95,8 @@ public class Registro extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Abrir un dialogo con la información de términos y condiciones
-
+                Intent i = new Intent(Registro.this, TerminosCondiciones.class);
+                startActivity(i);
             }
         });
     }

@@ -238,7 +238,7 @@
                 android:id="@+id/link_abrir_terminos_condiciones"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/text_color"
+                android:textColor="@color/color_btn"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/allerta"
