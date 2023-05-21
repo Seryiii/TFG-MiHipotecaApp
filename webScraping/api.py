@@ -153,7 +153,7 @@ def euriborHistorico():
                 mes_actual = 12
                 anio_actual = anio
 
-            # Actualizar los valores faltantes
+            # Actualizar el euribor mensual
             if mes_actual != mes:
                 for mes_faltante in range( mes+1,mes_actual+1):
                     euri = {
@@ -212,7 +212,7 @@ def index():
     return "Pagina principal"
 
 @app.route('/EuriborHistorico')
-def EuriborMensual():
+def EuriborHistorico():
     euriborHistorico()
     return jsonify({"Eur_dos_ult_meses" : euriborHist})
 
@@ -238,7 +238,35 @@ def pruebaArray():
     print(ofertas_fija)
     return jsonify({"fija" : ofertas_fija, "var_mixta" : ofertas_var_mixta})
 
+@app.route('/pruebaArray')
+def pruebaArray2():
+    ofertas_fija.clear()
+    ofertas_var_mixta.clear()
+    comunidad_autonoma = request.args.get('comunidad_autonoma')
+    tipo_vivienda = request.args.get('tipo_vivienda')
+    antiguedad_vivienda = request.args.get('antiguedad_vivienda')
+    precio_vivienda = request.args.get('precio_vivienda')
+    cantidad_abonada = request.args.get('cantidad_abonada')
+    plazo_anios = request.args.get('plazo_anios')
+    ingresos = request.args.get('ingresos')
+    detalles = request.args.get('detalles')
+    print(detalles)
+    datos = {
+        'comunidad_autonoma': comunidad_autonoma,
+        'tipo_vivienda': tipo_vivienda,
+        'antiguedad_vivienda': antiguedad_vivienda,
+        'precio_vivienda': precio_vivienda,
+        'cantidad_abonada': cantidad_abonada,
+        'plazo_anios': plazo_anios,
+        'ingresos': ingresos,
+        'detalles': detalles
+    }
 
+    print(datos)
+    extraccion(datos)
+    print(ofertas_fija)
+
+    return jsonify({"fija": ofertas_fija, "var_mixta": ofertas_var_mixta})
     
 def extraccion(datos):
     print("Arranca")
@@ -357,8 +385,16 @@ def extraccion(datos):
     opciones_fija = []
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")))
     opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
-    if datos["detalles"] == False:
-
+    if datos["detalles"] == "false":
+        pos_btn=5
+        try:
+            print("Poicion Boton", pos_btn)
+            btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
+            driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
+            driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
+            pos_btn=pos_btn +4
+        except TimeoutException:
+            print("No se pudo encontrar el botón de cálculo")
         for opt in opciones:
             img_src = opt.find_element(By.XPATH, ".//img").get_attribute("src")
             bank_name = img_src.split("/")[-1].split("_")[0]
@@ -447,14 +483,21 @@ def extraccion(datos):
          
 
     opciones_variable_mixta = []
-
+    try:
+        print("Poicion Boton", pos_btn)
+        btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
+        driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
+        driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
+        pos_btn=pos_btn +4
+    except TimeoutException:
+        print("No se pudo encontrar el botón de cálculo")
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "(//p[normalize-space()='Hipoteca Variable y Mixta'])[1]"))).click()
 
     time.sleep(1)
 
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")))
     opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
-    if datos["detalles"] == False:
+    if datos["detalles"] == "false":
         for opt in opciones:
             img_src = opt.find_element(By.XPATH, ".//img").get_attribute("src")
             bank_name = img_src.split("/")[-1].split("_")[0]
@@ -522,7 +565,6 @@ def extraccion(datos):
                     detalles = opt.find_element(By.TAG_NAME, "a")
                     try:
                         print("Poicion Boton", pos_btn)
-                    #<button class="help-button-btn btn help asesor ng-tns-c96-9 ng-star-inserted"
                         btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
                         driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
                         driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
@@ -565,7 +607,6 @@ def extraccion(datos):
                     detalles = opt.find_element(By.TAG_NAME, "a")
                     try:
                         print("Poicion Boton", pos_btn)
-                   
                         btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
                         driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
                         driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
