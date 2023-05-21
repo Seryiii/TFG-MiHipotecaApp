@@ -121,7 +121,7 @@ public class AmortizarAntes extends AppCompatActivity {
         formato = new DecimalFormat("#,##0.00", simbolos);
         //Establece el formato de Double por defecto
         DecimalFormatSymbols simbolos2 = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.');
+        simbolos2.setDecimalSeparator('.');
         formatoDouble = new DecimalFormat("#.##", simbolos2);
 
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
