@@ -113,7 +113,7 @@
                 android:fontFamily="@font/allerta"
                 android:layout_gravity="center"
                 android:textColor="@color/text_color"
-                android:text="Banco"
+                android:text="Banco:"
                 android:textAlignment="center"
                 android:textSize="20sp"
                 android:visibility="invisible" />
@@ -123,6 +123,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:layout_weight="1"
+                android:padding="5dp"
                 android:src="@drawable/logo_ing"
                 android:background="@drawable/btn_bordes_redondos3"
                 android:layout_marginBottom="12dp"

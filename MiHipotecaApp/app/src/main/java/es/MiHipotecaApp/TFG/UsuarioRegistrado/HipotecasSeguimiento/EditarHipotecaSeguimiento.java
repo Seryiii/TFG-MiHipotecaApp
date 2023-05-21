@@ -40,6 +40,8 @@ import com.skydoves.balloon.Balloon;
 import com.skydoves.balloon.BalloonAnimation;
 import com.skydoves.balloon.BalloonSizeSpec;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -108,6 +110,7 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
     private String[] comunidades;
     private String[] comunidades_base_datos;
     private int aniosHastaAhora;
+    private DecimalFormat formato;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,6 +118,12 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         comunidades = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla La Mancha", "Castilla León", "Cataluña", "Ceuta", "Comunidad de Madrid", "Comunidad Valenciana", "Extremadura", "Galicia", "La Rioja", "Melilla", "Murcia", "Navarra", "País Vasco"};
         ArrayAdapter<String> adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_item, comunidades);
         comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
+
+        // Establecer el formato a dos decimales
+        DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setGroupingSeparator('.'); // Separador de miles
+        simbolos.setDecimalSeparator(','); // Separador decimal
+        formato = new DecimalFormat("#,##0.00", simbolos);
 
         initUI();
         rellenarCampos();
@@ -485,11 +494,11 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
         List<Double> vinculaciones_hip = hip.getArrayVinculacionesAnual();
         if(!TextUtils.isEmpty(vinculaciones_anio.getText()) && !TextUtils.isEmpty(vinculaciones_valor.getText())) {
             vinculaciones_hip.set(Integer.parseInt(vinculaciones_anio.getText().toString()) - 1, Double.parseDouble(vinculaciones_valor.getText().toString()));
-        } else if(TextUtils.isEmpty(vinculaciones_anio.getText())) {
+        } else if(TextUtils.isEmpty(vinculaciones_anio.getText()) && !TextUtils.isEmpty(vinculaciones_valor.getText())) {
             vinculaciones_anio.setError("Debes de incluir un año");
             return;
-        } else {
-            vinculaciones_valor.setError("Debes de incluir un año");
+        } else if(!TextUtils.isEmpty(vinculaciones_anio.getText()) && TextUtils.isEmpty(vinculaciones_valor.getText())){
+            vinculaciones_valor.setError("Debes de incluir un valor");
             return;
         }
         nuevosDatos.put("arrayVinculacionesAnual", vinculaciones_hip);
@@ -614,8 +623,8 @@ public class EditarHipotecaSeguimiento extends AppCompatActivity {
 
         txt_edit_antiguedad_vivienda.setText("Estado de la vivienda: " + hip.getAntiguedad_vivienda());
 
-        txt_edit_precio_vivienda.setText("Precio de la vivienda: " + hip.getPrecio_vivienda() + "€");
-        txt_edit_cant_abonada.setText("Cantidad abonada: " + hip.getCantidad_abonada() + "€");
+        txt_edit_precio_vivienda.setText("Precio de la vivienda: " + formato.format(hip.getPrecio_vivienda()) + "€");
+        txt_edit_cant_abonada.setText("Cantidad abonada: " + formato.format(hip.getCantidad_abonada()) + "€");
         txt_edit_plazo_hip.setText("Plazo de la hipoteca: " + hip.getPlazo_anios() + " años");
 
         //date

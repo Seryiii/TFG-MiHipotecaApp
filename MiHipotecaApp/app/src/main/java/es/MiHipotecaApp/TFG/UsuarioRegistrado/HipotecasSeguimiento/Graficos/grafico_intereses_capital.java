@@ -47,6 +47,7 @@ public class grafico_intereses_capital extends AppCompatActivity {
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.');
         formato = new DecimalFormat("#.##", simbolos);
+
         initUI();
         construirGraficoLineas();
         eventos();

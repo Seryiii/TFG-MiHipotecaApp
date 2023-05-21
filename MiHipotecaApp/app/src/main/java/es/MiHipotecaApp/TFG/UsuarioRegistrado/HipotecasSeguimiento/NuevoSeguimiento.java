@@ -494,6 +494,9 @@ public class NuevoSeguimiento extends AppCompatActivity {
                 if (ahorro_aport <= 0) {
                     cantidad_abonada.setError(getString(R.string.cantidad_mayor_igual_cero));
                     camposCorrectos = false;
+                } else if(precio_viv < ahorro_aport){
+                    precio_vivienda.setError(getString(R.string.cantidad_mayor_igual_cero));
+                    camposCorrectos = false;
                 }
                 double dinero_aport_banco = precio_viv - ahorro_aport;
                 if (dinero_aport_banco > precio_viv * 0.8) {

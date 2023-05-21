@@ -1,7 +1,7 @@
 <resources>
 
     <!-- NOMBRE APP -->
-    <string name="app_name">MiHipotecaApp</string>
+    <string name="app_name">MiHipoteca App</string>
 
     <!-- BOTONES -->
     <string name="txt_btn_simular_hipoteca">COMPARAR HIPOTECAS</string>
@@ -34,7 +34,7 @@
     <string name="label_repetir_contrasenia_nueva">Repetir contraseña nueva</string>
     <string name="label_acepto_terminos">Acepto los términos y condiciones</string>
     <string name="label_selecciona_avatar">Escoge un avatar</string>
-    <string name="titulo_actividad_principal">MIS HIPOTECAS</string>
+    <string name="titulo_actividad_principal">Mis hipotecas</string>
     <string name="label_configuracion_usuario">Perfil y ajustes</string>
     <string name="label_notificar_problema">Notificar problema</string>
     <string name="label_cambiar_datos">Modificar perfil</string>
@@ -42,7 +42,7 @@
     <string name="label_acercaDe">Acerca de</string>
     <string name="label_pol_privacidad">Pol. de privacidad</string>
     <string name="label_eliminar_usuario">Eliminar cuenta</string>
-    <string name="label_modificar_perfil">Modificar Perfil</string>
+    <string name="label_modificar_perfil">Modificar perfil</string>
     <string name="label_nuevo_seguimiento">Nuevo \n seguimiento</string>
     <string name="label_combobox_comunidad">¿En qué provincia se encuentra?</string>
     <string name="label_tipo_vivienda">¿Vivienda de régimen general o de protección oficial?</string>
@@ -123,7 +123,7 @@
     <string name="label_seguimiento">Seguimiento</string>
     <string name="label_tipo_de_hipoteca">Tipo de Hipoteca: </string>
     <string name="label_dinero_que_falta_por_pagar">Dinero a pagar:</string>
-    <string name="label_tiempo_restante">Tiempo restante</string>
+    <string name="label_tiempo_restante">Tiempo restante:</string>
     <string name="label_cuota_de">CUOTA DE </string>
     <string name="label_ingresos">Ingresos mensuales:</string>
     <string name="label_ofertas_con_detalle">Obtener mejores ofertas con detalle</string>
@@ -149,6 +149,7 @@
     <string name="plazo_vacio">El campo plazo no puede estar vacío</string>
     <string name="ingresos_vacio">El campo ingresos no puede estar vacío</string>
     <string name="cantidad_mayor_igual_cero">La cantidad debe ser mayor que 0</string>
+    <string name="precio_menor_abonado">El precio de la vivienda debe ser mayor que la cantidad abonada</string>
     <string name="porcentaje_mayor_igual_cero">El porcentaje debe ser mayor que 0</string>
     <string name="duracion_mayor_igual_cero">La duracion debe ser mayor que 0</string>
     <string name="plazo_menor_mayor">El campo plazo debe estar entre 1 y 40</string>
@@ -177,13 +178,13 @@
     <string name="amortizacion_anticipada_exito">Amortización anticipada creada con éxito!</string>
     <string name="usuario_borrado_exito">Usuario borrado con éxito!</string>
 
-    <string name="label_texto_acerca_de">¡Bienvenido/a a nuestra aplicación de seguimiento y comparación de hipotecas! Aquí en MiHipotecaApp, entendemos que la compra de una vivienda es una de las decisiones financieras más importantes que tomarás en la vida, por lo que queremos ayudarte a tomar la mejor decisión posible.\n
+    <string name="label_texto_acerca_de">¡Bienvenido/a a nuestra aplicación de seguimiento y comparación de hipotecas! Aquí en MiHipoteca App, entendemos que la compra de una vivienda es una de las decisiones financieras más importantes que tomarás en la vida, por lo que queremos ayudarte a tomar la mejor decisión posible.\n
 
 Nuestra aplicación es una herramienta de comparación de hipotecas que te permite comparar las tasas de interés y los términos de diferentes prestamistas para que puedas encontrar la hipoteca que mejor se adapte a tus necesidades. Con nuestra aplicación, puedes ahorrar tiempo y esfuerzo al evitar tener que visitar a cada prestamista individualmente y rellenar múltiples solicitudes.\n
 
-Nos enorgullece ofrecer una plataforma fácil de usar que te ayuda a comparar diferentes hipotecas y encontrar la que mejor se adapte a tus necesidades financieras. En MiHipotecaApp, nuestra misión es proporcionarte las herramientas y la información que necesitas para tomar la mejor decisión financiera para ti y tu familia. Queremos ayudarte a navegar por el complejo mundo de las hipotecas
+Nos enorgullece ofrecer una plataforma fácil de usar que te ayuda a comparar diferentes hipotecas y encontrar la que mejor se adapte a tus necesidades financieras. En MiHipoteca App, nuestra misión es proporcionarte las herramientas y la información que necesitas para tomar la mejor decisión financiera para ti y tu familia. Queremos ayudarte a navegar por el complejo mundo de las hipotecas
 y hacer que el proceso de compra de una vivienda sea lo más sencillo posible. Gracias por confiar en nosotros para ayudarte en tu búsqueda de la hipoteca perfecta. Si tienes alguna pregunta, no dudes en ponerte en contacto con nuestro equipo de soporte en cualquier momento. Estamos aquí para ayudarte.</string>
-    <string name="label_texto_pol_privacidad">En MiHipotecaApp, nos tomamos muy en serio la privacidad de nuestros usuarios. Creemos que la transparencia es clave para construir una relación de confianza con nuestros clientes. Por eso, queremos explicar en detalle cómo manejamos y protegemos tus datos personales.\n
+    <string name="label_texto_pol_privacidad">En MiHipoteca App, nos tomamos muy en serio la privacidad de nuestros usuarios. Creemos que la transparencia es clave para construir una relación de confianza con nuestros clientes. Por eso, queremos explicar en detalle cómo manejamos y protegemos tus datos personales.\n
 
 Recopilación y uso de información personal:\n
 Cuando te registras en nuestra aplicación, solicitamos información personal que puede incluir tu nombre, dirección de correo electrónico y otra información relevante. Esta información se utiliza para crear una cuenta de usuario y para proporcionarte servicios personalizados. Nunca compartiremos tu información personal con terceros sin tu consentimiento expreso.\n
@@ -197,7 +198,7 @@ Tienes derecho a acceder, modificar, corregir y eliminar tus datos personales en
 Cambios en la política de privacidad:\n
 Nos reservamos el derecho de actualizar esta política de privacidad en cualquier momento. Te recomendamos que revises esta página periódicamente para estar al tanto de cualquier cambio.\n
 
-En MiHipotecaApp, nos tomamos en serio la protección de tu privacidad y nos comprometemos a proteger tus datos personales. Si tienes alguna pregunta o preocupación sobre nuestra política de privacidad, no dudes en ponerte en contacto con nuestro equipo de soporte.</string>
+En MiHipoteca App, nos tomamos en serio la protección de tu privacidad y nos comprometemos a proteger tus datos personales. Si tienes alguna pregunta o preocupación sobre nuestra política de privacidad, no dudes en ponerte en contacto con nuestro equipo de soporte.</string>
 
 
     <!-- PRIMER EJEMPLO MORALES -->

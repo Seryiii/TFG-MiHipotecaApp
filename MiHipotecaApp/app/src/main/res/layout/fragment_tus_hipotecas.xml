@@ -35,7 +35,7 @@
                 android:shadowRadius="3"
                 android:text="@string/titulo_actividad_principal"
                 android:textColor="@color/titulo2"
-                android:textSize="28dp"
+                android:textSize="28sp"
                 app:layout_constraintEnd_toStartOf="@+id/foto_perfil_pag_principal"
                 app:layout_constraintHorizontal_bias="0.662"
                 app:layout_constraintStart_toStartOf="parent"

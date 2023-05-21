@@ -49,6 +49,7 @@ public class grafico_gastos_totales extends AppCompatActivity {
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.');
         formato = new DecimalFormat("#.##", simbolos);
+
         initUI();
         construirGraficoGastosTotales();
         eventos();

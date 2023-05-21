@@ -136,6 +136,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private String[] comunidades_base_datos = new String[]{"Andalucía", "Aragón", "Asturias", "Baleares", "Canarias", "Cantabria", "Castilla_La_Mancha", "Castilla_León", "Cataluña", "Ceuta", "Madrid", "Comunidad_Valenciana", "Extremadura", "Galicia", "La_Rioja", "Melilla", "Murcia", "Navarra", "País_Vasco"};
 
     private DecimalFormat formato;
+    private DecimalFormat formatoDouble;
     private boolean premium;
 
     @Override
@@ -144,8 +145,15 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         setContentView(R.layout.activity_visualizar_hipoteca_seguimiento);
         // Establecer el formato a dos decimales
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
+        simbolos.setGroupingSeparator('.'); // Separador de miles
+        simbolos.setDecimalSeparator(','); // Separador decimal
+        formato = new DecimalFormat("#,##0.00", simbolos);
+
+        //Establece el formato de Double por defecto
+        DecimalFormatSymbols simbolos2 = new DecimalFormatSymbols();
         simbolos.setDecimalSeparator('.');
-        formato = new DecimalFormat("#.##", simbolos);
+        formatoDouble = new DecimalFormat("#.##", simbolos2);
+
         if(getIntent().getStringExtra("tipo_hipoteca").equals("fija")) hip = (HipotecaSegFija) getIntent().getSerializableExtra("hipoteca");
         else if (getIntent().getStringExtra("tipo_hipoteca").equals("variable")) hip = (HipotecaSegVariable) getIntent().getSerializableExtra("hipoteca");
         else hip = (HipotecaSegMixta) getIntent().getSerializableExtra("hipoteca");
@@ -423,7 +431,7 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         double interesesPendientes = interesesTotales - interesesPagados;
         double dineroRestante = interesesPendientes + capitalPendiente;
 
-        dinero_restante_a_pagar.setText(formato.format(dineroRestante));
+        dinero_restante_a_pagar.setText(formato.format(Math.abs(dineroRestante)));
         nombre_hipoteca.setText(hip.getNombre());
         tipo_hipoteca_seg.setText(hip.getTipo_hipoteca().substring(0, 1).toUpperCase() + hip.getTipo_hipoteca().substring(1));
         ponerLogoBanco();
@@ -485,10 +493,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         //double capitalPendiente = hip.getCapitalPendienteTotalActual(hip.getNumeroCuotaActual(amortizaciones_anticipadas), amortizaciones_anticipadas, euribors);
         if(amortizaciones_anticipadas.containsKey(numero_cuotas_pagadas + 1)) capitalPendiente -= (Double) amortizaciones_anticipadas.get(numero_cuotas_pagadas + 1).get(1);
-        String capitalFormateado = formato.format(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, porcentaje_aplicado)) + "€";
+        String capitalFormateado = formato.format(Math.abs(hip.getCapitalAmortizadoMensual(cuota_mensual, capitalPendiente, porcentaje_aplicado))) + "€";
         capital_cuota_mensual.setText(capitalFormateado);
 
-        String interesesFormateado = formato.format(hip.getInteresMensual(capitalPendiente, porcentaje_aplicado)) + "€";
+        String interesesFormateado = formato.format(Math.abs(hip.getInteresMensual(capitalPendiente, porcentaje_aplicado))) + "€";
         intereses_cuota_mensual.setText(interesesFormateado);
         setVisibility(View.VISIBLE);
 
@@ -545,16 +553,6 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
     private void eventos(){
 
         compruebaSiVinculacionAnual();
-
-        /*grafico.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(!premium){
-                    CustomDialogoPremium dialogo = new CustomDialogoPremium();
-                    dialogo.show(getSupportFragmentManager(), "dialogo");
-                }
-            }
-        });*/
 
         close_icon_seg.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -728,10 +726,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
 
         Pie pie = AnyChart.pie();
         List<DataEntry> data = new ArrayList<>();
-        data.add(new ValueDataEntry("CAPITAL AMORTIZADO", Double.parseDouble(formato.format(capitalAmortizado))));
-        data.add(new ValueDataEntry("CAPITAL PENDIENTE", Double.parseDouble(formato.format(capitalPendiente))));
-        data.add(new ValueDataEntry("INTERESES PENDIENTES", Double.parseDouble(formato.format(interesesPendientes))));
-        data.add(new ValueDataEntry("INTERESES PAGADOS", Double.parseDouble(formato.format(interesesPagados))));
+        data.add(new ValueDataEntry("CAPITAL AMORTIZADO", Double.parseDouble(formatoDouble.format(capitalAmortizado))));
+        data.add(new ValueDataEntry("CAPITAL PENDIENTE", Double.parseDouble(formatoDouble.format(capitalPendiente))));
+        data.add(new ValueDataEntry("INTERESES PENDIENTES", Double.parseDouble(formatoDouble.format(interesesPendientes))));
+        data.add(new ValueDataEntry("INTERESES PAGADOS", Double.parseDouble(formatoDouble.format(interesesPagados))));
         pie.data(data);
         pie.labels().fontSize(18);
         pie.labels().position("outside");
@@ -746,10 +744,10 @@ public class VisualizarHipotecaSeguimiento extends AppCompatActivity implements 
         grafico.invalidate();
 
 
-        capital_amortizado.setText("" + formato.format(capitalAmortizado) + "€");
-        capital_pendiente.setText("" + formato.format(capitalPendiente) + "€");
-        intereses_pagados.setText("" + formato.format(interesesPagados) + "€");
-        intereses_pendientes.setText("" + formato.format(interesesPendientes) + "€");
+        capital_amortizado.setText("" + formato.format(Math.abs(capitalAmortizado)) + "€");
+        capital_pendiente.setText("" + formato.format(Math.abs(capitalPendiente)) + "€");
+        intereses_pagados.setText("" + formato.format(Math.abs(interesesPagados)) + "€");
+        intereses_pendientes.setText("" + formato.format(Math.abs(interesesPendientes)) + "€");
 
         //COMPRUEBA SI EL USUARIO ES NO PREMIUM
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();

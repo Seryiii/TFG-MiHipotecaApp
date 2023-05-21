@@ -67,8 +67,10 @@ public class Cuadro_amortizacion extends AppCompatActivity implements custom_dia
         setContentView(R.layout.activity_cuadro_amortizacion);
         // Establecer el formato a dos decimales
         DecimalFormatSymbols simbolos = new DecimalFormatSymbols();
-        simbolos.setDecimalSeparator('.');
-        formato = new DecimalFormat("#.##", simbolos);
+        simbolos.setGroupingSeparator('.'); // Separador de miles
+        simbolos.setDecimalSeparator(','); // Separador decimal
+        formato = new DecimalFormat("#,##0.00", simbolos);
+
         closeIcon = findViewById(R.id.close_icon_cuadro);
 
         meses = new String[]{"Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"};
