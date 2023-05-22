@@ -194,7 +194,7 @@ def cargar(euri):
         doc_ref.update(euri)
     # De lo contrario, agregar un nuevo documento
     else:
-        doc_ref = db.collection('euribor_prueba').document()
+        doc_ref = db.collection('euribor').document()
         doc_ref.set(euri)
         
     doc_ref.set(euri, merge=True)
