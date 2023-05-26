@@ -202,9 +202,10 @@ public class AmortizarAntes extends AppCompatActivity {
 
                 if(s.toString().equals("")) total_comision.setText("Comisión: 0€");
                 else {
-                    if(!edit_dinero_a_amortizar.getText().toString().equals(""))total_comision.setText("Comisión: " + formato.format(Double.parseDouble(formatoDouble.format(edit_dinero_a_amortizar.getText().toString())) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
-                    else if (!edit_reduccion_plazo_meses.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(Double.parseDouble(formatoDouble.format(edit_reduccion_plazo_meses.getText().toString())) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
-                    else total_comision.setText("Comisión: " + formato.format(capital_pendiente_actual * (Double.parseDouble(edit_comision.getText().toString()) / 100))+ "€");
+                    if(check_reducir_cuota.isChecked() && !edit_dinero_a_amortizar.getText().toString().equals(""))total_comision.setText("Comisión: " + formato.format(Double.parseDouble(edit_dinero_a_amortizar.getText().toString()) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
+                    else if (check_reducir_plazo.isChecked() && !edit_reduccion_plazo_meses.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(Double.parseDouble(edit_reduccion_plazo_meses.getText().toString()) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
+                    else if(check_amort_total.isChecked())total_comision.setText("Comisión: " + formato.format(capital_pendiente_actual * (Double.parseDouble(edit_comision.getText().toString()) / 100))+ "€");
+                    else total_comision.setText("Comisión: 0€");
                 }
 
             }
@@ -219,6 +220,9 @@ public class AmortizarAntes extends AppCompatActivity {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
+
+                    if(!edit_comision.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(capital_pendiente_actual * (Double.parseDouble(edit_comision.getText().toString()) / 100))  + "€");
+
                     check_amort_parcial.setChecked(false);
                     edit_dinero_a_amortizar.setText("");
                     edit_reduccion_plazo_meses.setText("");
@@ -278,6 +282,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     cuota_plazo_nueva_valor.setText(cuota_mensual_actual);
                     edit_reduccion_plazo_meses.setText("");
                     edit_dinero_a_amortizar.setText("");
+                    total_comision.setText("Comisión: 0€");
                     cantidad_capital_amortizado.setVisibility(View.GONE);
                     capital_pendiente_nuevo.setText("Capital pdte nuevo: " + capital_pendiente_actual_formateado);
                 }else{
@@ -301,6 +306,7 @@ public class AmortizarAntes extends AppCompatActivity {
                     cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                     edit_dinero_a_amortizar.setText("");
                     edit_reduccion_plazo_meses.setText("");
+                    total_comision.setText("Comisión: 0€");
                 }else{
                     if (!check_reducir_cuota.isChecked()) check_reducir_plazo.setChecked(true);
                 }
@@ -319,7 +325,7 @@ public class AmortizarAntes extends AppCompatActivity {
                 if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(cuota_mensual_actual);
                 else{
 
-                    if(!edit_comision.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(Double.parseDouble(formatoDouble.format(edit_dinero_a_amortizar.getText().toString())) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
+                   if(!edit_comision.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(Double.parseDouble(edit_dinero_a_amortizar.getText().toString()) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
 
 
                     double porcentaje_aplicado  = hip.getPorcentajePorCuota(hip.getNumeroCuotaActual(amortizaciones_hip) + 1, amortizaciones_hip, euribors);//getIntent().getDoubleExtra("porcentaje_aplicado", -1);
@@ -362,7 +368,7 @@ public class AmortizarAntes extends AppCompatActivity {
 
                 if(s.toString().equals("")) cuota_plazo_nueva_valor.setText(plazo_actual + " meses");
                 else{
-                    if(!edit_comision.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(Double.parseDouble(formatoDouble.format(edit_reduccion_plazo_meses.getText().toString())) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
+                    if(!edit_comision.getText().toString().equals("")) total_comision.setText("Comisión: " + formato.format(Double.parseDouble(edit_reduccion_plazo_meses.getText().toString()) * (Double.parseDouble(edit_comision.getText().toString()) / 100)) + "€");
 
                     cantidad_amortizada = Double.parseDouble(s.toString());
                     if(cantidad_amortizada > capital_pendiente_actual) {
