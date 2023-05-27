@@ -16,11 +16,14 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -29,6 +32,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.List;
 import es.MiHipotecaApp.TFG.R;
 import es.MiHipotecaApp.TFG.Transfers.Oferta;
+import es.MiHipotecaApp.TFG.UsuarioRegistrado.CustomDialogoPremium;
 import es.MiHipotecaApp.TFG.UsuarioRegistrado.custom_dialog_oferta;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.RecyclerHolder>{
@@ -230,13 +234,69 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             }
         });
         holder.btn_guardar.setOnClickListener(new View.OnClickListener() {
+            boolean premium;
+            int numOfertas = 0;
+
             @Override
             public void onClick(View view) {
                 FirebaseUser currentUser = auth.getCurrentUser();
+
                 if(currentUser != null) {
-                    custom_dialog_oferta fragment = new custom_dialog_oferta(oferta, holder, tipo);
-                    fragment.show(fragmentManager, "Nombre oferta fragment");
-                    // Guardar nombreOferta en la colección de ofertas_guardadas
+                    //Comprobamos si usuario premium o no
+                    String userMail = user.getEmail();
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    Query query = db.collection("usuarios").whereEqualTo("correo", userMail);
+
+                    query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                        @Override
+                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                            if (task.isSuccessful()) {
+                                QuerySnapshot querySnapshot = task.getResult();
+                                DocumentSnapshot document = querySnapshot.getDocuments().get(0);
+                                if(!document.getBoolean("premium")) {
+                                    //Al no ser premium no deja interactuar con los grafico
+                                    premium = false;
+                                } else premium = true;
+                                if(!premium){
+
+                                    String userID = currentUser.getUid();
+                                    Query query_numOfertas = db.collection("ofertas_guardadas").whereEqualTo("idUser",userID );
+                                    query_numOfertas.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                        @Override
+                                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots.getDocuments()) {
+                                                numOfertas++;
+                                            }
+                                            Log.d("Num ofertas guardads", numOfertas+"");
+                                            if(numOfertas < 4){
+                                                custom_dialog_oferta fragment = new custom_dialog_oferta(oferta, holder, tipo);
+                                                fragment.show(fragmentManager, "Nombre oferta fragment");
+                                                // Guardar nombreOferta en la colección de ofertas_guardadas
+                                            }else{
+                                                CustomDialogoPremium dialogo = new CustomDialogoPremium();
+                                                dialogo.show(fragmentManager, "dialogo");
+                                            }
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
+                                }
+                                else{
+                                    custom_dialog_oferta fragment = new custom_dialog_oferta(oferta, holder, tipo);
+                                    fragment.show(fragmentManager, "Nombre oferta fragment");
+                                    // Guardar nombreOferta en la colección de ofertas_guardadas
+                                }
+
+                            } else {
+                                Log.d("Vista Mostrar ofertas", "Error getting documents: ", task.getException());
+                            }
+                        }
+                    });
+
+
                 }else Toast.makeText(view.getContext(), "Necesitas registrarte para poder guardar ofertas", Toast.LENGTH_LONG).show();
             }
         });
@@ -252,12 +312,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
                     public void onSuccess(QuerySnapshot querySnapshot) {
                         for (QueryDocumentSnapshot documentSnapshot : querySnapshot) {
                             String documentId = documentSnapshot.getId();
+                            String tipo = documentSnapshot.get("tipo").toString();
+                            Log.d("TIPO", tipo);
                             db.collection("ofertas_guardadas").document(documentId).delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             Log.d("Eliminar", "Oferta eliminada correctamente");
                                             holder.btn_eliminar.setVisibility(View.GONE);
-                                            actualizarInter.actualizar();
+                                            actualizarInter.actualizar(tipo);
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
@@ -278,7 +340,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         return lista.size();
     }
     public interface actualizarInter{
-        void actualizar();
+        void actualizar(String tipo);
     }
 
 

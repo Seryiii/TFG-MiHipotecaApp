@@ -59,9 +59,23 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
         eventos();
         LinearLayoutManager manager = new LinearLayoutManager(TusOfertas.this);
         rvLista.setLayoutManager(manager);
-        adapter = new RecyclerAdapter(ofertasFija,"fija",this);
-        rvLista.setAdapter(adapter);
-        btn_fijas.setAlpha(0.5f);
+        Intent intent = getIntent();
+        if(intent.hasExtra("tipo")){
+            String jsonStr = intent.getStringExtra("tipo");
+            if(jsonStr.equals("fija")){
+                adapter = new RecyclerAdapter(ofertasFija,"fija",this);
+                rvLista.setAdapter(adapter);
+                btn_fijas.setAlpha(0.5f);
+            }else{
+                adapter = new RecyclerAdapter(ofertasVarMix,"varMix",this);
+                rvLista.setAdapter(adapter);
+                btn_varMix.setAlpha(0.5f);
+            }
+        }else{
+            adapter = new RecyclerAdapter(ofertasFija,"fija",this);
+            rvLista.setAdapter(adapter);
+            btn_fijas.setAlpha(0.5f);
+        }
         txt_noOfertas = findViewById(R.id.txt_infoNoOfer);
     }
 
@@ -141,9 +155,10 @@ public class TusOfertas extends AppCompatActivity implements RecyclerAdapter.act
     }
 
     @Override
-    public void actualizar() {
+    public void actualizar(String tipo) {
         Intent intent = new Intent(this, TusOfertas.class);
         finish();
+        intent.putExtra("tipo", tipo);
         startActivity(intent);
     }
 }
