@@ -18,7 +18,8 @@ from flask import Flask, request, jsonify,redirect, url_for
 from flask_apscheduler import APScheduler
 import firebase_admin
 from firebase_admin import credentials,firestore
-
+from ansible_runner import run
+import getpass
 
 credentials_firebase=credentials.Certificate("/srv/home/salejo/TFG/mihipotecaapp-4b30a-firebase-adminsdk-uubno-841ef0be20.json")
 firebase_admin.initialize_app(credentials_firebase)
@@ -250,7 +251,6 @@ def pruebaArray2():
     plazo_anios = request.args.get('plazo_anios')
     ingresos = request.args.get('ingresos')
     detalles = request.args.get('detalles')
-    print(detalles)
     datos = {
         'comunidad_autonoma': comunidad_autonoma,
         'tipo_vivienda': tipo_vivienda,
@@ -264,8 +264,6 @@ def pruebaArray2():
 
     print(datos)
     extraccion(datos)
-    print(ofertas_fija)
-
     return jsonify({"fija": ofertas_fija, "var_mixta": ofertas_var_mixta})
     
 def extraccion(datos):
@@ -414,7 +412,7 @@ def extraccion(datos):
                 "tin" : tin,
                 "cuota": cuota
             }
-            
+            print(opcion)
             opciones_fija.append(opcion)
             ofertas_fija.append(opcion)
     else:
@@ -491,14 +489,60 @@ def extraccion(datos):
         pos_btn=pos_btn +4
     except TimeoutException:
         print("No se pudo encontrar el botón de cálculo")
-    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "(//p[normalize-space()='Hipoteca Variable y Mixta'])[1]"))).click()
-
+    WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "(//p[@class='filter-header'][normalize-space()='Hipoteca Variable'])[1]"))).click()
     time.sleep(1)
-
     WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")))
     opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
     if datos["detalles"] == "false":
-        for opt in opciones:
+        #CargarVariable
+        cargar_opciones_sin_detalles(opciones)
+        #CargarMixta
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "(//p[@class='filter-header'][normalize-space()='Hipoteca Mixta'])[1]"))).click()
+        time.sleep(1)
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")))
+        opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
+        cargar_opciones_sin_detalles(opciones)
+    else:
+        cont_var = 0
+        cont_mix = 0
+        i = 0
+        #Cargar Variable
+        while (cont_var <= 3) :
+            time.sleep(1)
+            print(i)
+            opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
+            opt = opciones[i]
+            cont_var +=1
+            if(cargar_opciones_con_detalles(opt,driver,pos_btn)):
+                pos_btn+=4
+            i+=1
+        try:
+            print("Poicion Boton", pos_btn)
+            btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
+            driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
+            driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
+            pos_btn+=4
+        except TimeoutException:
+            print("No se pudo encontrar el botón de cálculo")
+        #Hipoteca Mixta 
+        i=0
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.XPATH, "(//p[@class='filter-header'][normalize-space()='Hipoteca Mixta'])[1]"))).click()
+        time.sleep(1)
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")))
+        while (cont_mix <= 3) :
+            time.sleep(1)
+            print(i)
+            opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
+            opt = opciones[i]
+            cont_mix +=1
+            if(cargar_opciones_con_detalles(opt,driver,pos_btn)):
+                pos_btn+=4
+            i+=1
+                
+               
+                    
+def cargar_opciones_sin_detalles(opciones):
+     for opt in opciones:
             img_src = opt.find_element(By.XPATH, ".//img").get_attribute("src")
             bank_name = img_src.split("/")[-1].split("_")[0]
             bank_name = bank_name.upper()
@@ -525,127 +569,67 @@ def extraccion(datos):
                 "cuota_x_anios" : cuota_x_anios,
                 "cuota_resto": cuota_resto
             }
-            opciones_variable_mixta.append(opcion)
             ofertas_var_mixta.append(opcion)
-    else:
-        cont_var = 0
-        cont_mix = 0
-        i = 0
-        fuera_rango = 0
-        while (cont_var <= 3 or cont_mix <= 3) and fuera_rango != 1 :
-            time.sleep(1)
-            print(i)
-            opciones = driver.find_elements(By.CLASS_NAME, "price-card.animated.fadeIn.ng-star-inserted")
-            opt = opciones[i]
-            div_company = opt.find_element(By.CLASS_NAME,"company-name")
-            tipo = div_company.find_element(By.TAG_NAME,"p").text
-            if ("Mixta" in tipo and cont_mix <= 3) or ("Variable" in tipo and cont_var <=3):
-                img_src = opt.find_element(By.XPATH, ".//img").get_attribute("src")
-                bank_name = img_src.split("/")[-1].split("_")[0]
-                bank_name = bank_name.upper()
-                tae = opt.find_element(By.CLASS_NAME,"main-value.ng-star-inserted")
-                tae_value = tae.text
-                tin_x_anios = opt.find_element(By.CLASS_NAME,"first-value")
-                tin_x_anios = tin_x_anios.text
-                div_prices = opt.find_element(By.CLASS_NAME,"tae-block.desktop.ng-star-inserted")
-                tin_resto = div_prices.find_elements(By.TAG_NAME, "p")[-1].text
-                tin_resto = tin_resto.replace("Resto años: ", "")
-                cuota_x_anios = opt.find_element(By.CLASS_NAME,"first-value.ng-star-inserted")
-                cuota_x_anios = cuota_x_anios.text
-                div_cuotas = opt.find_element(By.CLASS_NAME,"fee-block.desktop.ng-star-inserted")
-                cuota_resto = div_cuotas.find_elements(By.TAG_NAME, "p")[-1].text
-                cuota_resto = cuota_resto.replace("Resto años: ", "")
             
-            i+=1
-            if len(opciones) == 1:
-                fuera_rango =1
-            if "Mixta" in tipo:
-                cont_mix +=1
-                if cont_mix <= 3:
-                    detalles = opt.find_element(By.TAG_NAME, "a")
-                    try:
-                        print("Poicion Boton", pos_btn)
-                        btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
-                        driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
-                        driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
-                        pos_btn+=4
-                    except TimeoutException:
-                        print("No se pudo encontrar el botón de cálculo")
-                    detalles.click()
-                    time.sleep(2)
-                    detalles_tae = driver.find_element(By.XPATH, "//div[@class='row']//app-more-details-accordion-tae")
-                    desplegar = detalles_tae.find_element(By.TAG_NAME,"h5")
-                    desplegar.click()
-                    time.sleep(1)
-                    div_principal = driver.find_element(By.XPATH,"//div[@class='collapsed active']")
-                    div_anidados = div_principal.find_elements(By.CLASS_NAME,"text-block.ng-star-inserted")
-                    ultimo_div = div_anidados[-2]
-                    vinculaciones = []
-                    lineas_vinculacion = ultimo_div.find_elements(By.TAG_NAME,"p")
-                    for linea in lineas_vinculacion:
-                        vinculaciones.append(linea.text)
-                    prueba = ""
-                    for vinc in vinculaciones:
-                        prueba = prueba + vinc + "\n"
-                   
-                    opcion = {
-                        "banco" : bank_name,
-                        "desc" : tipo,
-                        "tae" : tae_value,
-                        "tin_x_anios" : tin_x_anios,
-                        "tin_resto" : tin_resto,
-                        "cuota_x_anios" : cuota_x_anios,
-                        "cuota_resto": cuota_resto,
-                        "vinculaciones" : prueba
-                    }
-                    opciones_variable_mixta.append(opcion)
-                    ofertas_var_mixta.append(opcion)
-                    btn_regresar = driver.find_element(By.XPATH,"//button[normalize-space()='Volver a Resultados']").click()
-            if "Variable" in tipo:
-                cont_var += 1
-                if cont_var <= 3:
-                    detalles = opt.find_element(By.TAG_NAME, "a")
-                    try:
-                        print("Poicion Boton", pos_btn)
-                        btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
-                        driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
-                        driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
-                        pos_btn+=4
-                    except TimeoutException:
-                        print("No se pudo encontrar el botón de cálculo")
-                    detalles.click()
-                    time.sleep(2)
-                    detalles_tae = driver.find_element(By.XPATH, "//div[@class='row']//app-more-details-accordion-tae")
-                    desplegar = detalles_tae.find_element(By.TAG_NAME,"h5")
-                    desplegar.click()
-                    time.sleep(2)
-                    div_principal = driver.find_element(By.XPATH,"//div[@class='collapsed active']")
-                    div_anidados = div_principal.find_elements(By.CLASS_NAME,"text-block.ng-star-inserted")
-                    ultimo_div = div_anidados[-2]
-                    vinculaciones = []
-                    lineas_vinculacion = ultimo_div.find_elements(By.TAG_NAME,"p")
-                    for linea in lineas_vinculacion:
-                        vinculaciones.append(linea.text)
-                    prueba = ""
-                    for vinc in vinculaciones:
-                        prueba = prueba + vinc + "\n"
-                    vinculaciones = ultimo_div.text
-                    vinculaciones = vinculaciones.replace("Gastos mensuales", "")
-                    vinculaciones = vinculaciones.replace('\n', "")
-                    opcion = {
-                        "banco" : bank_name,
-                        "desc" : tipo,
-                        "tae" : tae_value,
-                        "tin_x_anios" : tin_x_anios,
-                        "tin_resto" : tin_resto,
-                        "cuota_x_anios" : cuota_x_anios,
-                        "cuota_resto": cuota_resto,
-                        "vinculaciones" : prueba
-                    } 
-                    opciones_variable_mixta.append(opcion)
-                    ofertas_var_mixta.append(opcion) 
-                    btn_regresar = driver.find_element(By.XPATH,"//button[normalize-space()='Volver a Resultados']").click()
-            
+def cargar_opciones_con_detalles(opt,driver,pos_btn):
+    div_company = opt.find_element(By.CLASS_NAME,"company-name")
+    tipo = div_company.find_element(By.TAG_NAME,"p").text
+    img_src = opt.find_element(By.XPATH, ".//img").get_attribute("src")
+    bank_name = img_src.split("/")[-1].split("_")[0]
+    bank_name = bank_name.upper()
+    tae = opt.find_element(By.CLASS_NAME,"main-value.ng-star-inserted")
+    tae_value = tae.text
+    tin_x_anios = opt.find_element(By.CLASS_NAME,"first-value")
+    tin_x_anios = tin_x_anios.text
+    div_prices = opt.find_element(By.CLASS_NAME,"tae-block.desktop.ng-star-inserted")
+    tin_resto = div_prices.find_elements(By.TAG_NAME, "p")[-1].text
+    tin_resto = tin_resto.replace("Resto años: ", "")
+    cuota_x_anios = opt.find_element(By.CLASS_NAME,"first-value.ng-star-inserted")
+    cuota_x_anios = cuota_x_anios.text
+    div_cuotas = opt.find_element(By.CLASS_NAME,"fee-block.desktop.ng-star-inserted")
+    cuota_resto = div_cuotas.find_elements(By.TAG_NAME, "p")[-1].text
+    cuota_resto = cuota_resto.replace("Resto años: ", "")
+    detalles = opt.find_element(By.TAG_NAME, "a")
+    try:
+        encontrado=True
+        print("Poicion Boton", pos_btn)
+        btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
+        driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
+        driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
+    except TimeoutException:
+        encontrado=False
+        print("No se pudo encontrar el botón de cálculo")
+    detalles.click()
+    time.sleep(2)
+    detalles_tae = driver.find_element(By.XPATH, "//div[@class='row']//app-more-details-accordion-tae")
+    desplegar = detalles_tae.find_element(By.TAG_NAME,"h5")
+    desplegar.click()
+    time.sleep(1)
+    div_principal = driver.find_element(By.XPATH,"//div[@class='collapsed active']")
+    div_anidados = div_principal.find_elements(By.CLASS_NAME,"text-block.ng-star-inserted")
+    ultimo_div = div_anidados[-2]
+    vinculaciones = []
+    lineas_vinculacion = ultimo_div.find_elements(By.TAG_NAME,"p")
+    for linea in lineas_vinculacion:
+        vinculaciones.append(linea.text)
+    prueba = ""
+    for vinc in vinculaciones:
+        prueba = prueba + vinc + "\n"
+
+    opcion = {
+        "banco" : bank_name,
+        "desc" : tipo,
+        "tae" : tae_value,
+        "tin_x_anios" : tin_x_anios,
+        "tin_resto" : tin_resto,
+        "cuota_x_anios" : cuota_x_anios,
+        "cuota_resto": cuota_resto,
+        "vinculaciones" : prueba
+    }
+    print(opcion)
+    ofertas_var_mixta.append(opcion)
+    btn_regresar = driver.find_element(By.XPATH,"//button[normalize-space()='Volver a Resultados']").click()
+    return encontrado         
 
 
 if __name__ == '__main__':
