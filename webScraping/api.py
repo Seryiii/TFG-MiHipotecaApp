@@ -20,10 +20,41 @@ import firebase_admin
 from firebase_admin import credentials,firestore
 from ansible_runner import run
 import getpass
+import json
+import subprocess
+from ansible.parsing.vault import VaultLib
 
-credentials_firebase=credentials.Certificate("/srv/home/salejo/TFG/mihipotecaapp-4b30a-firebase-adminsdk-uubno-841ef0be20.json")
-firebase_admin.initialize_app(credentials_firebase)
-db = firestore.client()
+
+
+clave_vault = getpass.getpass("Introduce la clave de Ansible Vault: ")
+archivo_encriptado = '/srv/home/salejo/TFG/mihipotecaapp-4b30a-firebase-adminsdk-uubno-841ef0be20.vault'
+
+# Ejecutar el comando de desencriptación utilizando ansible-vault
+proceso = subprocess.run(
+    ["ansible-vault", "decrypt", archivo_encriptado, "--output=-"],
+    input=clave_vault.encode(),
+    capture_output=True,
+)
+
+# Verificar el resultado del proceso
+if proceso.returncode == 0:
+    contenido_desencriptado = proceso.stdout.decode()
+
+    # Convertir el contenido desencriptado a formato JSON
+    contenido_json = json.loads(contenido_desencriptado)
+
+    # Aquí puedes trabajar con el contenido JSON como desees
+    credentials_json = json.loads(contenido_desencriptado)
+    credentials_firebase=credentials.Certificate(credentials_json)
+
+    firebase_admin.initialize_app(credentials_firebase)
+    db = firestore.client()
+
+    print("Contenido desencriptado en formato JSON:")
+    print(contenido_json)
+else:
+    print("Ha ocurrido un error al desencriptar el archivo.")
+
 
 array_prueba = []
 ofertas_fija = []
@@ -180,6 +211,7 @@ def euriborHistorico():
 def cargar(euri):
      # Realizar una consulta en la colección 'euribor' con los criterios de búsqueda
     query = db.collection('euribor').where(field_path='anio', op_string='==', value=euri['anio']).where(field_path='mes', op_string='==', value=euri['mes'])
+    #query = db.collection('euribor').where('anio', '==', euri['anio']).where('mes', '==', euri['mes'])
     docs = query.stream()
 
     # Verificar si hay algún documento que coincida
