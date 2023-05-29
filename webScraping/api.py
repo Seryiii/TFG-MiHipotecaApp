@@ -23,9 +23,6 @@ import getpass
 import json
 import subprocess
 from ansible.parsing.vault import VaultLib
-
-
-
 clave_vault = getpass.getpass("Introduce la clave de Ansible Vault: ")
 archivo_encriptado = '/srv/home/salejo/TFG/mihipotecaapp-4b30a-firebase-adminsdk-uubno-841ef0be20.vault'
 
@@ -50,8 +47,6 @@ if proceso.returncode == 0:
     firebase_admin.initialize_app(credentials_firebase)
     db = firestore.client()
 
-    print("Contenido desencriptado en formato JSON:")
-    print(contenido_json)
 else:
     print("Ha ocurrido un error al desencriptar el archivo.")
 
@@ -398,7 +393,6 @@ def extraccion(datos):
 
     time.sleep(2)
     try:
-        print(datos)
         btn_calcular = WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".cj-btn.ng-tns-c115-1")))
         btn_calcular.click()
     except TimeoutException:
@@ -418,7 +412,6 @@ def extraccion(datos):
     if datos["detalles"] == "false":
         pos_btn=5
         try:
-            print("Poicion Boton", pos_btn)
             btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
             driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
             driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
@@ -444,7 +437,6 @@ def extraccion(datos):
                 "tin" : tin,
                 "cuota": cuota
             }
-            print(opcion)
             opciones_fija.append(opcion)
             ofertas_fija.append(opcion)
     else:
@@ -473,7 +465,6 @@ def extraccion(datos):
             cuota = cuota.find_elements(By.TAG_NAME, "p")[-1].text
             detalles = opt.find_element(By.TAG_NAME, "a")
             try:
-                print("Poicion Boton", pos_btn)
                 btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
                 driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
                 driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
@@ -505,7 +496,6 @@ def extraccion(datos):
                 "cuota": cuota,
                 "vinculaciones" : prueba 
             }
-            print(opcion)
             opciones_fija.append(opcion)
             ofertas_fija.append(opcion)
             pos_btn=pos_btn +4
@@ -514,7 +504,6 @@ def extraccion(datos):
 
     opciones_variable_mixta = []
     try:
-        print("Poicion Boton", pos_btn)
         btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
         driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
         driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
@@ -549,7 +538,6 @@ def extraccion(datos):
                 pos_btn+=4
             i+=1
         try:
-            print("Poicion Boton", pos_btn)
             btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
             driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
             driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
@@ -624,7 +612,6 @@ def cargar_opciones_con_detalles(opt,driver,pos_btn):
     detalles = opt.find_element(By.TAG_NAME, "a")
     try:
         encontrado=True
-        print("Poicion Boton", pos_btn)
         btn_help=WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.CLASS_NAME, "help-button-btn.btn.help.asesor.ng-tns-c96-" +str( + pos_btn)+".ng-star-inserted")))
         driver.execute_script("arguments[0].style.visibility='hidden';", btn_help)
         driver.execute_script("arguments[0].style.pointerEvents='none';", btn_help)
